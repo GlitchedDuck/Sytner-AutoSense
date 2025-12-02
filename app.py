@@ -16,6 +16,8 @@ import streamlit as st
 from PIL import Image, ImageOps
 import datetime
 import re
+import random
+import time
 from dataclasses import dataclass, field
 from typing import Optional
 from enum import Enum
@@ -172,6 +174,138 @@ class Valuation:
         return self.base_value + self.stock_bonus + self.same_day_bonus
 
 
+class VehicleType(Enum):
+    """Vehicle body type classification"""
+    SPORTS = "Sports Car"
+    CONVERTIBLE = "Convertible"
+    SUV = "SUV"
+    CROSSOVER = "Crossover"
+    SALOON = "Saloon"
+    ESTATE = "Estate"
+    HATCHBACK = "Hatchback"
+    COUPE = "Coupe"
+    MPV = "MPV"
+    PICKUP = "Pickup"
+    
+    @property
+    def icon(self) -> str:
+        icons = {
+            VehicleType.SPORTS: "🏎️",
+            VehicleType.CONVERTIBLE: "🚗",
+            VehicleType.SUV: "🚙",
+            VehicleType.CROSSOVER: "🚙",
+            VehicleType.SALOON: "🚘",
+            VehicleType.ESTATE: "🚐",
+            VehicleType.HATCHBACK: "🚗",
+            VehicleType.COUPE: "🚘",
+            VehicleType.MPV: "🚐",
+            VehicleType.PICKUP: "🛻",
+        }
+        return icons.get(self, "🚗")
+
+
+class Season(Enum):
+    """Seasons for demand forecasting"""
+    SPRING = "spring"
+    SUMMER = "summer"
+    AUTUMN = "autumn"
+    WINTER = "winter"
+    
+    @classmethod
+    def current(cls) -> "Season":
+        month = datetime.date.today().month
+        if month in (3, 4, 5):
+            return cls.SPRING
+        elif month in (6, 7, 8):
+            return cls.SUMMER
+        elif month in (9, 10, 11):
+            return cls.AUTUMN
+        else:
+            return cls.WINTER
+    
+    @property
+    def display_name(self) -> str:
+        return self.value.capitalize()
+    
+    @property
+    def icon(self) -> str:
+        icons = {
+            Season.SPRING: "🌸",
+            Season.SUMMER: "☀️",
+            Season.AUTUMN: "🍂",
+            Season.WINTER: "❄️",
+        }
+        return icons[self]
+
+
+class DemandLevel(Enum):
+    """Demand level indicators"""
+    VERY_HIGH = "very_high"
+    HIGH = "high"
+    MODERATE = "moderate"
+    LOW = "low"
+    VERY_LOW = "very_low"
+    
+    @property
+    def display_name(self) -> str:
+        return self.value.replace("_", " ").title()
+    
+    @property
+    def color(self) -> str:
+        colors = {
+            DemandLevel.VERY_HIGH: "#06d6a0",
+            DemandLevel.HIGH: "#4ade80",
+            DemandLevel.MODERATE: "#ffd166",
+            DemandLevel.LOW: "#fb923c",
+            DemandLevel.VERY_LOW: "#ef476f",
+        }
+        return colors[self]
+    
+    @property
+    def bonus_multiplier(self) -> float:
+        multipliers = {
+            DemandLevel.VERY_HIGH: 1.15,
+            DemandLevel.HIGH: 1.08,
+            DemandLevel.MODERATE: 1.0,
+            DemandLevel.LOW: 0.95,
+            DemandLevel.VERY_LOW: 0.90,
+        }
+        return multipliers[self]
+
+
+@dataclass
+class RegionalDemand:
+    """Demand data for a specific region/location"""
+    location: str
+    demand_level: DemandLevel
+    demand_score: int  # 0-100
+    days_to_sell: int  # Average days to sell
+    stock_level: int  # Current stock count
+    buyers_waiting: int  # Number of interested buyers
+    distance_miles: float
+    
+    @property
+    def is_hotspot(self) -> bool:
+        return self.demand_level in (DemandLevel.VERY_HIGH, DemandLevel.HIGH)
+
+
+@dataclass
+class DemandForecast:
+    """Complete demand forecast for a vehicle"""
+    vehicle_type: VehicleType
+    current_season: Season
+    national_demand: DemandLevel
+    seasonal_trend: str  # "rising", "falling", "stable"
+    trend_percentage: int  # e.g., +15% or -10%
+    regional_demands: list[RegionalDemand]
+    best_region: Optional[RegionalDemand] = None
+    demand_bonus: int = 0
+    
+    @property
+    def hotspot_count(self) -> int:
+        return sum(1 for r in self.regional_demands if r.is_hotspot)
+
+
 @dataclass
 class Booking:
     """Booking information"""
@@ -213,6 +347,18 @@ class VehicleService(ABC):
     
     @abstractmethod
     def extract_plate_from_image(self, image) -> Optional[str]:
+        pass
+    
+    @abstractmethod
+    def get_vehicle_type(self, vehicle: Vehicle) -> VehicleType:
+        pass
+    
+    @abstractmethod
+    def get_demand_forecast(self, vehicle: Vehicle) -> DemandForecast:
+        pass
+    
+    @abstractmethod
+    def ping_network(self, vehicle: Vehicle, forecast: DemandForecast) -> dict:
         pass
 
 
@@ -263,6 +409,314 @@ class MockVehicleService(VehicleService):
     def extract_plate_from_image(self, image) -> Optional[str]:
         # Mock OCR - returns a sample plate
         return "KT68XYZ"
+    
+    def get_vehicle_type(self, vehicle: Vehicle) -> VehicleType:
+        """Determine vehicle type from make/model"""
+        model_lower = vehicle.model.lower()
+        
+        # BMW model type mapping
+        type_mapping = {
+            "x1": VehicleType.CROSSOVER,
+            "x2": VehicleType.CROSSOVER,
+            "x3": VehicleType.SUV,
+            "x4": VehicleType.SUV,
+            "x5": VehicleType.SUV,
+            "x6": VehicleType.SUV,
+            "x7": VehicleType.SUV,
+            "z4": VehicleType.CONVERTIBLE,
+            "m2": VehicleType.COUPE,
+            "m3": VehicleType.SPORTS,
+            "m4": VehicleType.SPORTS,
+            "m5": VehicleType.SPORTS,
+            "m8": VehicleType.SPORTS,
+            "2 series": VehicleType.COUPE,
+            "3 series": VehicleType.SALOON,
+            "4 series": VehicleType.COUPE,
+            "5 series": VehicleType.SALOON,
+            "7 series": VehicleType.SALOON,
+            "8 series": VehicleType.COUPE,
+            "1 series": VehicleType.HATCHBACK,
+            "touring": VehicleType.ESTATE,
+            "gran coupe": VehicleType.COUPE,
+            "convertible": VehicleType.CONVERTIBLE,
+        }
+        
+        for key, vtype in type_mapping.items():
+            if key in model_lower:
+                return vtype
+        
+        return VehicleType.SALOON  # Default
+    
+    def get_demand_forecast(self, vehicle: Vehicle) -> DemandForecast:
+        """Generate demand forecast based on vehicle type and season"""
+        vehicle_type = self.get_vehicle_type(vehicle)
+        current_season = Season.current()
+        
+        # Seasonal demand patterns
+        seasonal_demand = {
+            Season.SUMMER: {
+                VehicleType.SPORTS: DemandLevel.VERY_HIGH,
+                VehicleType.CONVERTIBLE: DemandLevel.VERY_HIGH,
+                VehicleType.COUPE: DemandLevel.HIGH,
+                VehicleType.SUV: DemandLevel.MODERATE,
+                VehicleType.CROSSOVER: DemandLevel.MODERATE,
+                VehicleType.SALOON: DemandLevel.MODERATE,
+                VehicleType.HATCHBACK: DemandLevel.MODERATE,
+                VehicleType.ESTATE: DemandLevel.LOW,
+                VehicleType.MPV: DemandLevel.LOW,
+                VehicleType.PICKUP: DemandLevel.MODERATE,
+            },
+            Season.WINTER: {
+                VehicleType.SUV: DemandLevel.VERY_HIGH,
+                VehicleType.CROSSOVER: DemandLevel.VERY_HIGH,
+                VehicleType.PICKUP: DemandLevel.HIGH,
+                VehicleType.ESTATE: DemandLevel.HIGH,
+                VehicleType.SALOON: DemandLevel.MODERATE,
+                VehicleType.HATCHBACK: DemandLevel.MODERATE,
+                VehicleType.MPV: DemandLevel.MODERATE,
+                VehicleType.SPORTS: DemandLevel.LOW,
+                VehicleType.CONVERTIBLE: DemandLevel.VERY_LOW,
+                VehicleType.COUPE: DemandLevel.LOW,
+            },
+            Season.SPRING: {
+                VehicleType.CONVERTIBLE: DemandLevel.HIGH,
+                VehicleType.SPORTS: DemandLevel.HIGH,
+                VehicleType.COUPE: DemandLevel.MODERATE,
+                VehicleType.SUV: DemandLevel.MODERATE,
+                VehicleType.CROSSOVER: DemandLevel.MODERATE,
+                VehicleType.SALOON: DemandLevel.MODERATE,
+                VehicleType.HATCHBACK: DemandLevel.HIGH,
+                VehicleType.ESTATE: DemandLevel.MODERATE,
+                VehicleType.MPV: DemandLevel.MODERATE,
+                VehicleType.PICKUP: DemandLevel.MODERATE,
+            },
+            Season.AUTUMN: {
+                VehicleType.SUV: DemandLevel.HIGH,
+                VehicleType.CROSSOVER: DemandLevel.HIGH,
+                VehicleType.ESTATE: DemandLevel.HIGH,
+                VehicleType.SALOON: DemandLevel.MODERATE,
+                VehicleType.HATCHBACK: DemandLevel.MODERATE,
+                VehicleType.MPV: DemandLevel.MODERATE,
+                VehicleType.SPORTS: DemandLevel.MODERATE,
+                VehicleType.CONVERTIBLE: DemandLevel.LOW,
+                VehicleType.COUPE: DemandLevel.MODERATE,
+                VehicleType.PICKUP: DemandLevel.HIGH,
+            },
+        }
+        
+        national_demand = seasonal_demand.get(current_season, {}).get(
+            vehicle_type, DemandLevel.MODERATE
+        )
+        
+        # Calculate trend based on upcoming season
+        trend_data = self._calculate_trend(vehicle_type, current_season)
+        
+        # Generate regional demand data
+        regional_demands = self._generate_regional_demands(vehicle_type, national_demand)
+        
+        # Find best region
+        best_region = max(regional_demands, key=lambda r: r.demand_score)
+        
+        # Calculate demand bonus
+        demand_bonus = self._calculate_demand_bonus(national_demand, best_region)
+        
+        return DemandForecast(
+            vehicle_type=vehicle_type,
+            current_season=current_season,
+            national_demand=national_demand,
+            seasonal_trend=trend_data["direction"],
+            trend_percentage=trend_data["percentage"],
+            regional_demands=regional_demands,
+            best_region=best_region,
+            demand_bonus=demand_bonus,
+        )
+    
+    def _calculate_trend(self, vehicle_type: VehicleType, current_season: Season) -> dict:
+        """Calculate demand trend based on upcoming season"""
+        # Summer-friendly vehicles trend up in spring, down in autumn
+        summer_vehicles = {VehicleType.SPORTS, VehicleType.CONVERTIBLE, VehicleType.COUPE}
+        # Winter-friendly vehicles trend up in autumn, down in spring
+        winter_vehicles = {VehicleType.SUV, VehicleType.CROSSOVER, VehicleType.PICKUP}
+        
+        if vehicle_type in summer_vehicles:
+            if current_season == Season.SPRING:
+                return {"direction": "rising", "percentage": 18}
+            elif current_season == Season.SUMMER:
+                return {"direction": "stable", "percentage": 2}
+            elif current_season == Season.AUTUMN:
+                return {"direction": "falling", "percentage": -15}
+            else:
+                return {"direction": "stable", "percentage": -5}
+        elif vehicle_type in winter_vehicles:
+            if current_season == Season.AUTUMN:
+                return {"direction": "rising", "percentage": 22}
+            elif current_season == Season.WINTER:
+                return {"direction": "stable", "percentage": 3}
+            elif current_season == Season.SPRING:
+                return {"direction": "falling", "percentage": -12}
+            else:
+                return {"direction": "stable", "percentage": -3}
+        else:
+            return {"direction": "stable", "percentage": 0}
+    
+    def _generate_regional_demands(
+        self, vehicle_type: VehicleType, national_demand: DemandLevel
+    ) -> list[RegionalDemand]:
+        """Generate regional demand data for all network locations"""
+        
+        # Regional characteristics affect demand
+        regions = [
+            {
+                "location": "Sytner BMW Birmingham",
+                "base_modifier": 0,
+                "rural_bonus": False,
+                "affluent": True,
+                "distance": 0,
+            },
+            {
+                "location": "Sytner BMW Manchester",
+                "base_modifier": 5,
+                "rural_bonus": False,
+                "affluent": True,
+                "distance": 85,
+            },
+            {
+                "location": "Sytner BMW London - Park Lane",
+                "base_modifier": 10,
+                "rural_bonus": False,
+                "affluent": True,
+                "distance": 120,
+            },
+            {
+                "location": "Sytner BMW Edinburgh",
+                "base_modifier": -5,
+                "rural_bonus": True,
+                "affluent": False,
+                "distance": 290,
+            },
+            {
+                "location": "Sytner BMW Leeds",
+                "base_modifier": 0,
+                "rural_bonus": True,
+                "affluent": False,
+                "distance": 120,
+            },
+            {
+                "location": "Sytner BMW Bristol",
+                "base_modifier": 5,
+                "rural_bonus": True,
+                "affluent": True,
+                "distance": 90,
+            },
+            {
+                "location": "Sytner BMW Newcastle",
+                "base_modifier": -10,
+                "rural_bonus": True,
+                "affluent": False,
+                "distance": 200,
+            },
+            {
+                "location": "Sytner BMW Cardiff",
+                "base_modifier": -5,
+                "rural_bonus": True,
+                "affluent": False,
+                "distance": 110,
+            },
+        ]
+        
+        regional_demands = []
+        base_score = {
+            DemandLevel.VERY_HIGH: 90,
+            DemandLevel.HIGH: 75,
+            DemandLevel.MODERATE: 55,
+            DemandLevel.LOW: 35,
+            DemandLevel.VERY_LOW: 20,
+        }[national_demand]
+        
+        for region in regions:
+            # Calculate regional score
+            score = base_score + region["base_modifier"]
+            
+            # Rural areas prefer SUVs/4x4s
+            if region["rural_bonus"] and vehicle_type in {
+                VehicleType.SUV, VehicleType.CROSSOVER, VehicleType.PICKUP
+            }:
+                score += 15
+            
+            # Affluent areas prefer sports/luxury
+            if region["affluent"] and vehicle_type in {
+                VehicleType.SPORTS, VehicleType.CONVERTIBLE, VehicleType.COUPE
+            }:
+                score += 12
+            
+            # Add some randomness
+            score += random.randint(-8, 8)
+            score = max(10, min(98, score))
+            
+            # Determine demand level from score
+            if score >= 85:
+                demand_level = DemandLevel.VERY_HIGH
+            elif score >= 70:
+                demand_level = DemandLevel.HIGH
+            elif score >= 50:
+                demand_level = DemandLevel.MODERATE
+            elif score >= 30:
+                demand_level = DemandLevel.LOW
+            else:
+                demand_level = DemandLevel.VERY_LOW
+            
+            # Calculate days to sell (inversely related to demand)
+            days_to_sell = max(3, int(60 - (score * 0.5)))
+            
+            regional_demands.append(RegionalDemand(
+                location=region["location"],
+                demand_level=demand_level,
+                demand_score=score,
+                days_to_sell=days_to_sell,
+                stock_level=random.randint(0, 5),
+                buyers_waiting=random.randint(0, 12) if score > 60 else random.randint(0, 3),
+                distance_miles=region["distance"],
+            ))
+        
+        return sorted(regional_demands, key=lambda r: -r.demand_score)
+    
+    def _calculate_demand_bonus(
+        self, national_demand: DemandLevel, best_region: RegionalDemand
+    ) -> int:
+        """Calculate bonus value based on demand"""
+        base_bonus = {
+            DemandLevel.VERY_HIGH: 800,
+            DemandLevel.HIGH: 500,
+            DemandLevel.MODERATE: 200,
+            DemandLevel.LOW: 0,
+            DemandLevel.VERY_LOW: 0,
+        }[national_demand]
+        
+        # Additional bonus for hotspot regions
+        if best_region.demand_score >= 85:
+            base_bonus += 300
+        elif best_region.demand_score >= 75:
+            base_bonus += 150
+        
+        return base_bonus
+    
+    def ping_network(self, vehicle: Vehicle, forecast: DemandForecast) -> dict:
+        """Simulate pinging the network with vehicle availability"""
+        hotspots = [r for r in forecast.regional_demands if r.is_hotspot]
+        
+        # Simulate network notification
+        notifications_sent = len(hotspots)
+        interested_buyers = sum(r.buyers_waiting for r in hotspots)
+        
+        return {
+            "success": True,
+            "notifications_sent": notifications_sent,
+            "locations_pinged": [r.location for r in hotspots],
+            "interested_buyers": interested_buyers,
+            "best_match": forecast.best_region.location if forecast.best_region else None,
+            "estimated_sale_days": forecast.best_region.days_to_sell if forecast.best_region else 30,
+            "timestamp": datetime.datetime.now().isoformat(),
+        }
 
 
 # Service instance (swap for real implementation in production)
@@ -318,6 +772,7 @@ class SessionState:
         "vehicle_data": None,
         "booking_forms": {},
         "show_inspection_booking": False,
+        "ping_result": None,
     }
     
     @classmethod
@@ -759,6 +1214,255 @@ class Styles:
             font-weight: 500;
         }}
         
+        /* Demand Forecast Styles */
+        .demand-card {{
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 24px;
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .demand-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }}
+        
+        .demand-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }}
+        
+        .demand-title {{
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }}
+        
+        .demand-subtitle {{
+            font-size: 13px;
+            opacity: 0.8;
+        }}
+        
+        .demand-level {{
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }}
+        
+        .demand-meter {{
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 12px;
+            margin: 16px 0;
+            overflow: hidden;
+        }}
+        
+        .demand-meter-fill {{
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }}
+        
+        .demand-stats {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }}
+        
+        .demand-stat {{
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }}
+        
+        .demand-stat-value {{
+            font-family: 'Space Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: {Config.ACCENT};
+        }}
+        
+        .demand-stat-label {{
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }}
+        
+        .trend-indicator {{
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+        }}
+        
+        .trend-up {{
+            background: rgba(6, 214, 160, 0.2);
+            color: #06d6a0;
+        }}
+        
+        .trend-down {{
+            background: rgba(239, 71, 111, 0.2);
+            color: #ef476f;
+        }}
+        
+        .trend-stable {{
+            background: rgba(255, 209, 102, 0.2);
+            color: #ffd166;
+        }}
+        
+        /* Regional Hotspot Card */
+        .hotspot-card {{
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 10px 0;
+            border-left: 4px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }}
+        
+        .hotspot-card:hover {{
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }}
+        
+        .hotspot-info {{
+            flex: 1;
+        }}
+        
+        .hotspot-location {{
+            font-weight: 600;
+            color: {Config.PRIMARY};
+            font-size: 15px;
+            margin-bottom: 4px;
+        }}
+        
+        .hotspot-details {{
+            font-size: 13px;
+            color: {Config.TEXT_MUTED};
+        }}
+        
+        .hotspot-score {{
+            text-align: right;
+        }}
+        
+        .hotspot-score-value {{
+            font-family: 'Space Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+        }}
+        
+        .hotspot-score-label {{
+            font-size: 11px;
+            text-transform: uppercase;
+            color: {Config.TEXT_MUTED};
+        }}
+        
+        /* Ping Network Button */
+        .ping-button {{
+            background: linear-gradient(135deg, #06d6a0 0%, #05c793 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(6, 214, 160, 0.3);
+        }}
+        
+        .ping-button:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 214, 160, 0.4);
+        }}
+        
+        .ping-result {{
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid {Config.SUCCESS};
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }}
+        
+        .ping-result-header {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }}
+        
+        .ping-result-title {{
+            font-weight: 600;
+            color: {Config.PRIMARY};
+            font-size: 16px;
+        }}
+        
+        .ping-result-stats {{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }}
+        
+        .ping-stat {{
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }}
+        
+        .ping-stat-value {{
+            font-family: 'Space Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: {Config.PRIMARY};
+        }}
+        
+        .ping-stat-label {{
+            font-size: 12px;
+            color: {Config.TEXT_MUTED};
+        }}
+        
+        /* Season indicator */
+        .season-badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+        }}
+        
         /* Hide empty elements */
         .element-container:has(> .stMarkdown > div:empty) {{
             display: none !important;
@@ -910,6 +1614,147 @@ class Components:
                     <div class="feature-desc">{desc}</div>
                 </div>
                 """, unsafe_allow_html=True)
+    
+    @staticmethod
+    def demand_forecast_card(forecast: DemandForecast, vehicle: Vehicle):
+        """Render the main demand forecast card"""
+        # Determine trend styling
+        if forecast.seasonal_trend == "rising":
+            trend_class = "trend-up"
+            trend_icon = "📈"
+            trend_sign = "+"
+        elif forecast.seasonal_trend == "falling":
+            trend_class = "trend-down"
+            trend_icon = "📉"
+            trend_sign = ""
+        else:
+            trend_class = "trend-stable"
+            trend_icon = "➡️"
+            trend_sign = ""
+        
+        # Demand level color
+        demand_color = forecast.national_demand.color
+        
+        # Calculate meter width
+        meter_width = {
+            DemandLevel.VERY_HIGH: 95,
+            DemandLevel.HIGH: 75,
+            DemandLevel.MODERATE: 55,
+            DemandLevel.LOW: 35,
+            DemandLevel.VERY_LOW: 15,
+        }[forecast.national_demand]
+        
+        st.markdown(f"""
+        <div class="demand-card">
+            <div class="demand-header">
+                <div>
+                    <div class="demand-title">
+                        {forecast.vehicle_type.icon} {forecast.vehicle_type.value} Demand Forecast
+                    </div>
+                    <div class="demand-subtitle">
+                        {vehicle.display_name} · {vehicle.year}
+                    </div>
+                </div>
+                <div>
+                    <span class="season-badge">
+                        {forecast.current_season.icon} {forecast.current_season.display_name}
+                    </span>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
+                <span class="demand-level" style="background: {demand_color};">
+                    {forecast.national_demand.display_name}
+                </span>
+                <span class="{trend_class} trend-indicator">
+                    {trend_icon} {trend_sign}{forecast.trend_percentage}% this season
+                </span>
+            </div>
+            
+            <div class="demand-meter">
+                <div class="demand-meter-fill" style="width: {meter_width}%; background: linear-gradient(90deg, {demand_color} 0%, {Config.ACCENT} 100%);"></div>
+            </div>
+            
+            <div class="demand-stats">
+                <div class="demand-stat">
+                    <div class="demand-stat-value">{forecast.hotspot_count}</div>
+                    <div class="demand-stat-label">Hotspot Regions</div>
+                </div>
+                <div class="demand-stat">
+                    <div class="demand-stat-value">{forecast.best_region.days_to_sell if forecast.best_region else '—'}d</div>
+                    <div class="demand-stat-label">Est. Days to Sell</div>
+                </div>
+                <div class="demand-stat">
+                    <div class="demand-stat-value">+£{forecast.demand_bonus:,}</div>
+                    <div class="demand-stat-label">Demand Bonus</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    @staticmethod
+    def regional_hotspot(region: RegionalDemand, rank: int):
+        """Render a regional hotspot card"""
+        demand_color = region.demand_level.color
+        
+        # Badge for top regions
+        rank_badge = ""
+        if rank == 1:
+            rank_badge = '<span style="background: #ffd166; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">🏆 BEST MATCH</span>'
+        elif rank == 2:
+            rank_badge = '<span style="background: #e2e8f0; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">2nd</span>'
+        elif rank == 3:
+            rank_badge = '<span style="background: #e2e8f0; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">3rd</span>'
+        
+        st.markdown(f"""
+        <div class="hotspot-card" style="border-color: {demand_color};">
+            <div class="hotspot-info">
+                <div class="hotspot-location">
+                    {region.location}{rank_badge}
+                </div>
+                <div class="hotspot-details">
+                    📍 {region.distance_miles:.0f} miles · 
+                    🚗 {region.stock_level} in stock · 
+                    👥 {region.buyers_waiting} buyers waiting · 
+                    ⏱️ ~{region.days_to_sell} days to sell
+                </div>
+            </div>
+            <div class="hotspot-score">
+                <div class="hotspot-score-value" style="color: {demand_color};">{region.demand_score}</div>
+                <div class="hotspot-score-label">Demand Score</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    @staticmethod
+    def ping_result(result: dict):
+        """Render the ping network result"""
+        st.markdown(f"""
+        <div class="ping-result">
+            <div class="ping-result-header">
+                <span style="font-size: 24px;">📡</span>
+                <span class="ping-result-title">Network Pinged Successfully!</span>
+            </div>
+            <div class="ping-result-stats">
+                <div class="ping-stat">
+                    <div class="ping-stat-value">{result['notifications_sent']}</div>
+                    <div class="ping-stat-label">Locations Notified</div>
+                </div>
+                <div class="ping-stat">
+                    <div class="ping-stat-value">{result['interested_buyers']}</div>
+                    <div class="ping-stat-label">Interested Buyers</div>
+                </div>
+                <div class="ping-stat">
+                    <div class="ping-stat-value">~{result['estimated_sale_days']}d</div>
+                    <div class="ping-stat-label">Est. Time to Sale</div>
+                </div>
+                <div class="ping-stat">
+                    <div class="ping-stat-value">✓</div>
+                    <div class="ping-stat-label">Best: {result['best_match'].split(' - ')[0].replace('Sytner BMW ', '') if result['best_match'] else 'N/A'}</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # ============================================================================
@@ -1104,6 +1949,88 @@ class Sections:
                 
                 if idx < len(recalls) - 1:
                     st.markdown("---")
+    
+    @staticmethod
+    def demand_forecast(vehicle: Vehicle):
+        """Render demand forecast section with regional hotspots"""
+        st.markdown('<div class="content-card">', unsafe_allow_html=True)
+        st.markdown("<h4>📊 Vehicle Demand Forecast</h4>", unsafe_allow_html=True)
+        
+        # Get forecast data
+        forecast = vehicle_service.get_demand_forecast(vehicle)
+        
+        # Render main forecast card
+        Components.demand_forecast_card(forecast, vehicle)
+        
+        # Seasonal insight
+        season_insights = {
+            (Season.SUMMER, VehicleType.SPORTS): "🔥 Peak season for sports cars! Buyers actively searching.",
+            (Season.SUMMER, VehicleType.CONVERTIBLE): "☀️ Convertibles are HOT right now. Expect fast sales.",
+            (Season.WINTER, VehicleType.SUV): "❄️ SUV demand peaks in winter. Great time to sell!",
+            (Season.WINTER, VehicleType.CROSSOVER): "🌨️ Crossovers in high demand for winter conditions.",
+            (Season.WINTER, VehicleType.CONVERTIBLE): "📉 Off-season for convertibles. Consider holding or pricing competitively.",
+            (Season.WINTER, VehicleType.SPORTS): "⚠️ Sports car demand drops in winter. Target indoor showrooms.",
+            (Season.AUTUMN, VehicleType.SUV): "📈 SUV demand rising as winter approaches!",
+            (Season.SPRING, VehicleType.CONVERTIBLE): "🌸 Convertible interest picking up for summer.",
+        }
+        
+        insight_key = (forecast.current_season, forecast.vehicle_type)
+        if insight_key in season_insights:
+            st.info(season_insights[insight_key])
+        
+        st.markdown("---")
+        
+        # Regional hotspots
+        st.markdown("#### 🗺️ Regional Demand Hotspots")
+        st.caption("Locations ranked by demand score — higher scores mean faster sales")
+        
+        # Show top 5 regions
+        for idx, region in enumerate(forecast.regional_demands[:5], 1):
+            Components.regional_hotspot(region, idx)
+        
+        # Expandable for all regions
+        with st.expander(f"View all {len(forecast.regional_demands)} regions"):
+            for idx, region in enumerate(forecast.regional_demands[5:], 6):
+                Components.regional_hotspot(region, idx)
+        
+        st.markdown("---")
+        
+        # Ping Network Feature
+        st.markdown("#### 📡 Ping Network")
+        st.caption("Alert high-demand locations about this vehicle to find buyers faster")
+        
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            hotspot_locations = [r.location.replace("Sytner BMW ", "") for r in forecast.regional_demands if r.is_hotspot]
+            if hotspot_locations:
+                st.markdown(f"**Will notify:** {', '.join(hotspot_locations[:3])}{'...' if len(hotspot_locations) > 3 else ''}")
+            else:
+                st.markdown("**Will notify:** All network locations")
+        
+        with col2:
+            ping_button = st.button(
+                "📡 Ping Network",
+                key="ping_network",
+                use_container_width=True,
+                type="primary"
+            )
+        
+        if ping_button:
+            with st.spinner("Pinging network locations..."):
+                time.sleep(1)  # Simulate network delay
+                result = vehicle_service.ping_network(vehicle, forecast)
+                st.session_state.ping_result = result
+        
+        if st.session_state.get("ping_result"):
+            Components.ping_result(st.session_state.ping_result)
+            
+            # Show which locations were pinged
+            if st.session_state.ping_result.get("locations_pinged"):
+                st.markdown("**📍 Locations notified:**")
+                for loc in st.session_state.ping_result["locations_pinged"]:
+                    st.markdown(f"- ✓ {loc}")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
     @staticmethod
     def valuation(vehicle: Vehicle):
@@ -1356,6 +2283,9 @@ class Pages:
         Sections.vehicle_summary(vehicle, mot_tax, history_flags, open_recalls)
         Sections.mot_history(mot_tax.mot_history)
         Sections.recalls(recalls)
+        
+        # Demand Forecast - NEW FEATURE
+        Sections.demand_forecast(vehicle)
         
         # Insurance quote (simplified)
         with st.expander("🛡️ Insurance Quote"):
