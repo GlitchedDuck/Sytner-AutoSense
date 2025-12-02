@@ -1644,53 +1644,60 @@ class Components:
             DemandLevel.VERY_LOW: 15,
         }[forecast.national_demand]
         
-        st.markdown(f"""
-        <div class="demand-card">
-            <div class="demand-header">
-                <div>
-                    <div class="demand-title">
-                        {forecast.vehicle_type.icon} {forecast.vehicle_type.value} Demand Forecast
-                    </div>
-                    <div class="demand-subtitle">
-                        {vehicle.display_name} · {vehicle.year}
-                    </div>
-                </div>
-                <div>
-                    <span class="season-badge">
-                        {forecast.current_season.icon} {forecast.current_season.display_name}
-                    </span>
-                </div>
+        # Best region days to sell
+        days_to_sell = forecast.best_region.days_to_sell if forecast.best_region else "—"
+        
+        # Build HTML as a single block
+        html = f'''
+<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 24px; border-radius: 16px; color: white; margin-bottom: 20px; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+        <div>
+            <div style="font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">
+                {forecast.vehicle_type.icon} {forecast.vehicle_type.value} Demand Forecast
             </div>
-            
-            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-                <span class="demand-level" style="background: {demand_color};">
-                    {forecast.national_demand.display_name}
-                </span>
-                <span class="{trend_class} trend-indicator">
-                    {trend_icon} {trend_sign}{forecast.trend_percentage}% this season
-                </span>
-            </div>
-            
-            <div class="demand-meter">
-                <div class="demand-meter-fill" style="width: {meter_width}%; background: linear-gradient(90deg, {demand_color} 0%, {Config.ACCENT} 100%);"></div>
-            </div>
-            
-            <div class="demand-stats">
-                <div class="demand-stat">
-                    <div class="demand-stat-value">{forecast.hotspot_count}</div>
-                    <div class="demand-stat-label">Hotspot Regions</div>
-                </div>
-                <div class="demand-stat">
-                    <div class="demand-stat-value">{forecast.best_region.days_to_sell if forecast.best_region else '—'}d</div>
-                    <div class="demand-stat-label">Est. Days to Sell</div>
-                </div>
-                <div class="demand-stat">
-                    <div class="demand-stat-value">+£{forecast.demand_bonus:,}</div>
-                    <div class="demand-stat-label">Demand Bonus</div>
-                </div>
+            <div style="font-size: 13px; opacity: 0.8;">
+                {vehicle.display_name} · {vehicle.year}
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        <div>
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; background: rgba(255, 255, 255, 0.1);">
+                {forecast.current_season.icon} {forecast.current_season.display_name}
+            </span>
+        </div>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px; flex-wrap: wrap;">
+        <span style="padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; background: {demand_color};">
+            {forecast.national_demand.display_name}
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; background: rgba(255, 209, 102, 0.2); color: #ffd166;">
+            {trend_icon} {trend_sign}{forecast.trend_percentage}% this season
+        </span>
+    </div>
+    
+    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 12px; margin: 16px 0; overflow: hidden;">
+        <div style="height: 100%; border-radius: 10px; width: {meter_width}%; background: linear-gradient(90deg, {demand_color} 0%, {Config.ACCENT} 100%);"></div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px;">
+        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
+            <div style="font-family: monospace; font-size: 24px; font-weight: 700; color: {Config.ACCENT};">{forecast.hotspot_count}</div>
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 4px;">Hotspot Regions</div>
+        </div>
+        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
+            <div style="font-family: monospace; font-size: 24px; font-weight: 700; color: {Config.ACCENT};">{days_to_sell}d</div>
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 4px;">Est. Days to Sell</div>
+        </div>
+        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
+            <div style="font-family: monospace; font-size: 24px; font-weight: 700; color: {Config.ACCENT};">+£{forecast.demand_bonus:,}</div>
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 4px;">Demand Bonus</div>
+        </div>
+    </div>
+</div>
+'''
+        st.markdown(html, unsafe_allow_html=True)
     
     @staticmethod
     def regional_hotspot(region: RegionalDemand, rank: int):
@@ -1706,55 +1713,61 @@ class Components:
         elif rank == 3:
             rank_badge = '<span style="background: #e2e8f0; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">3rd</span>'
         
-        st.markdown(f"""
-        <div class="hotspot-card" style="border-color: {demand_color};">
-            <div class="hotspot-info">
-                <div class="hotspot-location">
-                    {region.location}{rank_badge}
-                </div>
-                <div class="hotspot-details">
-                    📍 {region.distance_miles:.0f} miles · 
-                    🚗 {region.stock_level} in stock · 
-                    👥 {region.buyers_waiting} buyers waiting · 
-                    ⏱️ ~{region.days_to_sell} days to sell
-                </div>
-            </div>
-            <div class="hotspot-score">
-                <div class="hotspot-score-value" style="color: {demand_color};">{region.demand_score}</div>
-                <div class="hotspot-score-label">Demand Score</div>
-            </div>
+        html = f'''
+<div style="background: white; border-radius: 12px; padding: 16px; margin: 10px 0; border-left: 4px solid {demand_color}; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <div style="flex: 1;">
+        <div style="font-weight: 600; color: {Config.PRIMARY}; font-size: 15px; margin-bottom: 4px;">
+            {region.location}{rank_badge}
         </div>
-        """, unsafe_allow_html=True)
+        <div style="font-size: 13px; color: {Config.TEXT_MUTED};">
+            📍 {region.distance_miles:.0f} miles · 
+            🚗 {region.stock_level} in stock · 
+            👥 {region.buyers_waiting} buyers waiting · 
+            ⏱️ ~{region.days_to_sell} days to sell
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <div style="font-family: monospace; font-size: 28px; font-weight: 700; color: {demand_color};">{region.demand_score}</div>
+        <div style="font-size: 11px; text-transform: uppercase; color: {Config.TEXT_MUTED};">Demand Score</div>
+    </div>
+</div>
+'''
+        st.markdown(html, unsafe_allow_html=True)
     
     @staticmethod
     def ping_result(result: dict):
         """Render the ping network result"""
-        st.markdown(f"""
-        <div class="ping-result">
-            <div class="ping-result-header">
-                <span style="font-size: 24px;">📡</span>
-                <span class="ping-result-title">Network Pinged Successfully!</span>
-            </div>
-            <div class="ping-result-stats">
-                <div class="ping-stat">
-                    <div class="ping-stat-value">{result['notifications_sent']}</div>
-                    <div class="ping-stat-label">Locations Notified</div>
-                </div>
-                <div class="ping-stat">
-                    <div class="ping-stat-value">{result['interested_buyers']}</div>
-                    <div class="ping-stat-label">Interested Buyers</div>
-                </div>
-                <div class="ping-stat">
-                    <div class="ping-stat-value">~{result['estimated_sale_days']}d</div>
-                    <div class="ping-stat-label">Est. Time to Sale</div>
-                </div>
-                <div class="ping-stat">
-                    <div class="ping-stat-value">✓</div>
-                    <div class="ping-stat-label">Best: {result['best_match'].split(' - ')[0].replace('Sytner BMW ', '') if result['best_match'] else 'N/A'}</div>
-                </div>
-            </div>
+        best_location = result.get('best_match', 'N/A')
+        if best_location and best_location != 'N/A':
+            best_location = best_location.replace('Sytner BMW ', '')
+        
+        html = f'''
+<div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 2px solid {Config.SUCCESS}; border-radius: 12px; padding: 20px; margin-top: 16px;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+        <span style="font-size: 24px;">📡</span>
+        <span style="font-weight: 600; color: {Config.PRIMARY}; font-size: 16px;">Network Pinged Successfully!</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">{result['notifications_sent']}</div>
+            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Locations Notified</div>
         </div>
-        """, unsafe_allow_html=True)
+        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">{result['interested_buyers']}</div>
+            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Interested Buyers</div>
+        </div>
+        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">~{result['estimated_sale_days']}d</div>
+            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Est. Time to Sale</div>
+        </div>
+        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">✓</div>
+            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Best: {best_location}</div>
+        </div>
+    </div>
+</div>
+'''
+        st.markdown(html, unsafe_allow_html=True)
 
 
 # ============================================================================
@@ -1953,13 +1966,10 @@ class Sections:
     @staticmethod
     def demand_forecast(vehicle: Vehicle):
         """Render demand forecast section with regional hotspots"""
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("<h4>📊 Vehicle Demand Forecast</h4>", unsafe_allow_html=True)
-        
         # Get forecast data
         forecast = vehicle_service.get_demand_forecast(vehicle)
         
-        # Render main forecast card
+        # Render main forecast card (self-contained HTML)
         Components.demand_forecast_card(forecast, vehicle)
         
         # Seasonal insight
@@ -1978,11 +1988,13 @@ class Sections:
         if insight_key in season_insights:
             st.info(season_insights[insight_key])
         
-        st.markdown("---")
-        
-        # Regional hotspots
-        st.markdown("#### 🗺️ Regional Demand Hotspots")
-        st.caption("Locations ranked by demand score — higher scores mean faster sales")
+        # Regional hotspots section
+        st.markdown(f"""
+        <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 20px 0; border: 1px solid rgba(0,0,0,0.04);">
+            <h4 style="color: {Config.PRIMARY}; margin: 0 0 8px 0;">🗺️ Regional Demand Hotspots</h4>
+            <p style="color: {Config.TEXT_MUTED}; font-size: 13px; margin: 0 0 16px 0;">Locations ranked by demand score — higher scores mean faster sales</p>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Show top 5 regions
         for idx, region in enumerate(forecast.regional_demands[:5], 1):
@@ -1993,11 +2005,13 @@ class Sections:
             for idx, region in enumerate(forecast.regional_demands[5:], 6):
                 Components.regional_hotspot(region, idx)
         
-        st.markdown("---")
-        
-        # Ping Network Feature
-        st.markdown("#### 📡 Ping Network")
-        st.caption("Alert high-demand locations about this vehicle to find buyers faster")
+        # Ping Network Section
+        st.markdown(f"""
+        <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 20px 0; border: 1px solid rgba(0,0,0,0.04);">
+            <h4 style="color: {Config.PRIMARY}; margin: 0 0 8px 0;">📡 Ping Network</h4>
+            <p style="color: {Config.TEXT_MUTED}; font-size: 13px; margin: 0;">Alert high-demand locations about this vehicle to find buyers faster</p>
+        </div>
+        """, unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
         with col1:
@@ -2029,8 +2043,6 @@ class Sections:
                 st.markdown("**📍 Locations notified:**")
                 for loc in st.session_state.ping_result["locations_pinged"]:
                     st.markdown(f"- ✓ {loc}")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
     
     @staticmethod
     def valuation(vehicle: Vehicle):
