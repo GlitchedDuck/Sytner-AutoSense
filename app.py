@@ -63,28 +63,12 @@ class Config:
     
     # Locations
     GARAGES = [
-    "Sytner BMW Cardiff - Penarth Road",
-    "Sytner BMW Chigwell - Langston Road",
-    "Sytner BMW Coventry - Holyhead Road",
-    "Sytner BMW Harold Wood - Colchester Road",
-    "Sytner BMW High Wycombe - London Road",
-    "Sytner BMW Leicester - Meridian East",
-    "Sytner BMW Luton - Dunstable Road",
-    "Sytner BMW Maidenhead - Bath Road",
-    "Sytner BMW Newport - Usk Way",
-    "Sytner BMW Nottingham - Lenton Lane",
-    "Sytner BMW Oldbury - Wolverhampton Road",
-    "Sytner BMW Sheffield - Brightside Way",
-    "Sytner BMW Shrewsbury - Battlefield Road",
-    "Sytner BMW Solihull - Highlands Road",
-    "Sytner BMW Stevenage - Gunnels Wood Road",
-    "Sytner BMW Sunningdale - London Road",
-    "Sytner BMW Swansea - Carmarthen Road",
-    "Sytner BMW Tamworth - Winchester Road",
-    "Sytner BMW Tring - Cow Roast",
-    "Sytner BMW Warwick - Fusiliers Way",
-    "Sytner BMW Wolverhampton - Lever Street",
-    "Sytner BMW Worcester - Wainwright Road",
+        "Sytner BMW Birmingham - High St",
+        "Sytner BMW Manchester - Oxford Rd",
+        "Sytner BMW London - Park Lane",
+        "Sytner BMW Bristol - Temple Way",
+        "Sytner BMW Solihull - Stratford Rd",
+        "Sytner BMW Coventry - Ring Road",
     ]
     
     TIME_SLOTS = ["09:00 AM", "11:00 AM", "02:00 PM", "04:00 PM"]
@@ -583,49 +567,49 @@ class MockVehicleService(VehicleService):
         # Regional characteristics affect demand
         regions = [
             {
-                "location": "Sytner BMW Warwick",
+                "location": "Sytner BMW Birmingham",
                 "base_modifier": 0,
                 "rural_bonus": False,
                 "affluent": True,
                 "distance": 0,
             },
             {
-                "location": "Sytner BMW Stevenage",
+                "location": "Sytner BMW Manchester",
                 "base_modifier": 5,
                 "rural_bonus": False,
                 "affluent": True,
                 "distance": 85,
             },
             {
-                "location": "Sytner BMW Leicester",
+                "location": "Sytner BMW London - Park Lane",
                 "base_modifier": 10,
                 "rural_bonus": False,
                 "affluent": True,
                 "distance": 120,
             },
             {
-                "location": "Sytner BMW Tamworth",
+                "location": "Sytner BMW Edinburgh",
                 "base_modifier": -5,
                 "rural_bonus": True,
                 "affluent": False,
                 "distance": 290,
             },
             {
-                "location": "Sytner BMW Nottingham",
+                "location": "Sytner BMW Leeds",
                 "base_modifier": 0,
                 "rural_bonus": True,
                 "affluent": False,
                 "distance": 120,
             },
             {
-                "location": "Sytner BMW Coventry",
+                "location": "Sytner BMW Bristol",
                 "base_modifier": 5,
                 "rural_bonus": True,
                 "affluent": True,
                 "distance": 90,
             },
             {
-                "location": "Sytner BMW Solihull",
+                "location": "Sytner BMW Newcastle",
                 "base_modifier": -10,
                 "rural_bonus": True,
                 "affluent": False,
@@ -1983,7 +1967,7 @@ class Sections:
         st.markdown("#### 🏢 Best Offers Across Network")
         
         network_offers = [
-            {"location": "Sytner BMW Tamworth", "value": total_value, "distance": "Current", "is_best": True},
+            {"location": "Sytner BMW Birmingham", "value": total_value, "distance": "Current", "is_best": True},
             {"location": "Sytner BMW Solihull", "value": total_value - 300, "distance": "8 miles", "is_best": False},
             {"location": "Sytner BMW Coventry", "value": total_value - 500, "distance": "15 miles", "is_best": False},
         ]
@@ -2233,7 +2217,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
