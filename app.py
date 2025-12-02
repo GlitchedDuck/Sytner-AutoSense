@@ -323,6 +323,7 @@ div[data-testid="stExpander"] {{
 .stRadio > div[role="radiogroup"] {{
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
 }}
 
 .stRadio > div[role="radiogroup"] > label {{
@@ -333,6 +334,7 @@ div[data-testid="stExpander"] {{
     flex: 1;
     text-align: center;
     color: {TEXT_PRIMARY} !important;
+    min-width: 100px;
 }}
 
 .stRadio > div[role="radiogroup"] > label div {{
@@ -341,6 +343,12 @@ div[data-testid="stExpander"] {{
 
 .stRadio > div[role="radiogroup"] > label span {{
     color: {TEXT_PRIMARY} !important;
+    font-size: 16px !important;
+}}
+
+/* Fix radio button text wrapping */
+.stRadio > div[role="radiogroup"] > label > div {{
+    white-space: nowrap;
 }}
 
 .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] {{
@@ -609,13 +617,32 @@ def show_summary_page():
     st.markdown("<div class='info-card'>", unsafe_allow_html=True)
     st.markdown("<div class='card-title'>Estimated value</div>", unsafe_allow_html=True)
     
-    condition = st.radio(
-        "Condition",
-        ["excellent", "good", "fair", "poor"],
-        index=1,
-        horizontal=True,
-        label_visibility="collapsed"
-    )
+    st.markdown(f"""
+    <div class='value-display'>
+        <div class='car-icon'>🚗</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Condition selector - use columns to prevent wrapping
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        if st.button("Excellent", key="cond_excellent", use_container_width=True):
+            st.session_state.condition = "excellent"
+    with col2:
+        if st.button("Good", key="cond_good", use_container_width=True):
+            st.session_state.condition = "good"
+    with col3:
+        if st.button("Fair", key="cond_fair", use_container_width=True):
+            st.session_state.condition = "fair"
+    with col4:
+        if st.button("Poor", key="cond_poor", use_container_width=True):
+            st.session_state.condition = "poor"
+    
+    # Set default condition if not set
+    if "condition" not in st.session_state:
+        st.session_state.condition = "good"
+    
+    condition = st.session_state.condition
     
     value = estimate_value(
         vehicle["make"],
@@ -627,13 +654,12 @@ def show_summary_page():
     
     st.markdown(f"""
     <div class='value-display'>
-        <div class='car-icon'>🚗</div>
         <div class='value-amount'>£{value:,}</div>
         <div class='value-condition'>{condition.capitalize()} condition</div>
     </div>
     """, unsafe_allow_html=True)
     
-    if st.button("📤 Send to Buyer"):
+    if st.button("📤 Send to Buyer", use_container_width=True):
         st.success("✅ Sent to John Smith")
         st.balloons()
     
