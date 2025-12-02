@@ -1481,17 +1481,12 @@ class Components:
     @staticmethod
     def header():
         """Render application header"""
-        st.markdown(f"""
-        <div class="header-card">
-            <div class="header-title">{Config.APP_NAME}</div>
-            <div class="header-tagline">{Config.APP_TAGLINE}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: linear-gradient(135deg, #0a2f4f 0%, #1a4a6e 100%); color: white; padding: 20px 28px; border-radius: 16px; text-align: center; margin-bottom: 28px; box-shadow: 0 8px 32px rgba(10, 47, 79, 0.25);"><div style="font-family: monospace; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">{Config.APP_NAME}</div><div style="font-size: 14px; opacity: 0.9; margin-top: 6px;">{Config.APP_TAGLINE}</div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def numberplate(reg: str):
         """Render number plate display"""
-        st.markdown(f'<div class="numberplate">{reg}</div>', unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 3px solid #0a2f4f; border-radius: 10px; padding: 14px 28px; font-family: monospace; font-size: 32px; font-weight: 700; color: #0a2f4f; text-align: center; margin: 0 auto 28px; max-width: 280px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); letter-spacing: 2px;">{reg}</div>""", unsafe_allow_html=True)
     
     @staticmethod
     def status_badges(history_flags: HistoryFlags, open_recall_count: int):
@@ -1499,61 +1494,41 @@ class Components:
         badges = []
         
         if history_flags.write_off:
-            badges.append('<span class="badge badge-error">Write-off</span>')
+            badges.append('<span style="padding: 5px 12px; border-radius: 20px; background: linear-gradient(135deg, #ef476f 0%, #dc2f5a 100%); color: white; font-size: 12px; font-weight: 600; margin-right: 4px;">Write-off</span>')
         if history_flags.theft:
-            badges.append('<span class="badge badge-error">Theft Record</span>')
+            badges.append('<span style="padding: 5px 12px; border-radius: 20px; background: linear-gradient(135deg, #ef476f 0%, #dc2f5a 100%); color: white; font-size: 12px; font-weight: 600; margin-right: 4px;">Theft Record</span>')
         if history_flags.mileage_anomaly:
-            badges.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+            badges.append('<span style="padding: 5px 12px; border-radius: 20px; background: linear-gradient(135deg, #ffd166 0%, #f5c842 100%); color: #1a1a2e; font-size: 12px; font-weight: 600; margin-right: 4px;">Mileage Anomaly</span>')
         if open_recall_count > 0:
-            badges.append(f'<span class="badge badge-warning">{open_recall_count} Open Recall(s)</span>')
+            badges.append(f'<span style="padding: 5px 12px; border-radius: 20px; background: linear-gradient(135deg, #ffd166 0%, #f5c842 100%); color: #1a1a2e; font-size: 12px; font-weight: 600; margin-right: 4px;">{open_recall_count} Open Recall(s)</span>')
         
         if not badges:
-            badges.append('<span class="badge badge-success">No Issues Found</span>')
+            badges.append('<span style="padding: 5px 12px; border-radius: 20px; background: linear-gradient(135deg, #06d6a0 0%, #05c793 100%); color: white; font-size: 12px; font-weight: 600;">No Issues Found</span>')
         
         st.markdown(f'<p><strong>Status:</strong> {" ".join(badges)}</p>', unsafe_allow_html=True)
     
     @staticmethod
     def valuation_display(value: int, condition: str, total_with_bonuses: int):
         """Render valuation display"""
-        st.markdown(f"""
-        <div class="valuation-box">
-            <div class="valuation-label">Total Offer Value</div>
-            <div class="valuation-value">£{total_with_bonuses:,}</div>
-            <div class="valuation-note">
-                Base: £{value:,} ({condition}) + bonuses | 
-                Valid for {Config.VALUATION_VALIDITY_HOURS} hours
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 20px; border-radius: 12px; border-left: 5px solid #ffd166; margin: 20px 0;"><div style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">Total Offer Value</div><div style="font-family: monospace; font-size: 42px; font-weight: 700; color: #0a2f4f;">£{total_with_bonuses:,}</div><div style="font-size: 13px; color: #6b7280; margin-top: 8px;">Base: £{value:,} ({condition}) + bonuses | Valid for {Config.VALUATION_VALIDITY_HOURS} hours</div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def bonus_item(label: str, value: int, description: str):
         """Render a bonus item"""
-        st.markdown(f"""
-        <div class="bonus-item">
-            <span class="bonus-label">{label}:</span>
-            <span class="bonus-value"> +£{value:,}</span>
-            <div style="font-size: 13px; color: #6b7280; margin-top: 4px;">{description}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding: 14px 18px; border-radius: 10px; border-left: 4px solid #06d6a0; margin: 8px 0;"><span style="font-weight: 600; color: #0a2f4f; font-size: 14px;">{label}:</span><span style="color: #06d6a0; font-weight: 700; font-size: 16px;"> +£{value:,}</span><div style="font-size: 13px; color: #6b7280; margin-top: 4px;">{description}</div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def network_comparison(offers: list[dict], trade_in_value: int):
         """Render network price comparison"""
         for offer in offers:
-            best_badge = '<span class="network-best">BEST OFFER</span>' if offer.get('is_best') else ''
-            st.markdown(f"""
-            <div class="network-row">
-                <div>
-                    <span class="network-location">{offer['location']}</span>
-                    {best_badge}
-                </div>
-                <div>
-                    <span class="network-price">£{offer['value']:,}</span>
-                    <span class="network-distance"> · {offer['distance']}</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            col1, col2 = st.columns([3, 2])
+            with col1:
+                if offer.get('is_best'):
+                    st.markdown(f"**{offer['location']}** <span style='background: #06d6a0; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;'>BEST OFFER</span>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"**{offer['location']}**")
+            with col2:
+                st.markdown(f"**£{offer['value']:,}** · {offer['distance']}")
     
     @staticmethod
     def upgrade_option(model: str, year: int, price: int, monthly: int, trade_in_value: int):
@@ -1561,39 +1536,12 @@ class Components:
         deposit_needed = max(0, price - trade_in_value)
         coverage_pct = min(100, int((trade_in_value / price) * 100))
         
-        st.markdown(f"""
-        <div class="upgrade-card">
-            <div class="upgrade-title">{model} ({year})</div>
-            <div class="upgrade-details">
-                <strong>£{price:,}</strong> · 
-                £{deposit_needed:,} additional · 
-                From <strong>£{monthly}/month</strong>
-            </div>
-            <div class="upgrade-coverage">
-                Your trade-in covers {coverage_pct}% of the price
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: #f8fafc; padding: 18px; border-radius: 10px; margin: 14px 0; border-left: 4px solid #0a2f4f;"><div style="font-size: 17px; font-weight: 600; color: #0a2f4f; margin-bottom: 8px;">{model} ({year})</div><div style="font-size: 14px; color: #6b7280;"><strong>£{price:,}</strong> · £{deposit_needed:,} additional · From <strong>£{monthly}/month</strong></div><div style="font-size: 13px; color: #00b4d8; margin-top: 8px; font-weight: 500;">Your trade-in covers {coverage_pct}% of the price</div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def trust_indicators():
         """Render trust indicators"""
-        st.markdown(f"""
-        <div class="trust-section">
-            <div class="trust-label">Trusted by Sytner Staff Nationwide</div>
-            <div class="trust-items">
-                <div class="trust-item">
-                    <span class="trust-check">✓</span> Full DVLA Integration
-                </div>
-                <div class="trust-item">
-                    <span class="trust-check">✓</span> Real-time MOT Data
-                </div>
-                <div class="trust-item">
-                    <span class="trust-check">✓</span> Secure & Compliant
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div style="background: white; padding: 28px; border-radius: 16px; text-align: center; margin-top: 48px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);"><div style="color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 16px;">Trusted by Sytner Staff Nationwide</div><div style="display: flex; justify-content: center; gap: 36px; flex-wrap: wrap;"><span style="color: #0a2f4f; font-size: 14px;"><span style="color: #06d6a0; font-weight: 700;">✓</span> Full DVLA Integration</span><span style="color: #0a2f4f; font-size: 14px;"><span style="color: #06d6a0; font-weight: 700;">✓</span> Real-time MOT Data</span><span style="color: #0a2f4f; font-size: 14px;"><span style="color: #06d6a0; font-weight: 700;">✓</span> Secure & Compliant</span></div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def feature_cards():
@@ -1608,12 +1556,7 @@ class Components:
         
         for col, (title, desc) in zip([col1, col2, col3], features):
             with col:
-                st.markdown(f"""
-                <div class="feature-card">
-                    <div class="feature-title">{title}</div>
-                    <div class="feature-desc">{desc}</div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f"""<div style="text-align: center; padding: 24px 16px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);"><div style="font-weight: 600; color: #0a2f4f; margin-bottom: 8px; font-size: 16px;">{title}</div><div style="font-size: 14px; color: #6b7280; line-height: 1.5;">{desc}</div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def demand_forecast_card(forecast: DemandForecast, vehicle: Vehicle):
@@ -2119,26 +2062,7 @@ class Pages:
     def input_page():
         """Render the vehicle input page"""
         # Hero section
-        st.markdown(f"""
-        <div class="hero">
-            <h1>Instant Trade-In Valuation</h1>
-            <p>Get competitive offers in seconds · Complete deals in minutes</p>
-            <div class="stats-row">
-                <div class="stat-item">
-                    <div class="stat-value">30 min</div>
-                    <div class="stat-label">Average completion</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">15+</div>
-                    <div class="stat-label">Network locations</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">£500+</div>
-                    <div class="stat-label">Bonus opportunities</div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div style="background: linear-gradient(135deg, #0a2f4f 0%, #00b4d8 100%); padding: 48px 32px; border-radius: 20px; margin-bottom: 36px; text-align: center; position: relative; overflow: hidden;"><h1 style="color: white; font-size: 38px; font-weight: 700; margin: 0 0 12px 0;">Instant Trade-In Valuation</h1><p style="color: rgba(255, 255, 255, 0.95); font-size: 18px; margin: 0 0 32px 0;">Get competitive offers in seconds · Complete deals in minutes</p><div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;"><div style="text-align: center;"><div style="font-family: monospace; font-size: 36px; font-weight: 700; color: white;">30 min</div><div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px;">Average completion</div></div><div style="text-align: center;"><div style="font-family: monospace; font-size: 36px; font-weight: 700; color: white;">15+</div><div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px;">Network locations</div></div><div style="text-align: center;"><div style="font-family: monospace; font-size: 36px; font-weight: 700; color: white;">£500+</div><div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px;">Bonus opportunities</div></div></div></div>""", unsafe_allow_html=True)
         
         # Feature cards
         Components.feature_cards()
