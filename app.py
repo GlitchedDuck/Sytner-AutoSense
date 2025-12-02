@@ -1,27 +1,9 @@
-# Sytner AutoSense - Landing Page POC
 import streamlit as st
 from PIL import Image, ImageOps
-import io, datetime, json, re
+import datetime, re, json
 
 # -------------------------
-# OCR Libraries (same as before)
-# -------------------------
-EASYOCR_AVAILABLE = False
-PYTESSERACT_AVAILABLE = False
-try:
-    import easyocr
-    EASYOCR_AVAILABLE = True
-except Exception:
-    EASYOCR_AVAILABLE = False
-
-try:
-    import pytesseract
-    PYTESSERACT_AVAILABLE = True
-except Exception:
-    PYTESSERACT_AVAILABLE = False
-
-# -------------------------
-# Mock / Helpers (same as before)
+# Mock / Helpers
 # -------------------------
 def lookup_vehicle_basic(reg):
     reg = reg.upper().replace(" ", "")
@@ -46,10 +28,10 @@ def lookup_mot_and_tax(reg):
     }
 
 def lookup_recalls(reg_or_vin):
-    return [{"id": "R-2023-001", "summary": "Airbag inflator recall - replace module", "open": True}]
-
-def lookup_history_flags(reg):
-    return {"write_off": False, "theft": False, "mileage_anomaly": True, "note": "Mileage shows a 5,000 jump in 2021 record"}
+    return [
+        {"id": "R-2023-001", "summary": "Airbag inflator recall - replace module", "open": True},
+        {"id": "R-2022-012", "summary": "Steering column check", "open": False}
+    ]
 
 def estimate_value(make, model, year, mileage, condition="good"):
     age = datetime.date.today().year - year
@@ -60,19 +42,47 @@ def estimate_value(make, model, year, mileage, condition="good"):
 PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 
 # -------------------------
-# Streamlit Config
+# Streamlit config + theming
 # -------------------------
 st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
 PRIMARY = "#0b3b6f"
+ACCENT = "#1e90ff"
+PAGE_BG = "#e6f0fa"
 
-# Header
 st.markdown(f"""
-<div style="display:flex;align-items:center;gap:12px">
-  <div style="background:{PRIMARY};padding:10px 14px;border-radius:8px;color:white;font-weight:700;">Sytner</div>
-  <div style="font-size:22px;font-weight:700;color:{PRIMARY};">AutoSense — POC</div>
-</div>
+<style>
+[data-testid="stAppViewContainer"] {{
+    background-color: {PAGE_BG};
+}}
+.header-card {{
+    background-color: {PRIMARY};
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+}}
+.content-card {{
+    background-color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
+}}
+.stButton>button {{
+    background-color: {ACCENT};
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+}}
+</style>
 """, unsafe_allow_html=True)
 
+# -------------------------
+# Header
+# -------------------------
+st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_allow_html=True)
 st.markdown("## Welcome to AutoSense")
 st.write("Start by entering a vehicle registration / VIN or take a photo of the number plate.")
 
@@ -80,7 +90,6 @@ st.write("Start by entering a vehicle registration / VIN or take a photo of the 
 # Landing Page Options
 # -------------------------
 option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0)
-
 reg = None
 image = None
 
@@ -88,27 +97,21 @@ if option == "Enter Registration / VIN":
     manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
     if manual_reg:
         reg = manual_reg.strip().upper().replace(" ", "")
-
 elif option == "Take Photo":
     if st.button("Open Camera"):
-        # Only show camera input when button is clicked
-        image = st.camera_input("Take photo of the number plate")
+        image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
 
-# Stop until either reg or image is provided
 if not reg and not image:
     st.info("Provide a registration or take a photo to proceed.")
     st.stop()
 
 # -------------------------
-# If image is provided, show preview and run OCR
+# Image preview / mock OCR
 # -------------------------
-ocr_texts = []
 if image:
     st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
-    st.info("OCR will run here (EasyOCR or pytesseract) in full app version.")
-    # Placeholder: in full version, run OCR and extract reg
-    st.warning("OCR is mocked in this landing page POC.")
-    reg = "KT68XYZ"  # Mocked extracted reg for demo
+    st.warning("OCR is mocked in this demo. Extracted reg will be used for summary.")
+    reg = "KT68XYZ"
 
 # -------------------------
 # Fetch mocked data
@@ -116,15 +119,66 @@ if image:
 vehicle = lookup_vehicle_basic(reg)
 mot_tax = lookup_mot_and_tax(reg)
 recalls = lookup_recalls(reg)
-history_flags = lookup_history_flags(reg)
-value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], "good")
 
 # -------------------------
-# Summary Metrics
+# Valuation Card with condition selector
 # -------------------------
-st.markdown("---")
-st.markdown("### Vehicle Summary")
-col1, col2, col3 = st.columns(3)
-col1.metric("Estimated Value", f"£{value:,}", "Good")
-col2.metric("Next MOT", mot_tax['mot_next_due'])
-col3.metric("Open Recalls", sum(1 for r in recalls if r['open']))
+st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+st.subheader("Vehicle Valuation")
+condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
+value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
+st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
+
+# -------------------------
+# Vehicle Summary Card
+# -------------------------
+st.markdown(f"""
+<div class='content-card'>
+<h4>Vehicle Summary</h4>
+<p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
+<p><strong>Year:</strong> {vehicle['year']}</p>
+<p><strong>VIN:</strong> {vehicle['vin']}</p>
+<p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
+<p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
+</div>
+""", unsafe_allow_html=True)
+
+# -------------------------
+# MOT History Card (expandable)
+# -------------------------
+with st.expander("MOT History"):
+    for t in mot_tax['mot_history']:
+        st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
+
+# -------------------------
+# Recalls Card (expandable)
+# -------------------------
+with st.expander("Recalls"):
+    for r in recalls:
+        status = "Open ⚠️" if r['open'] else "Closed ✅"
+        st.write(f"- {r['summary']} — ID: {r['id']} ({status})")
+
+# -------------------------
+# Insurance Card (mock)
+# -------------------------
+st.markdown("<div class='content-card'><h4>Insurance (Mock)</h4>", unsafe_allow_html=True)
+st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
+if st.button('Get a mock insurance quote'):
+    st.success('Sample quote: £320/year (3rd party, excess £250)')
+st.markdown("</div>", unsafe_allow_html=True)
+
+# -------------------------
+# Snapshot Download
+# -------------------------
+st.markdown("<div class='content-card'><h4>Snapshot</h4>", unsafe_allow_html=True)
+snapshot = {
+    "vehicle": vehicle,
+    "mot_tax": mot_tax,
+    "recalls": recalls,
+    "valuation": {"value": value, "condition": condition},
+    "queried_at": datetime.datetime.utcnow().isoformat()
+}
+st.download_button("Download JSON snapshot", data=json.dumps(snapshot, indent=2),
+                   file_name=f"{reg}_snapshot.json", mime='application/json')
+st.markdown("</div>", unsafe_allow_html=True)
