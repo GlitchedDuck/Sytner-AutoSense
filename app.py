@@ -206,9 +206,8 @@ def render_header():
     """Render the application header"""
     st.markdown(f"""
     <div class='header-card' style='background: linear-gradient(135deg, {PRIMARY} 0%, #1a4d7a 100%);'>
-        <div style='display: flex; align-items: center; justify-content: center; gap: 12px;'>
-            <span style='font-size: 32px;'>⚡</span>
-            <div>
+        <div style='display: flex; align-items: center; justify-content: center;'>
+            <div style='text-align: center;'>
                 <div style='font-size: 28px; font-weight: 700;'>Sytner TradeSnap</div>
                 <div style='font-size: 14px; opacity: 0.9; font-weight: 400;'>Snap it. Value it. Done.</div>
             </div>
@@ -388,7 +387,7 @@ def render_recalls(recalls):
 
 def render_upgrade_options(vehicle):
     """Show what customers could upgrade to with their trade-in"""
-    st.markdown("#### 🚗 What Could You Drive Away In?")
+    st.markdown("#### What Could You Drive Away In?")
     st.markdown("*Based on your trade-in value + typical finance options*")
     
     trade_in_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
@@ -399,7 +398,6 @@ def render_upgrade_options(vehicle):
             "model": "BMW 5 Series 530e M Sport",
             "year": 2023,
             "price": 45000,
-            "image_emoji": "🚙",
             "monthly": 520,
             "deposit_needed": 45000 - trade_in_value
         },
@@ -407,7 +405,6 @@ def render_upgrade_options(vehicle):
             "model": "BMW X3 xDrive30e",
             "year": 2024,
             "price": 52000,
-            "image_emoji": "🚗",
             "monthly": 580,
             "deposit_needed": 52000 - trade_in_value
         },
@@ -415,7 +412,6 @@ def render_upgrade_options(vehicle):
             "model": "BMW 4 Series 420i Coupe",
             "year": 2023,
             "price": 38000,
-            "image_emoji": "🏎️",
             "monthly": 420,
             "deposit_needed": 38000 - trade_in_value
         }
@@ -424,24 +420,24 @@ def render_upgrade_options(vehicle):
     for car in upgrade_options:
         st.markdown(f"""
         <div style='background-color: #f8f9fa; padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 4px solid {PRIMARY};'>
-            <p style='margin: 0; font-size: 18px;'><strong>{car['image_emoji']} {car['model']}</strong> ({car['year']})</p>
+            <p style='margin: 0; font-size: 18px;'><strong>{car['model']}</strong> ({car['year']})</p>
             <p style='margin: 8px 0; color: #666;'>
-                💰 <strong>£{car['price']:,}</strong> | 
-                📉 £{car['deposit_needed']:,} additional needed | 
-                💳 From <strong>£{car['monthly']}/month</strong>
+                <strong>£{car['price']:,}</strong> | 
+                £{car['deposit_needed']:,} additional needed | 
+                From <strong>£{car['monthly']}/month</strong>
             </p>
             <p style='margin: 8px 0 0 0; font-size: 13px; color: {ACCENT};'>
-                ✅ Your £{trade_in_value:,} trade-in covers {int((trade_in_value/car['price'])*100)}% of the price
+                Your £{trade_in_value:,} trade-in covers {int((trade_in_value/car['price'])*100)}% of the price
             </p>
         </div>
         """, unsafe_allow_html=True)
     
-    st.info("💡 **Speak to our sales team** about part-exchange deals and finance options")
+    st.info("Speak to our sales team about part-exchange deals and finance options")
 
 def render_inspection_booking(vehicle, offer_value):
     """Render instant inspection booking form"""
     st.markdown("---")
-    st.markdown("### 📅 Book Instant Inspection")
+    st.markdown("### Book Instant Inspection")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -470,7 +466,7 @@ def render_inspection_booking(vehicle, offer_value):
     
     st.markdown(f"""
     <div style='background-color: #e3f2fd; padding: 12px; border-radius: 8px; margin: 12px 0;'>
-        <p style='margin: 0; font-size: 14px;'><strong>✅ What happens next:</strong></p>
+        <p style='margin: 0; font-size: 14px;'><strong>What happens next:</strong></p>
         <ul style='margin: 8px 0 0 0; font-size: 13px;'>
             <li>Inspection takes 15-20 minutes</li>
             <li>Instant offer confirmation</li>
@@ -509,7 +505,7 @@ def render_inspection_booking(vehicle, offer_value):
 def render_valuation(vehicle):
     """Render valuation card with deal accelerator"""
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("<h4>💰 Instant Trade-In Valuation</h4>", unsafe_allow_html=True)
+    st.markdown("<h4>Instant Trade-In Valuation</h4>", unsafe_allow_html=True)
     
     condition = st.radio(
         "Select vehicle condition",
@@ -527,22 +523,22 @@ def render_valuation(vehicle):
     <p style='color: #666;'><em>Condition: {condition.capitalize()}</em></p>
     """, unsafe_allow_html=True)
     
-    # NEW: Deal Accelerator
+    # Deal Accelerator
     st.markdown("---")
-    st.markdown("### 🚀 Deal Accelerator")
+    st.markdown("### Deal Accelerator")
     
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**💡 Stock Priority Bonus:**")
+        st.markdown("**Stock Priority Bonus:**")
         st.success("**+£500** - We need this model!")
     with col2:
-        st.markdown("**⚡ Same-Day Completion:**")
+        st.markdown("**Same-Day Completion:**")
         st.info("**+£200** if completed today")
     
     total_value = value + 700
     st.markdown(f"""
     <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 16px 0;'>
-        <p style='margin: 0; font-size: 16px;'><strong>🎯 Total Offer:</strong> 
+        <p style='margin: 0; font-size: 16px;'><strong>Total Offer:</strong> 
         <span style='color: {PRIMARY}; font-size: 32px; font-weight: 700;'>£{total_value:,}</span></p>
         <p style='margin: 8px 0 0 0; color: #666; font-size: 14px;'><em>Valid for 48 hours | Instant payment available</em></p>
     </div>
@@ -551,9 +547,9 @@ def render_valuation(vehicle):
     st.markdown("---")
     
     # Network comparison
-    st.markdown("#### 📍 Best Offers Across Sytner Network")
+    st.markdown("#### Best Offers Across Sytner Network")
     network_data = [
-        {"location": "Sytner BMW Birmingham", "offer": total_value, "distance": "Current", "badge": "🏆 Best Offer"},
+        {"location": "Sytner BMW Birmingham", "offer": total_value, "distance": "Current", "badge": "Best Offer"},
         {"location": "Sytner BMW Solihull", "offer": total_value - 300, "distance": "8 miles", "badge": ""},
         {"location": "Sytner BMW Coventry", "offer": total_value - 500, "distance": "15 miles", "badge": ""},
     ]
@@ -561,7 +557,7 @@ def render_valuation(vehicle):
     for loc in network_data:
         col_a, col_b, col_c = st.columns([2, 1, 1])
         with col_a:
-            badge = f" {loc['badge']}" if loc['badge'] else ""
+            badge = f" - {loc['badge']}" if loc['badge'] else ""
             st.markdown(f"**{loc['location']}**{badge}")
         with col_b:
             st.markdown(f"**£{loc['offer']:,}**")
@@ -573,10 +569,10 @@ def render_valuation(vehicle):
     # Instant booking
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**👤 Assigned Vehicle Buyer:** John Smith")
+        st.markdown("**Assigned Vehicle Buyer:** John Smith")
         st.caption("📞 01234 567890 | 📧 john.smith@sytner.co.uk")
     with col2:
-        if st.button("📅 Book Inspection Slot", key="book_inspection", use_container_width=True, type="primary"):
+        if st.button("Book Inspection Slot", key="book_inspection", use_container_width=True, type="primary"):
             st.session_state.show_booking = True
             st.rerun()
     
