@@ -66,12 +66,12 @@ st.set_page_config(
     layout="centered"
 )
 
-# Color scheme - Dark blue iOS style
+# Color scheme - Dark blue iOS style with better contrast
 DARK_BG = "#0a2540"
-CARD_BG = "#1a3a5c"
+CARD_BG = "#1e405f"
 TEXT_PRIMARY = "#ffffff"
-TEXT_SECONDARY = "#a0b8d0"
-ACCENT = "#4a9eff"
+TEXT_SECONDARY = "#b8d0e8"
+ACCENT = "#5db0ff"
 SUCCESS = "#34c759"
 
 # Custom CSS
@@ -143,18 +143,18 @@ header {{visibility: hidden;}}
 }}
 
 .card-title {{
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
     color: {TEXT_PRIMARY};
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }}
 
 .status-row {{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
 }}
 
 .status-row:last-child {{
@@ -165,15 +165,16 @@ header {{visibility: hidden;}}
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 18px;
+    font-size: 20px;
     color: {TEXT_PRIMARY};
-    font-weight: 500;
+    font-weight: 600;
 }}
 
 .status-value {{
-    font-size: 16px;
+    font-size: 17px;
     color: {TEXT_SECONDARY};
     text-align: right;
+    font-weight: 500;
 }}
 
 .check-icon {{
@@ -254,15 +255,16 @@ header {{visibility: hidden;}}
 }}
 
 .recall-title {{
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 22px;
+    font-weight: 700;
     color: {TEXT_PRIMARY};
 }}
 
 .recall-subtitle {{
-    font-size: 14px;
+    font-size: 16px;
     color: {TEXT_SECONDARY};
     margin-top: 4px;
+    font-weight: 500;
 }}
 
 .chevron {{
