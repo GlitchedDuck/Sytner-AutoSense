@@ -81,6 +81,17 @@ st.markdown(f"""
     font-weight: 600;
     border-radius: 8px;
 }}
+.numberplate {{
+    background-color: #fff;
+    border: 2px solid {PRIMARY};
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 28px;
+    font-weight: 700;
+    color: {PRIMARY};
+    text-align: center;
+    margin-bottom: 24px;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -88,100 +99,88 @@ st.markdown(f"""
 # Header
 # -------------------------
 st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_allow_html=True)
-st.markdown("## Welcome to AutoSense")
-st.write("Start by entering a vehicle registration / VIN or take a photo of the number plate.")
 
 # -------------------------
-# Landing Page Options
+# Session state for entered reg
 # -------------------------
-option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0)
-reg = None
-image = None
-
-if option == "Enter Registration / VIN":
-    manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
-    if manual_reg:
-        reg = manual_reg.strip().upper().replace(" ", "")
-elif option == "Take Photo":
-    if st.button("Open Camera"):
-        image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
-
-if not reg and not image:
-    st.info("Provide a registration or take a photo to proceed.")
-    st.stop()
+if "reg" not in st.session_state:
+    st.session_state.reg = None
+if "image" not in st.session_state:
+    st.session_state.image = None
 
 # -------------------------
-# Image preview / mock OCR
+# Input page
 # -------------------------
-if image:
-    st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
-    st.warning("OCR is mocked in this demo. Extracted reg will be used for summary.")
-    reg = "KT68XYZ"
+if st.session_state.reg is None:
+    st.markdown("## Enter Vehicle Registration or Take Photo")
+    option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0)
+
+    if option == "Enter Registration / VIN":
+        manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
+        if manual_reg:
+            st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
+    elif option == "Take Photo":
+        if st.button("Open Camera"):
+            st.session_state.image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
+            if st.session_state.image:
+                st.session_state.reg = "KT68XYZ"  # Mock OCR extraction
 
 # -------------------------
-# Fetch mocked data
+# Summary page
 # -------------------------
-vehicle = lookup_vehicle_basic(reg)
-mot_tax = lookup_mot_and_tax(reg)
-recalls = lookup_recalls(reg)
+if st.session_state.reg:
+    reg = st.session_state.reg
+    image = st.session_state.image
 
-# -------------------------
-# Valuation Card
-# -------------------------
-st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
-condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
-value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
-st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
+    # Display numberplate
+    if image:
+        st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
+    st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
 
-# -------------------------
-# Vehicle Summary Card
-# -------------------------
-st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
-st.markdown(f"""
-<p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
-<p><strong>Year:</strong> {vehicle['year']}</p>
-<p><strong>VIN:</strong> {vehicle['vin']}</p>
-<p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
-<p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
-""", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
+    # Fetch data
+    vehicle = lookup_vehicle_basic(reg)
+    mot_tax = lookup_mot_and_tax(reg)
+    recalls = lookup_recalls(reg)
 
-# -------------------------
-# MOT History Card (expandable)
-# -------------------------
-with st.expander("MOT History"):
-    for t in mot_tax['mot_history']:
-        st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
+    # Vehicle Summary
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
+    <p><strong>Year:</strong> {vehicle['year']}</p>
+    <p><strong>VIN:</strong> {vehicle['vin']}</p>
+    <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
+    <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
+    """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# -------------------------
-# Recalls Card (expandable)
-# -------------------------
-with st.expander("Recalls"):
-    for r in recalls:
-        status = "Open ⚠️" if r['open'] else "Closed ✅"
-        st.write(f"- {r['summary']} — ID: {r['id']} ({status})")
+    # MOT History
+    with st.expander("MOT History"):
+        for t in mot_tax['mot_history']:
+            st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
 
-# -------------------------
-# Insurance Card (mock)
-# -------------------------
-with st.expander("Insurance (Mock)"):
-    st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
-    if st.button('Get a mock insurance quote'):
-        st.success('Sample quote: £320/year (3rd party, excess £250)')
+    # Recalls
+    with st.expander("Recalls"):
+        for r in recalls:
+            status = "Open ⚠️" if r['open'] else "Closed ✅"
+            st.write(f"- {r['summary']} — ID: {r['id']} ({status})")
 
-# -------------------------
-# Snapshot Download Card
-# -------------------------
-with st.expander("Snapshot"):
-    snapshot = {
-        "vehicle": vehicle,
-        "mot_tax": mot_tax,
-        "recalls": recalls,
-        "valuation": {"value": value, "condition": condition},
-        "queried_at": datetime.datetime.utcnow().isoformat()
-    }
-    st.download_button("Download JSON snapshot", data=json.dumps(snapshot, indent=2),
-                       file_name=f"{reg}_snapshot.json", mime='application/json')
+    # Insurance
+    with st.expander("Insurance (Mock)"):
+        st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
+        if st.button('Get a mock insurance quote'):
+            st.success('Sample quote: £320/year (3rd party, excess £250)')
+
+    # Valuation at the bottom with "Send to Buyer"
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
+    condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
+    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
+    st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
+
+    # Mock "Send to Sytner Buyer"
+    if st.button("Send to Sytner Buyer"):
+        st.success("Sent successfully!")
+
+    st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
