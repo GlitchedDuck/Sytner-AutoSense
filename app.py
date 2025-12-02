@@ -42,12 +42,12 @@ def estimate_value(make, model, year, mileage, condition="good"):
 PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 
 # -------------------------
-# Streamlit config + theming
+# Streamlit config + CSS
 # -------------------------
 st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
 PRIMARY = "#0b3b6f"
 ACCENT = "#1e90ff"
-PAGE_BG = "#0b3b6f"  # dark blue background
+PAGE_BG = "#e6f0fa"
 
 st.markdown(f"""
 <style>
@@ -59,7 +59,7 @@ st.markdown(f"""
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
@@ -70,10 +70,7 @@ st.markdown(f"""
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 16px;
-}}
-.content-card h4 {{
-    margin-top: 0;
-    margin-bottom: 8px;
+    color: {PRIMARY};
 }}
 .stButton>button {{
     background-color: {ACCENT};
@@ -102,12 +99,6 @@ st.markdown(f"""
 .badge-warning {{background-color: #ff9800;}}
 .badge-error {{background-color: #f44336;}}
 .badge-info {{background-color: #0b3b6f;}}
-.centered {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -117,29 +108,26 @@ st.markdown(f"""
 st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_allow_html=True)
 
 # -------------------------
-# Session state
+# Session state defaults
 # -------------------------
 if "reg" not in st.session_state: st.session_state.reg = None
 if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
-# Reset / Change registration
+# Reset / Change Registration
 # -------------------------
-def reset_app():
-    st.session_state.reg = None
-    st.session_state.image = None
-    st.session_state.show_summary = False
-    st.stop()  # stops execution and forces rerender
-
 if st.session_state.show_summary:
-    st.button("Reset / Change Registration", on_click=reset_app)
+    if st.button("Reset / Change Registration"):
+        st.session_state.reg = None
+        st.session_state.image = None
+        st.session_state.show_summary = False
 
 # -------------------------
 # Input page
 # -------------------------
 if not st.session_state.show_summary:
-    st.markdown("## Enter Vehicle Registration or Take Photo", unsafe_allow_html=True)
+    st.markdown("## Enter Vehicle Registration or Take Photo")
     option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0, horizontal=True)
 
     if option == "Enter Registration / VIN":
@@ -147,14 +135,12 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
-            st.stop()
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate (use rear camera if possible)")
+        image = st.camera_input("Take photo of the number plate", key="camera", help="Use rear camera if possible")
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
-            st.stop()
 
 # -------------------------
 # Summary page
@@ -162,8 +148,6 @@ if not st.session_state.show_summary:
 if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
-
-    st.markdown("<div class='centered'>", unsafe_allow_html=True)
 
     # Display numberplate
     if image:
@@ -239,6 +223,4 @@ if st.session_state.show_summary and st.session_state.reg:
     if st.button("Send to Sytner Buyer"):
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("</div>", unsafe_allow_html=True)
