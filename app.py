@@ -1,13 +1,11 @@
 import streamlit as st
 from PIL import Image, ImageOps
-import datetime
-import re
+import datetime, re
 
 # -------------------------
-# Mock Data Functions
+# Mock / Helpers
 # -------------------------
 def lookup_vehicle_basic(reg):
-    """Mock vehicle lookup - replace with real API"""
     reg = reg.upper().replace(" ", "")
     return {
         "reg": reg,
@@ -19,7 +17,6 @@ def lookup_vehicle_basic(reg):
     }
 
 def lookup_mot_and_tax(reg):
-    """Mock MOT and tax lookup - replace with DVLA API"""
     today = datetime.date.today()
     return {
         "mot_next_due": (today + datetime.timedelta(days=120)).isoformat(),
@@ -31,666 +28,199 @@ def lookup_mot_and_tax(reg):
     }
 
 def lookup_recalls(reg_or_vin):
-    """Mock recall lookup - replace with DVSA API"""
     return [
         {"id": "R-2023-001", "summary": "Airbag inflator recall - replace module", "open": True},
         {"id": "R-2022-012", "summary": "Steering column check", "open": False}
     ]
 
-def get_history_flags(reg):
-    """Mock history check - replace with HPI/Experian API"""
-    return {
+def estimate_value(make, model, year, mileage, condition="good"):
+    age = datetime.date.today().year - year
+    base = 25000 - (age * 2000) - (mileage / 10)
+    cond_multiplier = {"excellent": 1.05, "good": 1.0, "fair": 0.9, "poor": 0.8}
+    return max(100, int(base * cond_multiplier.get(condition, 1.0)))
+
+PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
+
+# -------------------------
+# Streamlit config + CSS
+# -------------------------
+st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
+PRIMARY = "#0b3b6f"
+ACCENT = "#1e90ff"
+PAGE_BG = "#e6f0fa"
+
+st.markdown(f"""
+<style>
+[data-testid="stAppViewContainer"] {{
+    background-color: {PAGE_BG};
+}}
+.header-card {{
+    background-color: {PRIMARY};
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 24px;
+}}
+.content-card {{
+    background-color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
+    color: {PRIMARY};
+}}
+.stButton>button {{
+    background-color: {ACCENT};
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+}}
+.numberplate {{
+    background-color: #fff;
+    border: 2px solid {PRIMARY};
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 28px;
+    font-weight: 700;
+    color: {PRIMARY};
+    text-align: center;
+    margin-bottom: 24px;
+}}
+.badge {{
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: white;
+    margin-right: 4px;
+    font-size: 12px;
+}}
+.badge-warning {{background-color: #ff9800;}}
+.badge-error {{background-color: #f44336;}}
+.badge-info {{background-color: #0b3b6f;}}
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------------
+# Header
+# -------------------------
+st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_allow_html=True)
+
+# -------------------------
+# Session state defaults
+# -------------------------
+if "reg" not in st.session_state: st.session_state.reg = None
+if "image" not in st.session_state: st.session_state.image = None
+if "show_summary" not in st.session_state: st.session_state.show_summary = False
+
+# -------------------------
+# Reset / Change Registration
+# -------------------------
+if st.session_state.show_summary:
+    if st.button("Reset / Change Registration"):
+        st.session_state.reg = None
+        st.session_state.image = None
+        st.session_state.show_summary = False
+
+# -------------------------
+# Input page
+# -------------------------
+if not st.session_state.show_summary:
+    st.markdown("## Enter Vehicle Registration or Take Photo")
+    option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0, horizontal=True)
+
+    if option == "Enter Registration / VIN":
+        manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
+        if manual_reg:
+            st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
+            st.session_state.show_summary = True
+    elif option == "Take Photo":
+        image = st.camera_input("Take photo of the number plate", key="camera", help="Use rear camera if possible")
+        if image:
+            st.session_state.image = image
+            st.session_state.reg = "KT68XYZ"  # Mock OCR
+            st.session_state.show_summary = True
+
+# -------------------------
+# Summary page
+# -------------------------
+if st.session_state.show_summary and st.session_state.reg:
+    reg = st.session_state.reg
+    image = st.session_state.image
+
+    # Display numberplate
+    if image:
+        st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
+    st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
+
+    # Fetch mocked data
+    vehicle = lookup_vehicle_basic(reg)
+    mot_tax = lookup_mot_and_tax(reg)
+    recalls = lookup_recalls(reg)
+
+    # Mock flags
+    history_flags = {
         "write_off": False,
         "theft": False,
         "mileage_anomaly": True,
         "note": "Mileage shows a 5,000 jump in 2021 record"
     }
 
-def estimate_value(make, model, year, mileage, condition="good"):
-    """Mock valuation - replace with CAP/Glass's API"""
-    age = datetime.date.today().year - year
-    base = 25000 - (age * 2000) - (mileage / 10)
-    cond_multiplier = {"excellent": 1.05, "good": 1.0, "fair": 0.9, "poor": 0.8}
-    return max(100, int(base * cond_multiplier.get(condition, 1.0)))
+    # Vehicle Summary with badges
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
+    summary_html = f"""
+    <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
+    <p><strong>Year:</strong> {vehicle['year']}</p>
+    <p><strong>VIN:</strong> {vehicle['vin']}</p>
+    <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
+    <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
+    """
 
-def mock_ocr_numberplate(image):
-    """Mock OCR - replace with ANPR API"""
-    return "KT68XYZ"
-
-# -------------------------
-# Streamlit Configuration
-# -------------------------
-st.set_page_config(
-    page_title="Sytner AutoSense",
-    page_icon="🚗",
-    layout="centered"
-)
-
-# Color scheme - Match reference image exactly
-DARK_BG = "#0d1f3c"
-CARD_BG = "#1a3552"
-TEXT_PRIMARY = "#ffffff"
-TEXT_SECONDARY = "#d1dce6"
-ACCENT = "#4a9eff"
-SUCCESS = "#30d158"
-
-# Custom CSS
-st.markdown(f"""
-<style>
-/* Hide Streamlit branding */
-#MainMenu {{visibility: hidden;}}
-footer {{visibility: hidden;}}
-header {{visibility: hidden;}}
-
-[data-testid="stAppViewContainer"] {{
-    background: linear-gradient(180deg, {DARK_BG} 0%, #0d2f4d 100%);
-    padding-top: 20px;
-}}
-
-/* Hide default padding */
-.block-container {{
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    max-width: 500px;
-}}
-
-/* Header styling */
-.app-header {{
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 0 20px;
-}}
-
-.app-title {{
-    font-size: 32px;
-    font-weight: 300;
-    color: {TEXT_PRIMARY};
-    margin: 0;
-    line-height: 1.2;
-}}
-
-.app-subtitle {{
-    font-size: 48px;
-    font-weight: 700;
-    color: {TEXT_PRIMARY};
-    margin: 0;
-    line-height: 1.2;
-}}
-
-/* Number plate styling */
-.numberplate {{
-    background: linear-gradient(to bottom, #f9f9f9 0%, #e8e8e8 100%);
-    border: 3px solid #000;
-    border-radius: 8px;
-    padding: 16px 24px;
-    font-size: 36px;
-    font-weight: 900;
-    color: #000;
-    text-align: center;
-    margin: 30px auto;
-    max-width: 280px;
-    letter-spacing: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}}
-
-/* Card styling */
-.info-card {{
-    background-color: {CARD_BG};
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}}
-
-.card-title {{
-    font-size: 28px;
-    font-weight: 700;
-    color: {TEXT_PRIMARY};
-    margin-bottom: 20px;
-}}
-
-.status-row {{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-}}
-
-.status-row:last-child {{
-    border-bottom: none;
-}}
-
-.status-label {{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 22px;
-    color: {TEXT_PRIMARY};
-    font-weight: 600;
-}}
-
-.status-value {{
-    font-size: 18px;
-    color: {TEXT_SECONDARY};
-    text-align: right;
-    font-weight: 400;
-}}
-
-.check-icon {{
-    width: 32px;
-    height: 32px;
-    background-color: {ACCENT};
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-}}
-
-.warning-icon {{
-    width: 28px;
-    height: 28px;
-    background-color: #ff9500;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 16px;
-}}
-
-.value-display {{
-    text-align: center;
-    padding: 24px;
-}}
-
-.value-amount {{
-    font-size: 56px;
-    font-weight: 700;
-    color: {TEXT_PRIMARY};
-    margin: 16px 0 8px 0;
-}}
-
-.value-condition {{
-    font-size: 18px;
-    color: {TEXT_SECONDARY};
-}}
-
-.car-icon {{
-    font-size: 48px;
-    color: {ACCENT};
-}}
-
-/* Buttons */
-.stButton>button {{
-    background-color: {ACCENT};
-    color: white;
-    font-weight: 600;
-    border-radius: 12px;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    width: 100%;
-}}
-
-.stButton>button:hover {{
-    background-color: #3a8eef;
-}}
-
-/* Recall card */
-.recall-card {{
-    background-color: {CARD_BG};
-    border-radius: 16px;
-    padding: 20px;
-    margin: 16px 0;
-    cursor: pointer;
-}}
-
-.recall-header {{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}}
-
-.recall-title {{
-    font-size: 24px;
-    font-weight: 600;
-    color: {TEXT_PRIMARY};
-}}
-
-.recall-subtitle {{
-    font-size: 17px;
-    color: {TEXT_SECONDARY};
-    margin-top: 6px;
-    font-weight: 400;
-}}
-
-.chevron {{
-    color: {TEXT_SECONDARY};
-    font-size: 24px;
-}}
-
-/* Hide streamlit elements */
-.stExpander {{
-    background-color: transparent !important;
-    border: none !important;
-}}
-
-div[data-testid="stExpander"] {{
-    background-color: {CARD_BG};
-    border-radius: 16px;
-    border: none;
-}}
-
-.streamlit-expanderHeader {{
-    background-color: transparent;
-    color: {TEXT_PRIMARY};
-    font-size: 20px;
-    font-weight: 600;
-}}
-
-/* Input styling */
-.stTextInput label {{
-    color: {TEXT_PRIMARY};
-    font-size: 15px;
-    margin-bottom: 8px;
-    font-weight: 500;
-}}
-
-.stTextInput>div>div>input {{
-    background-color: {CARD_BG};
-    color: {TEXT_PRIMARY};
-    border: 2px solid rgba(255,255,255,0.25);
-    border-radius: 10px;
-    padding: 16px 20px;
-    font-size: 17px;
-}}
-
-.stTextInput>div>div>input::placeholder {{
-    color: rgba(255,255,255,0.5);
-}}
-
-.stRadio>label {{
-    color: {TEXT_PRIMARY};
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 12px;
-}}
-
-.stRadio > div[role="radiogroup"] {{
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}}
-
-.stRadio > div[role="radiogroup"] > label {{
-    background-color: {CARD_BG};
-    padding: 14px 24px;
-    border-radius: 10px;
-    border: 2px solid rgba(255,255,255,0.2);
-    flex: 1;
-    text-align: center;
-    color: {TEXT_PRIMARY} !important;
-    min-width: 100px;
-}}
-
-.stRadio > div[role="radiogroup"] > label div {{
-    color: {TEXT_PRIMARY} !important;
-}}
-
-.stRadio > div[role="radiogroup"] > label span {{
-    color: {TEXT_PRIMARY} !important;
-    font-size: 16px !important;
-}}
-
-/* Fix radio button text wrapping */
-.stRadio > div[role="radiogroup"] > label > div {{
-    white-space: nowrap;
-}}
-
-.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] {{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}}
-
-/* Reset button */
-.reset-btn {{
-    background-color: transparent !important;
-    color: {ACCENT} !important;
-    border: 2px solid {ACCENT} !important;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------------
-# Session State Initialization
-# -------------------------
-def init_session_state():
-    """Initialize session state variables"""
-    if "reg" not in st.session_state:
-        st.session_state.reg = None
-    if "image" not in st.session_state:
-        st.session_state.image = None
-    if "show_summary" not in st.session_state:
-        st.session_state.show_summary = False
-    if "vehicle_data" not in st.session_state:
-        st.session_state.vehicle_data = None
-
-def reset_state():
-    """Reset all session state"""
-    st.session_state.reg = None
-    st.session_state.image = None
-    st.session_state.show_summary = False
-    st.session_state.vehicle_data = None
-
-init_session_state()
-
-# -------------------------
-# Input Page
-# -------------------------
-def show_input_page():
-    """Display the vehicle registration input page"""
-    
-    # Header
-    st.markdown("""
-    <div class='app-header'>
-        <div class='app-title'>Sytner</div>
-        <div class='app-subtitle'>AutoSense</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    # Input options
-    option = st.radio(
-        "Choose input method",
-        ["Enter Registration", "Take Photo"],
-        index=0,
-        horizontal=True
-    )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    if option == "Enter Registration":
-        manual_reg = st.text_input(
-            "Registration",
-            placeholder="e.g. KT68 XYZ",
-            key="reg_input"
-        )
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True):
-                if manual_reg and len(manual_reg.strip()) >= 5:
-                    st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
-                    st.session_state.image = None
-                    st.session_state.show_summary = True
-                    st.rerun()
-                else:
-                    st.error("Please enter a valid registration")
-    
-    elif option == "Take Photo":
-        image = st.camera_input(
-            "Take photo",
-            help="Position the number plate clearly in the frame"
-        )
-        
-        if image is not None:
-            extracted_reg = mock_ocr_numberplate(image)
-            
-            if extracted_reg:
-                st.session_state.reg = extracted_reg
-                st.session_state.image = image
-                st.session_state.show_summary = True
-                st.rerun()
-            else:
-                st.error("Could not read number plate. Please try again.")
-
-# -------------------------
-# Summary Page
-# -------------------------
-def show_summary_page():
-    """Display the vehicle summary page"""
-    reg = st.session_state.reg
-    image = st.session_state.image
-    
-    # Header
-    st.markdown("""
-    <div class='app-header'>
-        <div class='app-title'>Sytner</div>
-        <div class='app-subtitle'>AutoSense</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Number plate
-    formatted_reg = reg[:4] + " " + reg[4:] if len(reg) > 4 else reg
-    st.markdown(
-        f"<div class='numberplate'>{formatted_reg}</div>",
-        unsafe_allow_html=True
-    )
-    
-    # Fetch vehicle data
-    with st.spinner(""):
-        vehicle = lookup_vehicle_basic(reg)
-        mot_tax = lookup_mot_and_tax(reg)
-        recalls = lookup_recalls(reg)
-        history_flags = get_history_flags(reg)
-    
-    # Recalls card
+    # Badges
+    flags_html = "<p><strong>Status:</strong> "
+    flag_list = []
+    if history_flags.get("write_off"):
+        flag_list.append('<span class="badge badge-error">Write-off</span>')
+    if history_flags.get("theft"):
+        flag_list.append('<span class="badge badge-error">Theft</span>')
+    if history_flags.get("mileage_anomaly"):
+        flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
-    
-    st.markdown("<div class='recall-card'>", unsafe_allow_html=True)
-    if open_recalls > 0:
-        st.markdown(f"""
-        <div class='recall-header'>
-            <div>
-                <div class='recall-title'>⚠️ {open_recalls} open recall{'s' if open_recalls > 1 else ''}</div>
-                <div class='recall-subtitle'>Check for safety recalls</div>
-            </div>
-            <div class='chevron'>›</div>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown(f"""
-        <div class='recall-header'>
-            <div>
-                <div class='recall-title'>No open recalls</div>
-                <div class='recall-subtitle'>Check for safety recalls</div>
-            </div>
-            <div class='chevron'>›</div>
-        </div>
-        """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Expand recalls section
-    if open_recalls > 0:
-        with st.expander("View recall details", expanded=False):
-            for idx, recall in enumerate(recalls):
-                if recall['open']:
-                    st.markdown(f"**{recall['summary']}**")
-                    st.markdown(f"ID: `{recall['id']}`")
-                    
-                    if st.button("📅 Book Repair", key=f"book_recall_{idx}"):
-                        st.session_state[f"booking_recall_{idx}"] = True
-                    
-                    # Booking form
-                    if st.session_state.get(f"booking_recall_{idx}", False):
-                        st.markdown("---")
-                        
-                        garage = st.selectbox(
-                            "Select Garage",
-                            [
-                                "Sytner BMW Birmingham",
-                                "Sytner BMW Manchester",
-                                "Sytner BMW London",
-                                "Sytner BMW Bristol"
-                            ],
-                            key=f"garage_{idx}"
-                        )
-                        
-                        min_date = datetime.date.today() + datetime.timedelta(days=1)
-                        max_date = datetime.date.today() + datetime.timedelta(days=60)
-                        
-                        booking_date = st.date_input(
-                            "Preferred Date",
-                            min_value=min_date,
-                            max_value=max_date,
-                            key=f"date_{idx}"
-                        )
-                        
-                        time_slot = st.selectbox(
-                            "Preferred Time",
-                            ["9:00 AM", "11:00 AM", "2:00 PM", "4:00 PM"],
-                            key=f"time_{idx}"
-                        )
-                        
-                        col_a, col_b = st.columns(2)
-                        with col_a:
-                            customer_name = st.text_input("Name", key=f"name_{idx}")
-                        with col_b:
-                            customer_phone = st.text_input("Phone", key=f"phone_{idx}")
-                        
-                        col_x, col_y = st.columns(2)
-                        with col_x:
-                            if st.button("✅ Confirm", key=f"confirm_{idx}", use_container_width=True):
-                                if customer_name and customer_phone:
-                                    st.success(f"✅ Booked at **{garage}** on **{booking_date}** at **{time_slot}**")
-                                    st.session_state[f"booking_recall_{idx}"] = False
-                                else:
-                                    st.error("Please fill in all fields")
-                        with col_y:
-                            if st.button("Cancel", key=f"cancel_{idx}", use_container_width=True):
-                                st.session_state[f"booking_recall_{idx}"] = False
-                                st.rerun()
-                    
-                    st.markdown("---")
-    
-    # Vehicle status card
-    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
-    st.markdown("<div class='card-title'>Vehicle status</div>", unsafe_allow_html=True)
-    
-    # MOT
-    mot_date = datetime.datetime.fromisoformat(mot_tax['mot_next_due']).strftime("%d %b %Y")
-    st.markdown(f"""
-    <div class='status-row'>
-        <div class='status-label'>
-            <div class='check-icon'>✓</div>
-            <span>MOT</span>
-        </div>
-        <div class='status-value'>Expires {mot_date}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Tax
-    tax_date = datetime.datetime.fromisoformat(mot_tax['tax_expiry']).strftime("%d %b %Y")
-    st.markdown(f"""
-    <div class='status-row'>
-        <div class='check-icon'>✓</div>
-        <div class='status-label'>
-            <span>Tax</span>
-        </div>
-        <div class='status-value'>Expires {tax_date}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Insurance card
-    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class='status-row'>
-        <div class='status-label'>
-            <span style='font-size: 18px; font-weight: 500;'>Insurance</span>
-        </div>
-        <div class='status-value' style='color: {ACCENT}; font-weight: 600;'>Get a quote ›</div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Valuation card
-    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
-    st.markdown("<div class='card-title'>Estimated value</div>", unsafe_allow_html=True)
-    
-    st.markdown(f"""
-    <div class='value-display'>
-        <div class='car-icon'>🚗</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Condition selector - use columns to prevent wrapping
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        if st.button("Excellent", key="cond_excellent", use_container_width=True):
-            st.session_state.condition = "excellent"
-    with col2:
-        if st.button("Good", key="cond_good", use_container_width=True):
-            st.session_state.condition = "good"
-    with col3:
-        if st.button("Fair", key="cond_fair", use_container_width=True):
-            st.session_state.condition = "fair"
-    with col4:
-        if st.button("Poor", key="cond_poor", use_container_width=True):
-            st.session_state.condition = "poor"
-    
-    # Set default condition if not set
-    if "condition" not in st.session_state:
-        st.session_state.condition = "good"
-    
-    condition = st.session_state.condition
-    
-    value = estimate_value(
-        vehicle["make"],
-        vehicle["model"],
-        vehicle["year"],
-        vehicle["mileage"],
-        condition
-    )
-    
-    st.markdown(f"""
-    <div class='value-display'>
-        <div class='value-amount'>£{value:,}</div>
-        <div class='value-condition'>{condition.capitalize()} condition</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("📤 Send to Buyer", use_container_width=True):
-        st.success("✅ Sent to John Smith")
-        st.balloons()
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Vehicle details expander
-    with st.expander("📋 View full vehicle details"):
-        st.markdown(f"**Make & Model:** {vehicle['make']} {vehicle['model']}")
-        st.markdown(f"**Year:** {vehicle['year']}")
-        st.markdown(f"**VIN:** {vehicle['vin']}")
-        st.markdown(f"**Mileage:** {vehicle['mileage']:,} miles")
-        
-        if history_flags.get("mileage_anomaly"):
-            st.warning(f"⚠️ {history_flags['note']}")
-        
-        st.markdown("---")
-        st.markdown("**MOT History**")
-        for entry in mot_tax['mot_history']:
-            result_emoji = "✅" if entry['result'] == "Pass" else "⚠️"
-            st.markdown(f"{result_emoji} {entry['date']}: {entry['result']} — {entry['mileage']:,} miles")
-    
-    # Reset button
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🔄 Check Another Vehicle", key="reset_btn"):
-        reset_state()
-        st.rerun()
+    if open_recalls:
+        flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
 
-# -------------------------
-# Main App Logic
-# -------------------------
-if st.session_state.show_summary and st.session_state.reg:
-    show_summary_page()
-else:
-    show_input_page()
+    flags_html += " ".join(flag_list) + "</p>"
+
+    st.markdown(summary_html + flags_html, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # MOT History
+    with st.expander("MOT History"):
+        for t in mot_tax['mot_history']:
+            st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
+
+    # Recalls
+    with st.expander("Recalls"):
+        for r in recalls:
+            status = "Open ⚠️" if r['open'] else "Closed ✅"
+            st.write(f"- {r['summary']} — ID: {r['id']} ({status})")
+
+    # Insurance
+    with st.expander("Insurance (Mock)"):
+        st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
+        if st.button('Get a mock insurance quote'):
+            st.success('Sample quote: £320/year (3rd party, excess £250)')
+
+    # Valuation card with Send to Buyer
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
+    condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
+    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
+    st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
+    if st.button("Send to Sytner Buyer"):
+        st.success("Sent successfully!")
+    st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
