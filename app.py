@@ -45,6 +45,7 @@ PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 # Streamlit config + theming
 # -------------------------
 st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
+
 PRIMARY = "#0b3b6f"
 ACCENT = "#1e90ff"
 PAGE_BG = "#e6f0fa"
@@ -105,8 +106,6 @@ st.markdown(f"""
 .centered {{
     display: flex;
     justify-content: center;
-    flex-direction: column;
-    align-items: center;
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -124,31 +123,42 @@ if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
-# Reset / Change Reg button
+# Reset / Change Registration
 # -------------------------
-def reset_app():
+def reset():
     st.session_state.reg = None
     st.session_state.image = None
     st.session_state.show_summary = False
+
+if st.session_state.show_summary:
+    st.button("Reset / Change Registration", on_click=reset)
 
 # -------------------------
 # Input page
 # -------------------------
 if not st.session_state.show_summary:
-    st.markdown("## Enter Vehicle Registration or Take Photo", unsafe_allow_html=True)
-    option = st.radio("", ["Enter Registration / VIN", "Take Photo"], index=0, horizontal=True)
+    st.markdown("## Enter Vehicle Registration or Take Photo")
+    option = st.radio(
+        "Choose input method",
+        ["Enter Registration / VIN", "Take Photo"],
+        index=0,
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
     if option == "Enter Registration / VIN":
         manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
+            st.experimental_rerun()
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate", key="camera_input")
+        image = st.camera_input("Take photo of the number plate (use rear camera if available)")
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
+            st.experimental_rerun()
 
 # -------------------------
 # Summary page
@@ -157,16 +167,10 @@ if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
 
-    st.markdown("<div class='centered'>", unsafe_allow_html=True)
-
     # Display numberplate
     if image:
         st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
     st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
-
-    # Reset / Change Registration button
-    if st.button("Reset / Change Registration"):
-        reset_app()
 
     # Fetch mocked data
     vehicle = lookup_vehicle_basic(reg)
@@ -201,11 +205,12 @@ if st.session_state.show_summary and st.session_state.reg:
         flag_list.append('<span class="badge badge-error">Theft</span>')
     if history_flags.get("mileage_anomaly"):
         flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
-    flags_html += " ".join(flag_list) + "</p>"
 
+    flags_html += " ".join(flag_list) + "</p>"
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -235,6 +240,4 @@ if st.session_state.show_summary and st.session_state.reg:
     if st.button("Send to Sytner Buyer"):
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("</div>", unsafe_allow_html=True)
