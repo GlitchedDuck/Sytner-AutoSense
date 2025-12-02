@@ -332,6 +332,15 @@ div[data-testid="stExpander"] {{
     border: 2px solid rgba(255,255,255,0.2);
     flex: 1;
     text-align: center;
+    color: {TEXT_PRIMARY} !important;
+}}
+
+.stRadio > div[role="radiogroup"] > label div {{
+    color: {TEXT_PRIMARY} !important;
+}}
+
+.stRadio > div[role="radiogroup"] > label span {{
+    color: {TEXT_PRIMARY} !important;
 }}
 
 .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] {{
