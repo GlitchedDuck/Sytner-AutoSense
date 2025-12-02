@@ -153,8 +153,8 @@ header {{visibility: hidden;}}
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }}
 
 .status-row:last-child {{
@@ -165,16 +165,15 @@ header {{visibility: hidden;}}
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 20px;
+    font-size: 18px;
     color: {TEXT_PRIMARY};
-    font-weight: 600;
+    font-weight: 500;
 }}
 
 .status-value {{
-    font-size: 17px;
+    font-size: 16px;
     color: {TEXT_SECONDARY};
     text-align: right;
-    font-weight: 500;
 }}
 
 .check-icon {{
