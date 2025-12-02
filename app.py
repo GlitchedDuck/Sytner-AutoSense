@@ -134,6 +134,11 @@ st.markdown(f"""
     border-radius: 8px;
     margin-top: 12px;
 }}
+
+/* Hide empty Streamlit containers */
+.element-container:has(> .stMarkdown > div:empty) {{
+    display: none;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -174,7 +179,7 @@ st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_a
 if st.session_state.show_summary:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🔄 Reset / Change Registration", use_container_width=True):
+        if st.button("Reset / Change Registration", use_container_width=True):
             reset_all_state()
             st.rerun()
 
@@ -336,7 +341,6 @@ if st.session_state.show_summary and st.session_state.reg:
                 
                 # Show booking form if toggled
                 if recall['open'] and st.session_state.booking_forms.get(recall_key):
-                    st.markdown("<div class='booking-form'>", unsafe_allow_html=True)
                     st.markdown("##### Book Recall Repair")
                     
                     # Garage selection
@@ -394,7 +398,7 @@ if st.session_state.show_summary and st.session_state.reg:
                     # Action buttons
                     col_x, col_y = st.columns(2)
                     with col_x:
-                        if st.button("✅ Confirm Booking", key=f"confirm_{recall_key}", use_container_width=True):
+                        if st.button("Confirm Booking", key=f"confirm_{recall_key}", use_container_width=True):
                             # Validation
                             if not customer_name or not customer_phone:
                                 st.error("⚠️ Please fill in all required fields (marked with *)")
@@ -422,13 +426,11 @@ if st.session_state.show_summary and st.session_state.reg:
                                 st.balloons()
                     
                     with col_y:
-                        if st.button("❌ Cancel", key=f"cancel_{recall_key}", use_container_width=True):
+                        if st.button("Cancel", key=f"cancel_{recall_key}", use_container_width=True):
                             # Close the form
                             if recall_key in st.session_state.booking_forms:
                                 del st.session_state.booking_forms[recall_key]
                             st.rerun()
-                    
-                    st.markdown("</div>", unsafe_allow_html=True)
                 
                 # Divider between recalls
                 if idx < len(recalls) - 1:
@@ -478,7 +480,7 @@ if st.session_state.show_summary and st.session_state.reg:
         st.markdown("**Assigned Buyer:** John Smith")
         st.caption("📞 01234 567890 | 📧 john.smith@sytner.co.uk")
     with col2:
-        if st.button("📤 Send to Buyer", key="send_buyer", use_container_width=True):
+        if st.button("Send to Buyer", key="send_buyer", use_container_width=True):
             st.success("✅ Vehicle details sent to John Smith!")
             st.info(f"📧 Email sent with valuation: £{value:,} ({condition})")
     
