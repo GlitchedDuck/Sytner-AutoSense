@@ -66,12 +66,12 @@ st.set_page_config(
     layout="centered"
 )
 
-# Color scheme - Dark blue iOS style with better contrast
+# Color scheme - Dark blue iOS style
 DARK_BG = "#0a2540"
-CARD_BG = "#1e405f"
+CARD_BG = "#1a3a5c"
 TEXT_PRIMARY = "#ffffff"
-TEXT_SECONDARY = "#b8d0e8"
-ACCENT = "#5db0ff"
+TEXT_SECONDARY = "#a0b8d0"
+ACCENT = "#4a9eff"
 SUCCESS = "#34c759"
 
 # Custom CSS
