@@ -59,7 +59,7 @@ st.markdown(f"""
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
@@ -76,7 +76,7 @@ st.markdown(f"""
     margin-bottom: 8px;
 }}
 .stButton>button {{
-    background-color: {PRIMARY};
+    background-color: {ACCENT};
     color: white;
     font-weight: 600;
     border-radius: 8px;
@@ -104,6 +104,7 @@ st.markdown(f"""
 .badge-info {{background-color: #0b3b6f;}}
 .centered {{
     display: flex;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
 }}
@@ -123,7 +124,7 @@ if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
-# Reset / Change Reg
+# Reset / Change Reg button
 # -------------------------
 def reset_app():
     st.session_state.reg = None
@@ -134,22 +135,20 @@ def reset_app():
 # Input page
 # -------------------------
 if not st.session_state.show_summary:
-    st.markdown("## Enter Vehicle Registration or Take Photo")
-    option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0, horizontal=True)
+    st.markdown("## Enter Vehicle Registration or Take Photo", unsafe_allow_html=True)
+    option = st.radio("", ["Enter Registration / VIN", "Take Photo"], index=0, horizontal=True)
 
     if option == "Enter Registration / VIN":
         manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
-            st.experimental_rerun()
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate (use rear camera if possible)")
+        image = st.camera_input("Take photo of the number plate", key="camera_input")
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
-            st.experimental_rerun()
 
 # -------------------------
 # Summary page
@@ -158,18 +157,16 @@ if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
 
-    # Center container
     st.markdown("<div class='centered'>", unsafe_allow_html=True)
-
-    # Reset button
-    if st.button("Reset / Change Registration"):
-        reset_app()
-        st.experimental_rerun()
 
     # Display numberplate
     if image:
         st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
     st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
+
+    # Reset / Change Registration button
+    if st.button("Reset / Change Registration"):
+        reset_app()
 
     # Fetch mocked data
     vehicle = lookup_vehicle_basic(reg)
