@@ -76,7 +76,7 @@ st.markdown(f"""
     margin-bottom: 8px;
 }}
 .stButton>button {{
-    background-color: {ACCENT};
+    background-color: {PRIMARY};
     color: white;
     font-weight: 600;
     border-radius: 8px;
@@ -118,6 +118,16 @@ if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
+# Reset / Change Registration
+# -------------------------
+if st.session_state.show_summary:
+    if st.button("Reset / Change Registration"):
+        st.session_state.reg = None
+        st.session_state.image = None
+        st.session_state.show_summary = False
+        st.stop()  # immediately stop execution so input page shows
+
+# -------------------------
 # Input page
 # -------------------------
 if not st.session_state.show_summary:
@@ -129,13 +139,17 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
-
+            st.experimental_rerun()
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate", key="camera_input")  # rear-facing handled by default if device
+        try:
+            image = st.camera_input("Take photo of the number plate", key="camera_input")
+        except TypeError:
+            image = st.camera_input("Take photo of the number plate")  # fallback for older Streamlit
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
+            st.experimental_rerun()
 
 # -------------------------
 # Summary page
@@ -143,13 +157,6 @@ if not st.session_state.show_summary:
 if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
-
-    # Reset button
-    if st.button("Reset / Change Registration"):
-        st.session_state.reg = None
-        st.session_state.image = None
-        st.session_state.show_summary = False
-        st.info("Please enter a new registration or take a photo.")
 
     # Display numberplate
     if image:
@@ -179,7 +186,6 @@ if st.session_state.show_summary and st.session_state.reg:
     <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
     <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
     """
-
     # Badges
     flags_html = "<p><strong>Status:</strong> "
     flag_list = []
