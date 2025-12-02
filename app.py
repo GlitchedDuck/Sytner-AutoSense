@@ -125,7 +125,7 @@ if st.session_state.show_summary:
         st.session_state.reg = None
         st.session_state.image = None
         st.session_state.show_summary = False
-        st.stop()  # immediately stop execution so input page shows
+        st.stop()  # stop to immediately show input page
 
 # -------------------------
 # Input page
@@ -139,17 +139,15 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
-            st.experimental_rerun()
+            st.stop()  # immediately show summary
+
     elif option == "Take Photo":
-        try:
-            image = st.camera_input("Take photo of the number plate", key="camera_input")
-        except TypeError:
-            image = st.camera_input("Take photo of the number plate")  # fallback for older Streamlit
+        image = st.camera_input("Take photo of the number plate (rear camera)")
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
-            st.experimental_rerun()
+            st.stop()  # immediately show summary
 
 # -------------------------
 # Summary page
@@ -186,6 +184,7 @@ if st.session_state.show_summary and st.session_state.reg:
     <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
     <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
     """
+
     # Badges
     flags_html = "<p><strong>Status:</strong> "
     flag_list = []
@@ -195,13 +194,11 @@ if st.session_state.show_summary and st.session_state.reg:
         flag_list.append('<span class="badge badge-error">Theft</span>')
     if history_flags.get("mileage_anomaly"):
         flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
-    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
 
     flags_html += " ".join(flag_list) + "</p>"
-
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
