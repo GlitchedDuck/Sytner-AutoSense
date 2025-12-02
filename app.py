@@ -530,10 +530,10 @@ def render_valuation(vehicle):
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("**Stock Priority Bonus:**")
-        st.success("**+£500** - We need this model!")
+        st.success("+£500 - We need this model!")
     with col2:
         st.markdown("**Same-Day Completion:**")
-        st.info("**+£200** if completed today")
+        st.info("+£200 if completed today")
     
     total_value = value + 700
     st.markdown(f"""
@@ -641,23 +641,23 @@ def render_input_page():
     # Hero section with value proposition
     st.markdown(f"""
     <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
-                padding: 32px 24px; border-radius: 16px; margin-bottom: 32px; text-align: center;'>
-        <h1 style='color: white; margin: 0 0 12px 0; font-size: 32px;'>Instant Trade-In Valuation</h1>
-        <p style='color: rgba(255,255,255,0.95); font-size: 18px; margin: 0 0 20px 0;'>
+                padding: 40px 24px; border-radius: 16px; margin-bottom: 32px; text-align: center;'>
+        <h1 style='color: white; margin: 0 0 16px 0; font-size: 36px; font-weight: 700;'>Instant Trade-In Valuation</h1>
+        <p style='color: rgba(255,255,255,0.95); font-size: 18px; margin: 0 0 28px 0; font-weight: 400;'>
             Get competitive offers in seconds • Complete deals in minutes
         </p>
-        <div style='display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;'>
+        <div style='display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;'>
             <div style='text-align: center;'>
-                <div style='font-size: 28px; font-weight: 700; color: white;'>30 mins</div>
-                <div style='font-size: 13px; color: rgba(255,255,255,0.9);'>Average completion</div>
+                <div style='font-size: 32px; font-weight: 700; color: white;'>30 mins</div>
+                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Average completion</div>
             </div>
             <div style='text-align: center;'>
-                <div style='font-size: 28px; font-weight: 700; color: white;'>15+</div>
-                <div style='font-size: 13px; color: rgba(255,255,255,0.9);'>Network locations</div>
+                <div style='font-size: 32px; font-weight: 700; color: white;'>15+</div>
+                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Network locations</div>
             </div>
             <div style='text-align: center;'>
-                <div style='font-size: 28px; font-weight: 700; color: white;'>£500+</div>
-                <div style='font-size: 13px; color: rgba(255,255,255,0.9);'>Bonus opportunities</div>
+                <div style='font-size: 32px; font-weight: 700; color: white;'>£500+</div>
+                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Bonus opportunities</div>
             </div>
         </div>
     </div>
@@ -667,23 +667,23 @@ def render_input_page():
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""
-        <div style='text-align: center; padding: 16px;'>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px; font-size: 16px;'>Instant Check</div>
-            <div style='font-size: 13px; color: #666;'>Full vehicle history in seconds</div>
+        <div style='text-align: center; padding: 20px 16px;'>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Instant Check</div>
+            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Full vehicle history in seconds</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
-        <div style='text-align: center; padding: 16px;'>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px; font-size: 16px;'>Best Offers</div>
-            <div style='font-size: 13px; color: #666;'>Compare across network</div>
+        <div style='text-align: center; padding: 20px 16px;'>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Best Offers</div>
+            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Compare across network</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
-        <div style='text-align: center; padding: 16px;'>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px; font-size: 16px;'>Same Day</div>
-            <div style='font-size: 13px; color: #666;'>Complete deal today</div>
+        <div style='text-align: center; padding: 20px 16px;'>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Same Day</div>
+            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Complete deal today</div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -691,13 +691,13 @@ def render_input_page():
     
     # Main input section
     st.markdown(f"""
-    <div style='text-align: center; margin-bottom: 24px;'>
-        <h2 style='color: {PRIMARY}; margin: 0 0 8px 0;'>Get Started</h2>
-        <p style='color: #666; font-size: 15px;'>Enter the customer's registration or scan their number plate</p>
+    <div style='text-align: center; margin-bottom: 32px;'>
+        <h2 style='color: {PRIMARY}; margin: 0 0 12px 0; font-size: 28px;'>Get Started</h2>
+        <p style='color: #666; font-size: 16px;'>Enter the customer's registration or scan their number plate</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Center the radio buttons
+    # Center the radio buttons with more spacing
     col_spacer1, col_radio, col_spacer2 = st.columns([1, 2, 1])
     with col_radio:
         option = st.radio(
@@ -708,14 +708,17 @@ def render_input_page():
             label_visibility="collapsed"
         )
 
+    st.markdown("<br>", unsafe_allow_html=True)
+
     if "Enter Registration" in option:
-        st.markdown("<br>", unsafe_allow_html=True)
         manual_reg = st.text_input(
             "Enter registration / VIN",
             placeholder="e.g. KT68XYZ or WBA8BFAKEVIN12345",
             help="Enter a UK registration or VIN number",
             label_visibility="collapsed"
         )
+        
+        st.markdown("<br>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -726,21 +729,19 @@ def render_input_page():
                     st.session_state.show_summary = True
                     st.rerun()
                 else:
-                    st.error("⚠️ Please enter a valid registration (minimum 5 characters)")
+                    st.error("Please enter a valid registration (minimum 5 characters)")
         
-        # Quick examples
+        # Quick examples - more prominent
         st.markdown("""
-        <div style='text-align: center; margin-top: 16px;'>
-            <p style='color: #999; font-size: 13px;'>Try these examples: KT68XYZ • AB12CDE • WBA8B12345</p>
+        <div style='text-align: center; margin-top: 20px;'>
+            <p style='color: #999; font-size: 14px;'><strong>Try these examples:</strong> KT68XYZ • AB12CDE • WBA8B12345</p>
         </div>
         """, unsafe_allow_html=True)
     
     else:  # Scan Number Plate
-        st.markdown("<br>", unsafe_allow_html=True)
-        
         # Camera instructions
         st.markdown(f"""
-        <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT}; margin-bottom: 16px;'>
+        <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT}; margin-bottom: 20px;'>
             <p style='margin: 0; font-size: 14px; color: #0b3b6f;'>
                 <strong>Camera Tips:</strong> Position the plate clearly in frame • Ensure good lighting • Hold steady
             </p>
@@ -764,24 +765,24 @@ def render_input_page():
                     st.session_state.show_summary = True
                     st.rerun()
                 else:
-                    st.error("⚠️ Could not read number plate. Please try again or enter manually.")
+                    st.error("Could not read number plate. Please try again or enter manually.")
             except Exception as e:
-                st.error(f"⚠️ Error processing image: {str(e)}")
+                st.error(f"Error processing image: {str(e)}")
     
-    # Trust indicators at bottom
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # Trust indicators at bottom - cleaner styling
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
     st.markdown(f"""
-    <div style='text-align: center; padding: 24px; background-color: white; border-radius: 12px; margin-top: 32px;'>
-        <p style='color: #999; font-size: 13px; margin: 0 0 12px 0;'>TRUSTED BY SYTNER STAFF NATIONWIDE</p>
-        <div style='display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;'>
-            <div style='color: {PRIMARY};'>
-                <span style='font-weight: 600;'>✓</span> Full DVLA Integration
+    <div style='text-align: center; padding: 28px 24px; background-color: white; border-radius: 12px; margin-top: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'>
+        <p style='color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0; font-weight: 600;'>Trusted by Sytner Staff Nationwide</p>
+        <div style='display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;'>
+            <div style='color: {PRIMARY}; font-size: 14px;'>
+                <span style='font-weight: 600; color: #4caf50;'>✓</span> Full DVLA Integration
             </div>
-            <div style='color: {PRIMARY};'>
-                <span style='font-weight: 600;'>✓</span> Real-time MOT Data
+            <div style='color: {PRIMARY}; font-size: 14px;'>
+                <span style='font-weight: 600; color: #4caf50;'>✓</span> Real-time MOT Data
             </div>
-            <div style='color: {PRIMARY};'>
-                <span style='font-weight: 600;'>✓</span> Secure & Compliant
+            <div style='color: {PRIMARY}; font-size: 14px;'>
+                <span style='font-weight: 600; color: #4caf50;'>✓</span> Secure & Compliant
             </div>
         </div>
     </div>
