@@ -51,6 +51,8 @@ st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
     background-color: {PAGE_BG};
+    display: flex;
+    justify-content: center;
 }}
 .header-card {{
     background-color: {PRIMARY};
@@ -61,6 +63,7 @@ st.markdown(f"""
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
+    width: 80%;
 }}
 .content-card {{
     background-color: white;
@@ -68,6 +71,7 @@ st.markdown(f"""
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 16px;
+    width: 80%;
 }}
 .content-card h4 {{
     margin-top: 0;
@@ -89,6 +93,9 @@ st.markdown(f"""
     color: {PRIMARY};
     text-align: center;
     margin-bottom: 24px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }}
 .badge {{
     padding: 4px 10px;
@@ -114,21 +121,16 @@ st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_a
 if "reg" not in st.session_state: st.session_state.reg = None
 if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
-if "reset_flag" not in st.session_state: st.session_state.reset_flag = False
 
 # -------------------------
-# Reset button (always visible)
+# Reset / Change Registration
 # -------------------------
-if st.button("Reset / Change Registration"):
+def reset_app():
     st.session_state.reg = None
     st.session_state.image = None
     st.session_state.show_summary = False
-    st.session_state.reset_flag = True
 
-# If reset flag is True, just rerun the app logic
-if st.session_state.reset_flag:
-    st.session_state.reset_flag = False
-    st.experimental_rerun()
+st.button("Reset / Change Registration", on_click=reset_app)
 
 # -------------------------
 # Input page
