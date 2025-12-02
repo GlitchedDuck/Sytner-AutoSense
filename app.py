@@ -118,13 +118,12 @@ if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
-# Reset / Change Registration button (always visible if reg or image exists)
+# Reset / Change Registration button (always visible)
 # -------------------------
-if st.session_state.reg or st.session_state.image:
-    if st.button("Reset / Change Registration"):
-        st.session_state.reg = None
-        st.session_state.image = None
-        st.session_state.show_summary = False
+if st.button("Reset / Change Registration"):
+    st.session_state.reg = None
+    st.session_state.image = None
+    st.session_state.show_summary = False
 
 # -------------------------
 # Input page
@@ -191,7 +190,6 @@ if st.session_state.show_summary and st.session_state.reg:
         flag_list.append('<span class="badge badge-error">Theft</span>')
     if history_flags.get("mileage_anomaly"):
         flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
-    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
