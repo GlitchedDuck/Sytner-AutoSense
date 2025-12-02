@@ -159,6 +159,21 @@ def apply_custom_css():
         background-color: #1873cc;
         border: none;
     }}
+    .stButton>button:focus {{
+        background-color: #1873cc;
+        border: none;
+        box-shadow: none;
+    }}
+    .stButton>button:active {{
+        background-color: #1565b8;
+        border: none;
+    }}
+    .stButton>button[kind="primary"] {{
+        background-color: {ACCENT};
+    }}
+    .stButton>button[kind="primary"]:hover {{
+        background-color: #1873cc;
+    }}
     .stButton>button:disabled {{
         background-color: #cccccc;
         color: #666666;
