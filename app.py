@@ -92,6 +92,16 @@ st.markdown(f"""
     text-align: center;
     margin-bottom: 24px;
 }}
+.badge {{
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: white;
+    margin-right: 4px;
+    font-size: 12px;
+}}
+.badge-warning {{background-color: #ff9800;}}
+.badge-error {{background-color: #f44336;}}
+.badge-info {{background-color: #0b3b6f;}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -101,17 +111,16 @@ st.markdown(f"""
 st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_allow_html=True)
 
 # -------------------------
-# Session state for entered reg
+# Session state
 # -------------------------
-if "reg" not in st.session_state:
-    st.session_state.reg = None
-if "image" not in st.session_state:
-    st.session_state.image = None
+if "reg" not in st.session_state: st.session_state.reg = None
+if "image" not in st.session_state: st.session_state.image = None
+if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
 # Input page
 # -------------------------
-if st.session_state.reg is None:
+if not st.session_state.show_summary:
     st.markdown("## Enter Vehicle Registration or Take Photo")
     option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0)
 
@@ -119,16 +128,18 @@ if st.session_state.reg is None:
         manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
+            st.session_state.show_summary = True
     elif option == "Take Photo":
-        if st.button("Open Camera"):
-            st.session_state.image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
-            if st.session_state.image:
-                st.session_state.reg = "KT68XYZ"  # Mock OCR extraction
+        image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
+        if image:
+            st.session_state.image = image
+            st.session_state.reg = "KT68XYZ"  # Mock OCR
+            st.session_state.show_summary = True
 
 # -------------------------
 # Summary page
 # -------------------------
-if st.session_state.reg:
+if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
 
@@ -137,50 +148,48 @@ if st.session_state.reg:
         st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
     st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
 
-    # Fetch data
+    # Fetch mocked data
     vehicle = lookup_vehicle_basic(reg)
     mot_tax = lookup_mot_and_tax(reg)
     recalls = lookup_recalls(reg)
 
-# -------------------------
-# Vehicle Summary with Badges
-# -------------------------
-st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
+    # Mock flags
+    history_flags = {
+        "write_off": False,
+        "theft": False,
+        "mileage_anomaly": True,
+        "note": "Mileage shows a 5,000 jump in 2021 record"
+    }
 
-# Basic info
-summary_html = f"""
-<p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
-<p><strong>Year:</strong> {vehicle['year']}</p>
-<p><strong>VIN:</strong> {vehicle['vin']}</p>
-<p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
-<p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
-"""
+    # Vehicle Summary with badges
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
+    summary_html = f"""
+    <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
+    <p><strong>Year:</strong> {vehicle['year']}</p>
+    <p><strong>VIN:</strong> {vehicle['vin']}</p>
+    <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
+    <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
+    """
 
-# Flags
-flags_html = "<p><strong>Status:</strong> "
-flag_list = []
+    # Badges
+    flags_html = "<p><strong>Status:</strong> "
+    flag_list = []
+    if history_flags.get("write_off"):
+        flag_list.append('<span class="badge badge-error">Write-off</span>')
+    if history_flags.get("theft"):
+        flag_list.append('<span class="badge badge-error">Theft</span>')
+    if history_flags.get("mileage_anomaly"):
+        flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+    # Open recalls badge
+    open_recalls = sum(1 for r in recalls if r["open"])
+    if open_recalls:
+        flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
 
-# Example mock flags
-history_flags = {
-    "write_off": False,
-    "theft": False,
-    "mileage_anomaly": True,
-    "note": "Mileage shows a 5,000 jump in 2021 record"
-}
+    flags_html += " ".join(flag_list) + "</p>"
 
-if history_flags.get("write_off"):
-    flag_list.append('<span style="background-color:#f44336;color:white;padding:3px 8px;border-radius:12px;margin-right:4px;">Write-off</span>')
-if history_flags.get("theft"):
-    flag_list.append('<span style="background-color:#d32f2f;color:white;padding:3px 8px;border-radius:12px;margin-right:4px;">Theft</span>')
-if history_flags.get("mileage_anomaly"):
-    flag_list.append(f'<span style="background-color:#ff9800;color:white;padding:3px 8px;border-radius:12px;margin-right:4px;">Mileage Anomaly</span>')
-
-flags_html += " ".join(flag_list) + "</p>"
-
-st.markdown(summary_html + flags_html, unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
-
+    st.markdown(summary_html + flags_html, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # MOT History
     with st.expander("MOT History"):
@@ -199,17 +208,13 @@ st.markdown("</div>", unsafe_allow_html=True)
         if st.button('Get a mock insurance quote'):
             st.success('Sample quote: £320/year (3rd party, excess £250)')
 
-    # Valuation at the bottom with "Send to Buyer"
+    # Valuation card with Send to Buyer
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
     st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
     condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
     value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
     st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
-
-    # Mock "Send to Sytner Buyer"
     if st.button("Send to Sytner Buyer"):
         st.success("Sent successfully!")
-
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-
