@@ -62,6 +62,7 @@ st.markdown(f"""
     font-size: 24px;
     font-weight: 700;
     text-align: center;
+    margin-bottom: 24px;
 }}
 .content-card {{
     background-color: white;
@@ -69,6 +70,10 @@ st.markdown(f"""
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 16px;
+}}
+.content-card h4 {{
+    margin-top: 0;
+    margin-bottom: 8px;
 }}
 .stButton>button {{
     background-color: {ACCENT};
@@ -121,10 +126,10 @@ mot_tax = lookup_mot_and_tax(reg)
 recalls = lookup_recalls(reg)
 
 # -------------------------
-# Valuation Card with condition selector
+# Valuation Card
 # -------------------------
 st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-st.subheader("Vehicle Valuation")
+st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
 condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
 value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
 st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
@@ -133,16 +138,16 @@ st.markdown("</div>", unsafe_allow_html=True)
 # -------------------------
 # Vehicle Summary Card
 # -------------------------
+st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
 st.markdown(f"""
-<div class='content-card'>
-<h4>Vehicle Summary</h4>
 <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
 <p><strong>Year:</strong> {vehicle['year']}</p>
 <p><strong>VIN:</strong> {vehicle['vin']}</p>
 <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
 <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
-</div>
 """, unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------
 # MOT History Card (expandable)
@@ -162,26 +167,21 @@ with st.expander("Recalls"):
 # -------------------------
 # Insurance Card (mock)
 # -------------------------
-st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-st.markdown("<h4>Insurance (Mock)</h4>", unsafe_allow_html=True)
-st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
-if st.button('Get a mock insurance quote'):
-    st.success('Sample quote: £320/year (3rd party, excess £250)')
-st.markdown("</div>", unsafe_allow_html=True)
+with st.expander("Insurance (Mock)"):
+    st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
+    if st.button('Get a mock insurance quote'):
+        st.success('Sample quote: £320/year (3rd party, excess £250)')
 
 # -------------------------
-# Snapshot Download
+# Snapshot Download Card
 # -------------------------
-st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-st.markdown("<h4>Snapshot</h4>", unsafe_allow_html=True)
-snapshot = {
-    "vehicle": vehicle,
-    "mot_tax": mot_tax,
-    "recalls": recalls,
-    "valuation": {"value": value, "condition": condition},
-    "queried_at": datetime.datetime.utcnow().isoformat()
-}
-st.download_button("Download JSON snapshot", data=json.dumps(snapshot, indent=2),
-                   file_name=f"{reg}_snapshot.json", mime='application/json')
-st.markdown("</div>", unsafe_allow_html=True)
-
+with st.expander("Snapshot"):
+    snapshot = {
+        "vehicle": vehicle,
+        "mot_tax": mot_tax,
+        "recalls": recalls,
+        "valuation": {"value": value, "condition": condition},
+        "queried_at": datetime.datetime.utcnow().isoformat()
+    }
+    st.download_button("Download JSON snapshot", data=json.dumps(snapshot, indent=2),
+                       file_name=f"{reg}_snapshot.json", mime='application/json')
