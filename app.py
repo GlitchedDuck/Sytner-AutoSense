@@ -558,7 +558,7 @@ def render_valuation(vehicle):
         col_a, col_b, col_c = st.columns([2, 1, 1])
         with col_a:
             badge = f" - {loc['badge']}" if loc['badge'] else ""
-            st.markdown(f"**{loc['location']}**{badge}")
+            st.markdown(f"{loc['location']}{badge}")
         with col_b:
             st.markdown(f"**£{loc['offer']:,}**")
         with col_c:
