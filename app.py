@@ -688,8 +688,6 @@ def render_sytner_buyers(vehicle, reg):
     else:
         filtered_buyers = sorted(filtered_buyers, key=lambda x: x["name"])
     
-    st.markdown("---")
-    
     # Display buyers
     for buyer in filtered_buyers:
         # Check if this vehicle matches buyer's specialties
@@ -697,23 +695,22 @@ def render_sytner_buyers(vehicle, reg):
         specialty_badge = " ⭐ SPECIALIST" if is_specialty else ""
         
         st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 16px; border-radius: 12px; margin-bottom: 16px; 
+        <div style='background-color: #f8f9fa; padding: 12px 16px; border-radius: 10px; margin-bottom: 12px; 
                     border-left: 4px solid {"#4caf50" if is_specialty else ACCENT};'>
-            <div style='display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;'>
                 <div>
-                    <h5 style='margin: 0; color: {PRIMARY};'>{buyer['name']}{specialty_badge}</h5>
-                    <p style='margin: 4px 0; color: #666; font-size: 14px;'>
+                    <div style='margin: 0; color: {PRIMARY}; font-size: 16px; font-weight: 700;'>{buyer['name']}{specialty_badge}</div>
+                    <div style='margin: 2px 0 0 0; color: #666; font-size: 13px;'>
                         📍 {buyer['location']} • {buyer['area']}
-                    </p>
+                    </div>
                 </div>
                 <div style='text-align: right;'>
-                    <div style='color: #ffa726; font-size: 14px;'>★ {buyer['rating']}/5.0</div>
-                    <div style='color: #666; font-size: 12px;'>{buyer['deals_completed']} deals</div>
+                    <div style='color: #ffa726; font-size: 13px;'>★ {buyer['rating']}/5.0</div>
+                    <div style='color: #999; font-size: 11px;'>{buyer['deals_completed']} deals</div>
                 </div>
             </div>
-            <div style='margin: 8px 0;'>
-                <strong style='font-size: 13px; color: #666;'>Specialties:</strong>
-                <div style='margin-top: 4px;'>
+            <div style='margin: 6px 0;'>
+                <div style='font-size: 11px; color: #999; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;'>Specialties</div>
         """, unsafe_allow_html=True)
         
         for specialty in buyer['specialties']:
@@ -721,7 +718,7 @@ def render_sytner_buyers(vehicle, reg):
             text_color = "white" if specialty.lower() in vehicle['model'].lower() else "#666"
             st.markdown(f"""
             <span style='display: inline-block; background-color: {badge_color}; color: {text_color}; 
-                        padding: 4px 10px; border-radius: 12px; font-size: 12px; margin: 2px 4px 2px 0;'>
+                        padding: 3px 8px; border-radius: 10px; font-size: 11px; margin: 2px 3px 2px 0;'>
                 {specialty}
             </span>
             """, unsafe_allow_html=True)
@@ -729,10 +726,10 @@ def render_sytner_buyers(vehicle, reg):
         st.markdown("</div></div>", unsafe_allow_html=True)
         
         # Contact section
-        col_a, col_b = st.columns([2, 1])
+        col_a, col_b = st.columns([1.5, 1])
         with col_a:
             st.markdown(f"""
-            <div style='font-size: 13px; color: #666; margin: 8px 0;'>
+            <div style='font-size: 12px; color: #666; margin: 4px 0 8px 0;'>
                 📞 {buyer['phone']}<br>
                 📧 {buyer['email']}
             </div>
@@ -746,8 +743,8 @@ def render_sytner_buyers(vehicle, reg):
         # Ping form (appears when button clicked)
         if st.session_state.get(f"ping_form_{buyer['email']}", False):
             st.markdown(f"""
-            <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; margin-top: 12px;'>
-                <h5 style='margin: 0 0 12px 0; color: {PRIMARY};'>📤 Send Request to {buyer['name']}</h5>
+            <div style='background-color: #e3f2fd; padding: 12px; border-radius: 8px; margin-top: 8px;'>
+                <div style='margin: 0 0 8px 0; color: {PRIMARY}; font-size: 15px; font-weight: 600;'>📤 Send Request to {buyer['name']}</div>
             </div>
             """, unsafe_allow_html=True)
             
