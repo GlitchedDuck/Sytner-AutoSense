@@ -1337,18 +1337,18 @@ def render_valuation_tab(vehicle):
             border_color = "#ff9800"  # Orange - stretch
         
         st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 20px; border-radius: 12px; margin: 16px 0; 
+        <div style='background-color: #f8f9fa; padding: 16px 20px; border-radius: 12px; margin: 12px 0; 
                     border-left: 6px solid {border_color}; box-shadow: 0 2px 4px rgba(0,0,0,0.08);'>
-            <div style='display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
                 <div>
-                    <div style='font-size: 20px; font-weight: 700; color: {PRIMARY}; margin-bottom: 4px;'>
+                    <div style='font-size: 18px; font-weight: 700; color: {PRIMARY}; margin-bottom: 2px;'>
                         {car['image_icon']} {car['model']}
                     </div>
-                    <div style='font-size: 14px; color: #666;'>{car['year']} Model • £{car['price']:,}</div>
+                    <div style='font-size: 13px; color: #666;'>{car['year']} Model • £{car['price']:,}</div>
                 </div>
                 <div style='text-align: right;'>
-                    <div style='background-color: {border_color}; color: white; padding: 6px 12px; 
-                                border-radius: 20px; font-weight: 700; font-size: 14px;'>
+                    <div style='background-color: {border_color}; color: white; padding: 4px 10px; 
+                                border-radius: 16px; font-weight: 700; font-size: 13px;'>
                         {trade_in_percentage}% Covered
                     </div>
                 </div>
@@ -1360,41 +1360,41 @@ def render_valuation_tab(vehicle):
         col_a, col_b, col_c = st.columns(3)
         with col_a:
             st.markdown(f"""
-            <div style='background-color: white; padding: 16px; border-radius: 8px; text-align: center;'>
-                <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
-                    Your Trade-In Covers
+            <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
+                    YOUR TRADE-IN COVERS
                 </div>
-                <div style='font-size: 22px; font-weight: 700; color: #4caf50;'>
+                <div style='font-size: 20px; font-weight: 700; color: #4caf50;'>
                     £{trade_in_value:,}
                 </div>
             </div>
             """, unsafe_allow_html=True)
         with col_b:
             st.markdown(f"""
-            <div style='background-color: white; padding: 16px; border-radius: 8px; text-align: center; border-left: 2px solid #e0e0e0; border-right: 2px solid #e0e0e0;'>
-                <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
-                    Additional Needed
+            <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
+                    ADDITIONAL NEEDED
                 </div>
-                <div style='font-size: 22px; font-weight: 700; color: {PRIMARY};'>
+                <div style='font-size: 20px; font-weight: 700; color: {PRIMARY};'>
                     £{remaining_amount:,}
                 </div>
             </div>
             """, unsafe_allow_html=True)
         with col_c:
             st.markdown(f"""
-            <div style='background-color: white; padding: 16px; border-radius: 8px; text-align: center;'>
-                <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
-                    Est. Monthly*
+            <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
+                    EST. MONTHLY*
                 </div>
-                <div style='font-size: 22px; font-weight: 700; color: {ACCENT};'>
+                <div style='font-size: 20px; font-weight: 700; color: {ACCENT};'>
                     £{monthly_payment}/mo
                 </div>
             </div>
             """, unsafe_allow_html=True)
         
         st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 12px 20px 20px 20px; border-radius: 0 0 12px 12px; margin-top: -4px;'>
-            <div style='font-size: 12px; color: #666; line-height: 1.5;'>
+        <div style='background-color: #fffbf0; padding: 8px 12px; border-radius: 8px; margin: 8px 0 0 0;'>
+            <div style='font-size: 11px; color: #666; line-height: 1.4;'>
                 💡 With £{deposit:,} deposit + your trade-in • 48-month term @ 4.9% APR (indicative)
             </div>
         </div>
