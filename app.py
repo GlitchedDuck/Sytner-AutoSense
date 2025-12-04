@@ -711,19 +711,20 @@ def render_sytner_buyers(vehicle, reg):
             </div>
             <div style='margin: 6px 0;'>
                 <div style='font-size: 11px; color: #999; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;'>Specialties</div>
+                <div style='line-height: 1.8;'>
         """, unsafe_allow_html=True)
         
+        # Build all badges in a single string
+        badges_html = ""
         for specialty in buyer['specialties']:
             badge_color = "#4caf50" if specialty.lower() in vehicle['model'].lower() else "#e0e0e0"
             text_color = "white" if specialty.lower() in vehicle['model'].lower() else "#666"
-            st.markdown(f"""
-            <span style='display: inline-block; background-color: {badge_color}; color: {text_color}; 
-                        padding: 3px 8px; border-radius: 10px; font-size: 11px; margin: 2px 3px 2px 0;'>
+            badges_html += f"""<span style='display: inline-block; background-color: {badge_color}; color: {text_color}; 
+                        padding: 3px 8px; border-radius: 10px; font-size: 11px; margin: 2px 3px 2px 0; white-space: nowrap;'>
                 {specialty}
-            </span>
-            """, unsafe_allow_html=True)
+            </span>"""
         
-        st.markdown("</div></div>", unsafe_allow_html=True)
+        st.markdown(badges_html + "</div></div></div>", unsafe_allow_html=True)
         
         # Contact section
         col_a, col_b = st.columns([1.5, 1])
