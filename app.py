@@ -38,11 +38,71 @@ GARAGES = [
     "Sytner BMW Worcester - Knightsbridge Park, Wallingford Road, Worcester"
 ]
 
+# GPS coordinates for each garage (for automatic location detection)
+GARAGE_COORDS = {
+    "Sytner BMW Cardiff": (51.4695, -3.1792),
+    "Sytner BMW Chigwell": (51.6460, 0.0750),
+    "Sytner BMW Coventry": (52.4162, -1.5121),
+    "Sytner BMW Harold Wood": (51.6089, 0.2458),
+    "Sytner BMW High Wycombe": (51.6248, -0.7489),
+    "Sytner BMW Leicester": (52.6111, -1.1175),
+    "Sytner BMW Luton": (51.8929, -0.4372),
+    "Sytner BMW Maidenhead": (51.5225, -0.6433),
+    "Sytner BMW Newport": (51.5665, -2.9871),
+    "Sytner BMW Nottingham": (52.9536, -1.1358),
+    "Sytner BMW Oldbury": (52.5050, -2.0150),
+    "Sytner BMW Sheffield": (53.4059, -1.4016),
+    "Sytner BMW Shrewsbury": (52.7280, -2.7350),
+    "Sytner BMW Solihull": (52.4114, -1.7869),
+    "Sytner BMW Stevenage": (51.9020, -0.2050),
+    "Sytner BMW Sunningdale": (51.3989, -0.6600),
+    "Sytner BMW Swansea": (51.6565, -3.9900),
+    "Sytner BMW Tamworth": (52.6342, -1.6950),
+    "Sytner BMW Tring": (51.7950, -0.6600),
+    "Sytner BMW Warwick": (52.2819, -1.5850),
+    "Sytner BMW Wolverhampton": (52.5867, -2.1280),
+    "Sytner BMW Worcester": (52.1936, -2.2200)
+}
+
 TIME_SLOTS = ["09:00 AM", "11:00 AM", "02:00 PM", "04:00 PM"]
 
 # ============================================================================
 # MOCK API FUNCTIONS (Replace with real APIs in production)
 # ============================================================================
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    """Calculate distance between two GPS coordinates using Haversine formula (in miles)"""
+    from math import radians, sin, cos, sqrt, atan2
+    
+    R = 3959  # Earth's radius in miles
+    
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+    distance = R * c
+    
+    return distance
+
+def find_nearest_garage(user_lat, user_lon):
+    """Find the nearest Sytner garage based on GPS coordinates"""
+    nearest_garage = None
+    min_distance = float('inf')
+    
+    for garage_name, (lat, lon) in GARAGE_COORDS.items():
+        distance = calculate_distance(user_lat, user_lon, lat, lon)
+        if distance < min_distance:
+            min_distance = distance
+            nearest_garage = garage_name
+    
+    # Find the full garage string from GARAGES list
+    for garage in GARAGES:
+        if garage.startswith(nearest_garage):
+            return garage, min_distance
+    
+    return None, None
 
 def lookup_vehicle_basic(reg):
     """Mock vehicle lookup - replace with real API"""
@@ -463,7 +523,7 @@ def render_input_page():
     st.markdown(f"""
     <div style='text-align: center; margin-bottom: 32px;'>
         <h2 style='color: {PRIMARY}; margin: 0 0 12px 0; font-size: 28px;'>Get Started</h2>
-        <p style='color: #666; font-size: 16px;'>Enter the customer's registration or scan their number plate</p>
+        <p style='color: #666; font-size: 16px;'>Enter customer's registration or scan their number plate</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -662,20 +722,66 @@ def get_sytner_buyers():
     ]
 
 def render_sytner_buyers(vehicle, reg):
-    """Render location-based buyer assignment"""
+    """Render location-based buyer assignment with GPS auto-detection"""
     st.markdown(f"<h4 style='color: {PRIMARY}; margin-top: 0;'>🎯 Contact Your Local Buyer</h4>", unsafe_allow_html=True)
-    st.markdown("Select your nearest Sytner location to connect with the allocated vehicle buyer")
+    st.markdown("Connect the customer with our expert buyers for fast valuation (2hr response)")
     
     buyers = get_sytner_buyers()
     
-    # Location selection
-    st.markdown("##### 📍 Select Your Sytner Location")
-    selected_garage = st.selectbox(
-        "Choose your nearest location",
-        GARAGES,
-        key="garage_selector",
-        help="The allocated buyer for this location will be shown below"
-    )
+    # Initialize session state for GPS location
+    if 'user_location' not in st.session_state:
+        st.session_state.user_location = None
+    if 'nearest_garage' not in st.session_state:
+        st.session_state.nearest_garage = None
+    
+    # GPS Auto-detection button
+    st.markdown("##### 📍 Your Location")
+    col_gps, col_manual = st.columns([1, 2])
+    
+    with col_gps:
+        if st.button("📡 Use My Location", use_container_width=True, type="secondary"):
+            # Use JavaScript to get GPS coordinates
+            st.components.v1.html("""
+            <script>
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        window.parent.postMessage({
+                            type: 'streamlit:setComponentValue',
+                            data: {lat: lat, lon: lon}
+                        }, '*');
+                    },
+                    function(error) {
+                        alert('Unable to get location: ' + error.message);
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser');
+            }
+            </script>
+            <p style='font-size: 12px; color: #666; margin: 10px 0;'>Click "Use My Location" to detect nearest garage</p>
+            """, height=60)
+    
+    with col_manual:
+        # Try to auto-detect nearest garage if we have GPS coordinates
+        default_index = 0
+        if st.session_state.nearest_garage:
+            try:
+                default_index = GARAGES.index(st.session_state.nearest_garage)
+                st.success(f"📍 Nearest location detected: {st.session_state.nearest_garage.split(' - ')[0]}")
+            except ValueError:
+                pass
+        
+        selected_garage = st.selectbox(
+            "Or choose your nearest location manually",
+            GARAGES,
+            index=default_index,
+            key="garage_selector",
+            help="The allocated buyer for this location will be shown below",
+            label_visibility="collapsed"
+        )
     
     # Extract just the location name (e.g., "Sytner BMW Cardiff")
     garage_name = selected_garage.split(" - ")[0] if " - " in selected_garage else selected_garage
@@ -1033,9 +1139,9 @@ def render_market_trends(vehicle):
     """, unsafe_allow_html=True)
 
 def render_upgrade_options(vehicle):
-    """Show what customers could upgrade to with their trade-in"""
-    st.markdown("#### What Could You Drive Away In?")
-    st.markdown("*Based on your trade-in value + typical finance options*")
+    """Show potential upgrade options for the customer"""
+    st.markdown("#### Potential Upgrade Options")
+    st.markdown("*Show customer what they could upgrade to with trade-in + finance*")
     
     trade_in_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
     
@@ -1229,7 +1335,7 @@ def render_buyer_contact_tab(vehicle, reg):
 def render_valuation_tab(vehicle):
     """Render valuation information in tab"""
     st.markdown("### 💰 Estimated Trade-In Value")
-    st.markdown("*Based on current market data. Final valuation subject to vehicle inspection by Sytner buyer.*")
+    st.markdown("*Guide price based on current market data. Final offer subject to vehicle inspection.*")
     
     base_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], "good")
     min_value = int(base_value * 0.85)
@@ -1239,7 +1345,7 @@ def render_valuation_tab(vehicle):
     st.markdown(f"""
     <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
                 padding: 28px; border-radius: 12px; text-align: center; color: white; margin-bottom: 24px;'>
-        <div style='font-size: 16px; opacity: 0.9; margin-bottom: 8px;'>Your Vehicle Could Be Worth</div>
+        <div style='font-size: 16px; opacity: 0.9; margin-bottom: 8px;'>Estimated Vehicle Value</div>
         <div style='font-size: 48px; font-weight: 900; margin: 12px 0;'>£{min_value:,} - £{max_value:,}</div>
         <div style='font-size: 14px; opacity: 0.85;'>
             Typical value: £{mid_value:,} • {vehicle['year']} {vehicle['make']} {vehicle['model']}
@@ -1273,8 +1379,8 @@ def render_valuation_tab(vehicle):
     # Upgrade options section
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("### 🚗 What Could You Drive Away In?")
-    st.markdown("*See what your trade-in could get you into with Sytner finance options*")
+    st.markdown("### 🚗 Potential Upgrade Options")
+    st.markdown("*Show customer what they could upgrade to with trade-in + finance*")
     
     trade_in_value = mid_value  # Use good condition value
     
@@ -1358,7 +1464,7 @@ def render_valuation_tab(vehicle):
             st.markdown(f"""
             <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
                 <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
-                    YOUR TRADE-IN COVERS
+                    TRADE-IN COVERS
                 </div>
                 <div style='font-size: 20px; font-weight: 700; color: #4caf50;'>
                     £{trade_in_value:,}
@@ -1369,7 +1475,7 @@ def render_valuation_tab(vehicle):
             st.markdown(f"""
             <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
                 <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
-                    ADDITIONAL NEEDED
+                    CUSTOMER PAYS
                 </div>
                 <div style='font-size: 20px; font-weight: 700; color: {PRIMARY};'>
                     £{remaining_amount:,}
@@ -1380,7 +1486,7 @@ def render_valuation_tab(vehicle):
             st.markdown(f"""
             <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
                 <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
-                    EST. MONTHLY*
+                    MONTHLY PAYMENT*
                 </div>
                 <div style='font-size: 20px; font-weight: 700; color: {ACCENT};'>
                     £{monthly_payment}/mo
@@ -1391,7 +1497,7 @@ def render_valuation_tab(vehicle):
         st.markdown(f"""
         <div style='background-color: #fffbf0; padding: 8px 12px; border-radius: 8px; margin: 8px 0 0 0;'>
             <div style='font-size: 11px; color: #666; line-height: 1.4;'>
-                💡 With £{deposit:,} deposit + your trade-in • 48-month term @ 4.9% APR (indicative)
+                💡 With £{deposit:,} deposit + trade-in • 48-month term @ 4.9% APR (indicative)
             </div>
         </div>
         """, unsafe_allow_html=True)
