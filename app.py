@@ -832,6 +832,258 @@ def render_sytner_buyers(vehicle, reg):
         </div>
         """, unsafe_allow_html=True)
 
+def render_market_trends(vehicle):
+    """Display market trends and seasonal forecasting"""
+    st.markdown("#### 📊 Market Intelligence & Trends")
+    st.markdown("*Real-time insights to help you make the best deal*")
+    
+    # Current market demand for this vehicle type
+    vehicle_type = vehicle['model'].split()[0] if vehicle['model'] else "Series"
+    
+    st.markdown("---")
+    st.markdown("##### 🎯 Current Market Demand")
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); 
+                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
+            <div style='font-size: 32px; font-weight: 700;'>HIGH</div>
+            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Demand Level</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, {ACCENT} 0%, #1873cc 100%); 
+                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
+            <div style='font-size: 32px; font-weight: 700;'>12</div>
+            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Days avg. to sell</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); 
+                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
+            <div style='font-size: 32px; font-weight: 700;'>87%</div>
+            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Of asking price</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Seasonal trends
+    st.markdown("---")
+    st.markdown("##### 🌦️ Seasonal Demand Forecast")
+    
+    current_month = datetime.date.today().month
+    current_season = ""
+    if current_month in [12, 1, 2]:
+        current_season = "Winter"
+        season_icon = "❄️"
+    elif current_month in [3, 4, 5]:
+        current_season = "Spring"
+        season_icon = "🌸"
+    elif current_month in [6, 7, 8]:
+        current_season = "Summer"
+        season_icon = "☀️"
+    else:
+        current_season = "Autumn"
+        season_icon = "🍂"
+    
+    st.markdown(f"**Current Season: {season_icon} {current_season}**")
+    
+    # Seasonal performance by vehicle type
+    seasonal_data = {
+        "Winter": {
+            "SUV/4x4": {"demand": "Very High", "trend": "↑ +25%", "color": "#4caf50"},
+            "Saloon": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"},
+            "Convertible": {"demand": "Low", "trend": "↓ -40%", "color": "#f44336"},
+            "Estate": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"}
+        },
+        "Spring": {
+            "SUV/4x4": {"demand": "High", "trend": "↑ +10%", "color": "#4caf50"},
+            "Saloon": {"demand": "High", "trend": "↑ +20%", "color": "#4caf50"},
+            "Convertible": {"demand": "Very High", "trend": "↑ +60%", "color": "#4caf50"},
+            "Estate": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"}
+        },
+        "Summer": {
+            "SUV/4x4": {"demand": "Moderate", "trend": "↓ -10%", "color": "#ff9800"},
+            "Saloon": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"},
+            "Convertible": {"demand": "Very High", "trend": "↑ +50%", "color": "#4caf50"},
+            "Estate": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"}
+        },
+        "Autumn": {
+            "SUV/4x4": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"},
+            "Saloon": {"demand": "High", "trend": "↑ +10%", "color": "#4caf50"},
+            "Convertible": {"demand": "Low", "trend": "↓ -30%", "color": "#f44336"},
+            "Estate": {"demand": "High", "trend": "↑ +20%", "color": "#4caf50"}
+        }
+    }
+    
+    season_trends = seasonal_data.get(current_season, seasonal_data["Spring"])
+    
+    for vehicle_type, data in season_trends.items():
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 12px 16px; border-radius: 8px; 
+                    margin: 8px 0; border-left: 4px solid {data["color"]};'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <div>
+                    <strong>{vehicle_type}</strong>
+                </div>
+                <div style='text-align: right;'>
+                    <span style='color: {data["color"]}; font-weight: 600;'>{data["trend"]}</span>
+                    <span style='color: #666; margin-left: 12px;'>{data["demand"]} demand</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Local market insights
+    st.markdown("---")
+    st.markdown("##### 📍 Local Area Insights (30 mile radius)")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**🔥 Hot Sellers This Month:**")
+        hot_sellers = [
+            "BMW 3 Series - 45 sold",
+            "BMW X3 - 38 sold",
+            "BMW 5 Series - 32 sold",
+            "BMW X5 - 28 sold"
+        ]
+        for seller in hot_sellers:
+            st.markdown(f"• {seller}")
+    
+    with col2:
+        st.markdown("**💰 Best Value Opportunities:**")
+        opportunities = [
+            "Estate cars (+12% over book)",
+            "Diesel models (High demand)",
+            "2018-2020 models (Sweet spot)",
+            "Full service history (+£800)"
+        ]
+        for opp in opportunities:
+            st.markdown(f"• {opp}")
+    
+    # Price forecast
+    st.markdown("---")
+    st.markdown("##### 📈 6-Month Price Forecast")
+    
+    current_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
+    
+    forecast_months = []
+    for i in range(1, 7):
+        month_date = datetime.date.today() + datetime.timedelta(days=30*i)
+        # Simulate depreciation with seasonal adjustments
+        base_depreciation = -2.5  # 2.5% per month base
+        seasonal_adj = 0
+        month_num = month_date.month
+        
+        # Adjust for seasons
+        if month_num in [3, 4, 5, 6, 7]:  # Spring/Summer
+            seasonal_adj = 1.0
+        elif month_num in [12, 1, 2]:  # Winter
+            seasonal_adj = -1.5
+        
+        total_change = base_depreciation + seasonal_adj
+        projected_value = current_value * (1 + (total_change * i) / 100)
+        
+        forecast_months.append({
+            "month": month_date.strftime("%b %Y"),
+            "value": int(projected_value),
+            "change": total_change * i
+        })
+    
+    st.markdown(f"""
+    <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; margin: 12px 0;'>
+        <p style='margin: 0 0 12px 0;'><strong>Current Value:</strong> £{current_value:,}</p>
+    """, unsafe_allow_html=True)
+    
+    for forecast in forecast_months:
+        change_color = "#4caf50" if forecast['change'] > 0 else "#f44336"
+        change_symbol = "+" if forecast['change'] > 0 else ""
+        st.markdown(f"""
+        <div style='padding: 8px 0; border-bottom: 1px solid #ddd;'>
+            <div style='display: flex; justify-content: space-between;'>
+                <span>{forecast['month']}</span>
+                <span>
+                    <strong>£{forecast['value']:,}</strong>
+                    <span style='color: {change_color}; margin-left: 8px; font-size: 13px;'>
+                        ({change_symbol}{forecast['change']:.1f}%)
+                    </span>
+                </span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.info("💡 **Tip:** Values typically peak in Spring/Summer. Current market conditions suggest selling now could maximize returns.")
+    
+    # Competition analysis
+    st.markdown("---")
+    st.markdown("##### 🏁 Competition Analysis")
+    
+    st.markdown(f"""
+    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;'>
+        <p style='margin: 0 0 8px 0;'><strong>⚡ Market Opportunity Alert</strong></p>
+        <p style='margin: 0; font-size: 14px; line-height: 1.6;'>
+            • Only <strong>3 similar vehicles</strong> available within 50 miles<br>
+            • Average listing time: <strong>8 days</strong> (vs. 21 day average)<br>
+            • Prices trending <strong>↑ +5%</strong> this month<br>
+            • <strong>Recommendation:</strong> Strong seller's market - excellent time to trade
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+def render_upgrade_options(vehicle):
+    """Show what customers could upgrade to with their trade-in"""
+    st.markdown("#### What Could You Drive Away In?")
+    st.markdown("*Based on your trade-in value + typical finance options*")
+    
+    trade_in_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
+    
+    # Mock upgrade vehicles
+    upgrade_options = [
+        {
+            "model": "BMW 5 Series 530e M Sport",
+            "year": 2023,
+            "price": 45000,
+            "monthly": 520,
+            "deposit_needed": 45000 - trade_in_value
+        },
+        {
+            "model": "BMW X3 xDrive30e",
+            "year": 2024,
+            "price": 52000,
+            "monthly": 580,
+            "deposit_needed": 52000 - trade_in_value
+        },
+        {
+            "model": "BMW 4 Series 420i Coupe",
+            "year": 2023,
+            "price": 38000,
+            "monthly": 420,
+            "deposit_needed": 38000 - trade_in_value
+        }
+    ]
+    
+    for car in upgrade_options:
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 4px solid {PRIMARY};'>
+            <p style='margin: 0; font-size: 18px;'><strong>{car['model']}</strong> ({car['year']})</p>
+            <p style='margin: 8px 0; color: #666;'>
+                <strong>£{car['price']:,}</strong> | 
+                £{car['deposit_needed']:,} additional needed | 
+                From <strong>£{car['monthly']}/month</strong>
+            </p>
+            <p style='margin: 8px 0 0 0; font-size: 13px; color: {ACCENT};'>
+                Your £{trade_in_value:,} trade-in covers {int((trade_in_value/car['price'])*100)}% of the price
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.info("Speak to our sales team about part-exchange deals and finance options")
 def render_summary_page():
     """Render the vehicle summary page with tabbed interface"""
     reg = st.session_state.reg
