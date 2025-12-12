@@ -341,35 +341,42 @@ def render_wheel_tracker(current_stage_index, stages):
         
         dots_html += f'<div class="stage-dot {dot_class}" title="{stage["name"]}">{stage["icon"]}</div>'
     
-    # Render everything in one markdown call
+    # Render everything in one markdown call with wrapper
     st.markdown(f"""
+    <div class="wheel-tracker-wrapper">
     <style>
+    .wheel-tracker-wrapper {{
+        width: 100%;
+        margin: 20px 0;
+    }}
+    
     @keyframes pulse {{
         0%, 100% {{ transform: scale(1); }}
         50% {{ transform: scale(1.05); }}
     }}
     
-    .wheel-container {{
+    .wheel-tracker-wrapper .wheel-container {{
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        padding: 40px 20px 80px 20px;
+        padding: 50px 30px 100px 30px;
         background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%);
         border-radius: 20px;
-        margin: 20px 0;
-        min-height: 700px;
+        min-height: 750px;
         overflow: hidden;
+        box-sizing: border-box;
     }}
     
-    .wheel-wrapper {{
+    .wheel-tracker-wrapper .wheel-wrapper {{
         position: relative;
         width: 280px;
         height: 280px;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        flex-shrink: 0;
     }}
     
-    .wheel-outer {{
+    .wheel-tracker-wrapper .wheel-outer {{
         position: absolute;
         width: 100%;
         height: 100%;
@@ -381,7 +388,7 @@ def render_wheel_tracker(current_stage_index, stages):
         transition: transform 1s ease-out;
     }}
     
-    .wheel-rim {{
+    .wheel-tracker-wrapper .wheel-rim {{
         position: absolute;
         width: 90%;
         height: 90%;
@@ -398,7 +405,7 @@ def render_wheel_tracker(current_stage_index, stages):
         box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
     }}
     
-    .wheel-center {{
+    .wheel-tracker-wrapper .wheel-center {{
         position: absolute;
         width: 50%;
         height: 50%;
@@ -415,34 +422,40 @@ def render_wheel_tracker(current_stage_index, stages):
         animation: pulse 2s ease-in-out infinite;
     }}
     
-    .progress-text {{
+    .wheel-tracker-wrapper .progress-text {{
         color: white;
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        flex-shrink: 0;
+        width: 100%;
     }}
     
-    .stage-name {{
+    .wheel-tracker-wrapper .stage-name {{
         font-size: 24px;
         font-weight: 700;
         margin-bottom: 5px;
     }}
     
-    .progress-percent {{
+    .wheel-tracker-wrapper .progress-percent {{
         font-size: 48px;
         font-weight: 900;
         margin-top: 10px;
     }}
     
-    .stage-dots {{
+    .wheel-tracker-wrapper .stage-dots {{
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 15px;
-        margin-top: 20px;
-        padding: 20px 20px 40px 20px;
+        margin-top: 30px;
+        padding: 20px 30px 50px 30px;
         flex-wrap: wrap;
+        flex-shrink: 0;
+        width: 100%;
+        box-sizing: border-box;
     }}
     
-    .stage-dot {{
+    .wheel-tracker-wrapper .stage-dot {{
         width: 50px;
         height: 50px;
         border-radius: 50%;
@@ -452,22 +465,24 @@ def render_wheel_tracker(current_stage_index, stages):
         font-size: 24px;
         transition: all 0.3s ease;
         border: 3px solid rgba(255,255,255,0.3);
+        flex-shrink: 0;
+        box-sizing: border-box;
     }}
     
-    .stage-dot.completed {{
+    .wheel-tracker-wrapper .stage-dot.completed {{
         background-color: #4caf50;
         border-color: #4caf50;
         box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
     }}
     
-    .stage-dot.current {{
+    .wheel-tracker-wrapper .stage-dot.current {{
         background-color: white;
         border-color: white;
         animation: pulse 1.5s ease-in-out infinite;
         box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
     }}
     
-    .stage-dot.pending {{
+    .wheel-tracker-wrapper .stage-dot.pending {{
         background-color: rgba(255,255,255,0.2);
         border-color: rgba(255,255,255,0.3);
     }}
@@ -492,6 +507,7 @@ def render_wheel_tracker(current_stage_index, stages):
         <div class="stage-dots">
             {dots_html}
         </div>
+    </div>
     </div>
     """, unsafe_allow_html=True)
 
