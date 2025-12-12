@@ -1,3 +1,7 @@
+import json
+from pathlib import Path
+import random
+import string
 import streamlit as st
 from PIL import Image, ImageOps
 import datetime
@@ -12,6 +16,15 @@ ACCENT = "#1e90ff"
 PAGE_BG = "#e6f0fa"
 
 PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
+
+# Sales Pipeline Stages
+SALES_STAGES = [
+    {"name": "Deposit Taken", "icon": "💰", "color": "#4caf50"},
+    {"name": "Demands & Needs", "icon": "📋", "color": "#2196f3"},
+    {"name": "Sign/Ink Order", "icon": "✍️", "color": "#9c27b0"},
+    {"name": "Sell Option Extras", "icon": "🎁", "color": "#ff9800"},
+    {"name": "Collection Day", "icon": "🚗", "color": "#f44336"}
+]
 
 GARAGES = [
     "Sytner BMW Cardiff - 285-287 Penarth Road",
@@ -38,7 +51,7 @@ GARAGES = [
     "Sytner BMW Worcester - Knightsbridge Park"
 ]
 
-# GPS coordinates for each garage (for automatic location detection)
+# GPS coordinates for each garage
 GARAGE_COORDS = {
     "Sytner BMW Cardiff": (51.4695, -3.1792),
     "Sytner BMW Chigwell": (51.6460, 0.0750),
@@ -67,7 +80,7 @@ GARAGE_COORDS = {
 TIME_SLOTS = ["09:00 AM", "11:00 AM", "02:00 PM", "04:00 PM"]
 
 # ============================================================================
-# MOCK API FUNCTIONS (Replace with real APIs in production)
+# MOCK API FUNCTIONS
 # ============================================================================
 
 def calculate_distance(lat1, lon1, lat2, lon2):
@@ -97,7 +110,6 @@ def find_nearest_garage(user_lat, user_lon):
             min_distance = distance
             nearest_garage = garage_name
     
-    # Find the full garage string from GARAGES list
     for garage in GARAGES:
         if garage.startswith(nearest_garage):
             return garage, min_distance
@@ -105,7 +117,7 @@ def find_nearest_garage(user_lat, user_lon):
     return None, None
 
 def lookup_vehicle_basic(reg):
-    """Mock vehicle lookup - replace with real API"""
+    """Mock vehicle lookup"""
     reg_clean = reg.upper().replace(" ", "")
     return {
         "reg": reg_clean,
@@ -117,7 +129,7 @@ def lookup_vehicle_basic(reg):
     }
 
 def lookup_mot_and_tax(reg):
-    """Mock MOT and tax lookup - replace with DVLA API"""
+    """Mock MOT and tax lookup"""
     today = datetime.date.today()
     return {
         "mot_next_due": (today + datetime.timedelta(days=120)).isoformat(),
@@ -129,14 +141,14 @@ def lookup_mot_and_tax(reg):
     }
 
 def lookup_recalls(reg_or_vin):
-    """Mock recall lookup - replace with DVSA API"""
+    """Mock recall lookup"""
     return [
         {"id": "R-2023-001", "summary": "Airbag inflator recall - replace module", "open": True},
         {"id": "R-2022-012", "summary": "Steering column check", "open": False}
     ]
 
 def get_history_flags(reg):
-    """Mock history check - replace with HPI/Experian API"""
+    """Mock history check"""
     return {
         "write_off": False,
         "theft": False,
@@ -145,15 +157,71 @@ def get_history_flags(reg):
     }
 
 def estimate_value(make, model, year, mileage, condition="good"):
-    """Mock valuation - replace with CAP/Glass's API"""
+    """Mock valuation"""
     age = datetime.date.today().year - year
     base = 25000 - (age * 2000) - (mileage / 10)
     cond_multiplier = {"excellent": 1.05, "good": 1.0, "fair": 0.9, "poor": 0.8}
     return max(100, int(base * cond_multiplier.get(condition, 1.0)))
 
 def mock_ocr_numberplate(image):
-    """Mock OCR - replace with ANPR API"""
+    """Mock OCR"""
     return "KT68XYZ"
+
+# ============================================================================
+# SALES CHECK-IN DATA FUNCTIONS
+# ============================================================================
+
+def load_sales_data():
+    """Load sales check-in data from JSON file"""
+    try:
+        sales_file = Path("data/sales_records.json")
+        if sales_file.exists():
+            with open(sales_file, 'r') as f:
+                return json.load(f)
+        return []
+    except Exception as e:
+        st.error(f"Error loading sales data: {e}")
+        return []
+
+def generate_tracking_id():
+    """Generate unique tracking ID"""
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=12))
+
+def save_customer_journey(journey_data):
+    """Save new customer journey"""
+    try:
+        journeys_file = Path("data/customer_journeys.json")
+        journeys_file.parent.mkdir(exist_ok=True)
+        
+        if journeys_file.exists():
+            with open(journeys_file, 'r') as f:
+                journeys = json.load(f)
+        else:
+            journeys = []
+        
+        journeys.append(journey_data)
+        
+        with open(journeys_file, 'w') as f:
+            json.dump(journeys, f, indent=2)
+        
+        return True
+    except Exception as e:
+        st.warning(f"Could not save journey: {e}")
+        return False
+
+def get_journey_by_tracking_id(tracking_id):
+    """Get journey by tracking ID"""
+    try:
+        journeys_file = Path("data/customer_journeys.json")
+        if journeys_file.exists():
+            with open(journeys_file, 'r') as f:
+                journeys = json.load(f)
+            for journey in journeys:
+                if journey.get('tracking_id') == tracking_id:
+                    return journey
+    except:
+        pass
+    return None
 
 # ============================================================================
 # VALIDATION FUNCTIONS
@@ -181,7 +249,9 @@ def init_session_state():
         "image": None,
         "show_summary": False,
         "vehicle_data": None,
-        "booking_forms": {}
+        "booking_forms": {},
+        "create_journey_mode": False,
+        "journey_data": {},
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -194,6 +264,180 @@ def reset_all_state():
     st.session_state.show_summary = False
     st.session_state.vehicle_data = None
     st.session_state.booking_forms = {}
+
+# ============================================================================
+# ANIMATED WHEEL TRACKER
+# ============================================================================
+
+def render_wheel_tracker(current_stage_index, stages):
+    """Render an animated car wheel progress tracker"""
+    
+    total_stages = len(stages)
+    progress_percent = ((current_stage_index + 1) / total_stages) * 100
+    rotation = (progress_percent / 100) * 360
+    current_stage = stages[current_stage_index]
+    
+    st.markdown(f"""
+    <style>
+    @keyframes pulse {{
+        0%, 100% {{ transform: scale(1); }}
+        50% {{ transform: scale(1.05); }}
+    }}
+    
+    .wheel-container {{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%);
+        border-radius: 20px;
+        margin: 20px 0;
+    }}
+    
+    .wheel-wrapper {{
+        position: relative;
+        width: 280px;
+        height: 280px;
+        margin-bottom: 30px;
+    }}
+    
+    .wheel-outer {{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3),
+                    inset 0 0 20px rgba(255,255,255,0.1);
+        transform: rotate({rotation}deg);
+        transition: transform 1s ease-out;
+    }}
+    
+    .wheel-rim {{
+        position: absolute;
+        width: 90%;
+        height: 90%;
+        top: 5%;
+        left: 5%;
+        border-radius: 50%;
+        background: conic-gradient(
+            from 0deg,
+            #3498db 0deg,
+            #2ecc71 {progress_percent * 3.6}deg,
+            #95a5a6 {progress_percent * 3.6}deg,
+            #7f8c8d 360deg
+        );
+        box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
+    }}
+    
+    .wheel-center {{
+        position: absolute;
+        width: 50%;
+        height: 50%;
+        top: 25%;
+        left: 25%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3),
+                    inset 0 0 10px rgba(255,255,255,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        animation: pulse 2s ease-in-out infinite;
+    }}
+    
+    .progress-text {{
+        color: white;
+        text-align: center;
+    }}
+    
+    .stage-name {{
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }}
+    
+    .progress-percent {{
+        font-size: 48px;
+        font-weight: 900;
+        margin-top: 10px;
+    }}
+    
+    .stage-dots {{
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }}
+    
+    .stage-dot {{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        transition: all 0.3s ease;
+        border: 3px solid rgba(255,255,255,0.3);
+    }}
+    
+    .stage-dot.completed {{
+        background-color: #4caf50;
+        border-color: #4caf50;
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+    }}
+    
+    .stage-dot.current {{
+        background-color: white;
+        border-color: white;
+        animation: pulse 1.5s ease-in-out infinite;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+    }}
+    
+    .stage-dot.pending {{
+        background-color: rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.3);
+    }}
+    </style>
+    
+    <div class="wheel-container">
+        <div class="wheel-wrapper">
+            <div class="wheel-outer">
+                <div class="wheel-rim"></div>
+                <div class="wheel-center">
+                    {current_stage['icon']}
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-text">
+            <div class="stage-name">{current_stage['name']}</div>
+            <div style="font-size: 16px; opacity: 0.9;">Stage {current_stage_index + 1} of {total_stages}</div>
+            <div class="progress-percent">{progress_percent:.0f}%</div>
+        </div>
+        
+        <div class="stage-dots">
+    """, unsafe_allow_html=True)
+    
+    for idx, stage in enumerate(stages):
+        if idx < current_stage_index:
+            dot_class = "completed"
+        elif idx == current_stage_index:
+            dot_class = "current"
+        else:
+            dot_class = "pending"
+        
+        st.markdown(f"""
+            <div class="stage-dot {dot_class}" title="{stage['name']}">
+                {stage['icon']}
+            </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
 # ============================================================================
 # STYLING
@@ -238,38 +482,6 @@ def apply_custom_css():
         border: none !important;
         color: white !important;
     }}
-    .stButton>button:focus {{
-        background-color: #1873cc !important;
-        border: none !important;
-        box-shadow: none !important;
-        color: white !important;
-    }}
-    .stButton>button:active {{
-        background-color: #1565b8 !important;
-        border: none !important;
-        color: white !important;
-    }}
-    .stButton>button[kind="primary"] {{
-        background-color: {ACCENT} !important;
-    }}
-    .stButton>button[kind="primary"]:hover {{
-        background-color: #1873cc !important;
-        color: white !important;
-    }}
-    .stButton>button[kind="primary"]:focus {{
-        background-color: #1873cc !important;
-        color: white !important;
-    }}
-    .stButton>button[kind="primary"]:active {{
-        background-color: #1565b8 !important;
-        color: white !important;
-    }}
-    .stButton>button:disabled {{
-        background-color: #cccccc !important;
-        color: #666666 !important;
-    }}
-    
-    /* Form submit buttons - same styling as regular buttons */
     .stFormSubmitButton>button {{
         background-color: {ACCENT} !important;
         color: white !important;
@@ -278,18 +490,6 @@ def apply_custom_css():
         border: none !important;
         padding: 0.5rem 1rem;
         font-size: 16px;
-    }}
-    .stFormSubmitButton>button:hover {{
-        background-color: #1873cc !important;
-        color: white !important;
-    }}
-    .stFormSubmitButton>button[kind="primary"] {{
-        background-color: {ACCENT} !important;
-        color: white !important;
-    }}
-    .stFormSubmitButton>button[kind="secondary"] {{
-        background-color: #6c757d !important;
-        color: white !important;
     }}
     .numberplate {{
         background-color: #FFC600;
@@ -317,75 +517,6 @@ def apply_custom_css():
     .badge-warning {{background-color: #ff9800;}}
     .badge-error {{background-color: #f44336;}}
     .badge-success {{background-color: #4caf50;}}
-    
-    /* Hide empty containers and white bars */
-    .element-container:has(> .stMarkdown > div:empty),
-    .element-container:has(> .stMarkdown > div:only-child:empty) {{
-        display: none !important;
-    }}
-    
-    /* Remove extra padding from empty column containers */
-    [data-testid="column"]:empty {{
-        display: none !important;
-    }}
-    
-    /* Ensure content cards have no unexpected margins when empty */
-    .content-card:empty {{
-        display: none !important;
-    }}
-    
-    /* Remove default Streamlit spacing that creates white bars */
-    .block-container {{
-        padding-top: 2rem;
-    }}
-    
-    /* Number plate specific styling - only applies to inputs with specific key */
-    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) input {{
-        font-size: 28px;
-        padding: 16px 20px;
-        font-weight: 700;
-        text-align: center;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        background-color: #FFC600;
-        color: #000000;
-        border: 3px solid #000000;
-        border-radius: 8px;
-        font-family: 'Charles Wright', Arial, sans-serif;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        max-width: 400px;
-        margin: 0 auto;
-    }}
-    
-    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) input::placeholder {{
-        color: #666 !important;
-        opacity: 0.6;
-        letter-spacing: 2px;
-        font-size: 20px;
-        font-weight: 600;
-    }}
-    
-    /* Center the number plate input container */
-    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) > div {{
-        display: flex;
-        justify-content: center;
-    }}
-    
-    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) > div > div {{
-        max-width: 400px;
-        width: 100%;
-    }}
-    
-    /* Regular text inputs - normal styling */
-    .stTextInput input {{
-        font-size: 16px;
-        padding: 12px;
-    }}
-    
-    .stTextInput input::placeholder {{
-        color: #888 !important;
-        opacity: 1;
-    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -409,1228 +540,148 @@ def render_header():
 def render_reset_button():
     """Render reset button when on summary page"""
     if st.session_state.show_summary:
-        # Use container to center button without creating empty columns
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("New Vehicle Lookup", use_container_width=True):
                 reset_all_state()
                 st.rerun()
-        # Add empty markdown to prevent white bar rendering
-        st.markdown("")
-
-def render_status_badges(history_flags, open_recalls):
-    """Render status badges for vehicle"""
-    flags_html = "<p><strong>Status Flags:</strong> "
-    flag_list = []
-    
-    if history_flags.get("write_off"):
-        flag_list.append('<span class="badge badge-error">Write-off</span>')
-    if history_flags.get("theft"):
-        flag_list.append('<span class="badge badge-error">Theft Record</span>')
-    if history_flags.get("mileage_anomaly"):
-        flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
-    if open_recalls:
-        flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
-    
-    if not flag_list:
-        flag_list.append('<span class="badge badge-success">No Issues Found</span>')
-
-    flags_html += " ".join(flag_list) + "</p>"
-    st.markdown(flags_html, unsafe_allow_html=True)
-
-def render_vehicle_summary(vehicle, mot_tax, history_flags, open_recalls):
-    """Render the main vehicle summary card"""
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"**Make & Model:** {vehicle['make']} {vehicle['model']}")
-        st.markdown(f"**Year:** {vehicle['year']}")
-        st.markdown(f"**Mileage:** {vehicle['mileage']:,} miles")
-    with col2:
-        st.markdown(f"**VIN:** {vehicle['vin']}")
-        st.markdown(f"**Next MOT:** {mot_tax['mot_next_due']}")
-        st.markdown(f"**Tax Expiry:** {mot_tax['tax_expiry']}")
-
-    st.markdown("---")
-    render_status_badges(history_flags, open_recalls)
-    
-    if history_flags.get("note"):
-        st.info(f"ℹ️ {history_flags['note']}")
-    
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================================
-# PAGE RENDERERS
+# PAGE RENDERERS (Simplified versions - keeping only essentials)
 # ============================================================================
 
 def render_input_page():
     """Render the vehicle input page"""
+    st.markdown("### 🚗 Vehicle Lookup")
     
-    # Hero section with value proposition
-    st.markdown(f"""
-    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
-                padding: 40px 24px; border-radius: 16px; margin-bottom: 32px; text-align: center;'>
-        <h1 style='color: white; margin: 0 0 16px 0; font-size: 36px; font-weight: 700;'>Instant Trade-In Valuation</h1>
-        <p style='color: rgba(255,255,255,0.95); font-size: 18px; margin: 0 0 28px 0; font-weight: 400;'>
-            Get competitive offers in seconds • Complete deals in minutes
-        </p>
-        <div style='display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;'>
-            <div style='text-align: center;'>
-                <div style='font-size: 32px; font-weight: 700; color: white;'>30 mins</div>
-                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Average completion</div>
-            </div>
-            <div style='text-align: center;'>
-                <div style='font-size: 32px; font-weight: 700; color: white;'>15+</div>
-                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Network locations</div>
-            </div>
-            <div style='text-align: center;'>
-                <div style='font-size: 32px; font-weight: 700; color: white;'>£500+</div>
-                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Bonus opportunities</div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    manual_reg = st.text_input("Enter Registration", placeholder="AB12 CDE")
     
-    # Quick benefit cards
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown("""
-        <div style='text-align: center; padding: 20px 16px;'>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Instant Check</div>
-            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Full vehicle history in seconds</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown("""
-        <div style='text-align: center; padding: 20px 16px;'>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Best Offers</div>
-            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Compare across network</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown("""
-        <div style='text-align: center; padding: 20px 16px;'>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Same Day</div>
-            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Complete deal today</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Main input section
-    st.markdown(f"""
-    <div style='text-align: center; margin-bottom: 32px;'>
-        <h2 style='color: {PRIMARY}; margin: 0 0 12px 0; font-size: 28px;'>Get Started</h2>
-        <p style='color: #666; font-size: 16px;'>Enter customer's registration or scan their number plate</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Center the radio buttons with more spacing
-    col_spacer1, col_radio, col_spacer2 = st.columns([1, 2, 1])
-    with col_radio:
-        option = st.radio(
-            "Choose input method",
-            ["Enter Registration / VIN", "Scan Number Plate"],
-            index=0,
-            horizontal=True,
-            label_visibility="collapsed"
-        )
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    if "Enter Registration" in option:
-        # Number plate style input
-        st.markdown("""
-        <div style='text-align: center; margin-bottom: 12px;'>
-            <p style='font-size: 14px; color: #666; margin: 0;'>Enter registration number</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        col_spacer1, col_input, col_spacer2 = st.columns([1, 1, 1])
-        with col_input:
-            manual_reg = st.text_input(
-                "Enter registration",
-                placeholder="AB12 CDE",
-                help="Enter a UK registration number",
-                label_visibility="collapsed",
-                max_chars=15
-            )
-        
-        st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns([1, 1.5, 1])
-        with col2:
-            if st.button("🔍 Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
-                if validate_registration(manual_reg):
-                    st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
-                    st.session_state.image = None
-                    st.session_state.show_summary = True
-                    st.rerun()
-                else:
-                    st.error("❌ Please enter a valid registration")
-        
-        # Quick examples
-        st.markdown("""
-        <div style='text-align: center; margin-top: 24px;'>
-            <p style='color: #999; font-size: 13px;'>💡 <strong>Try:</strong> KT68XYZ • AB12CDE • BD51SMR</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    else:  # Scan Number Plate
-        # Camera instructions
-        st.markdown(f"""
-        <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT}; margin-bottom: 20px;'>
-            <p style='margin: 0; font-size: 14px; color: #0b3b6f;'>
-                <strong>Camera Tips:</strong> Position the plate clearly in frame • Ensure good lighting • Hold steady
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        image = st.camera_input(
-            "Scan customer's number plate",
-            key="camera",
-            help="Position the number plate clearly in the frame",
-            label_visibility="collapsed"
-        )
-        
-        if image:
-            try:
-                extracted_reg = mock_ocr_numberplate(image)
-                
-                if extracted_reg and validate_registration(extracted_reg):
-                    st.session_state.image = image
-                    st.session_state.reg = extracted_reg
-                    st.session_state.show_summary = True
-                    st.rerun()
-                else:
-                    st.error("Could not read number plate. Please try again or enter manually.")
-            except Exception as e:
-                st.error(f"Error processing image: {str(e)}")
-    
-    # Trust indicators at bottom - cleaner styling
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div style='text-align: center; padding: 28px 24px; background-color: white; border-radius: 12px; margin-top: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'>
-        <p style='color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0; font-weight: 600;'>Trusted by Sytner Staff Nationwide</p>
-        <div style='display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;'>
-            <div style='color: {PRIMARY}; font-size: 14px;'>
-                <span style='font-weight: 600; color: #4caf50;'>✓</span> Full DVLA Integration
-            </div>
-            <div style='color: {PRIMARY}; font-size: 14px;'>
-                <span style='font-weight: 600; color: #4caf50;'>✓</span> Real-time MOT Data
-            </div>
-            <div style='color: {PRIMARY}; font-size: 14px;'>
-                <span style='font-weight: 600; color: #4caf50;'>✓</span> Secure & Compliant
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def get_sytner_buyers():
-    """Return list of Sytner buyers with their allocated locations"""
-    return [
-        {
-            "name": "Sarah Mitchell",
-            "location": "Sytner BMW Cardiff",
-            "area": "South Wales",
-            "phone": "029 2046 8000",
-            "email": "sarah.mitchell@sytner.co.uk",
-            "specialties": ["3 Series", "5 Series", "Estate Cars"],
-            "rating": 4.9,
-            "deals_completed": 247,
-            "covers_garages": ["Sytner BMW Cardiff", "Sytner BMW Swansea", "Sytner BMW Newport"]
-        },
-        {
-            "name": "James Thompson",
-            "location": "Sytner BMW Birmingham",
-            "area": "West Midlands",
-            "phone": "0121 456 7890",
-            "email": "james.thompson@sytner.co.uk",
-            "specialties": ["X Series", "SUV", "4x4"],
-            "rating": 4.8,
-            "deals_completed": 312,
-            "covers_garages": ["Sytner BMW Oldbury", "Sytner BMW Wolverhampton", "Sytner BMW Tamworth"]
-        },
-        {
-            "name": "Emma Richardson",
-            "location": "Sytner BMW Leicester",
-            "area": "East Midlands",
-            "phone": "0116 234 5678",
-            "email": "emma.richardson@sytner.co.uk",
-            "specialties": ["M Sport", "Performance", "Diesel"],
-            "rating": 4.9,
-            "deals_completed": 289,
-            "covers_garages": ["Sytner BMW Leicester", "Sytner BMW Nottingham", "Sytner BMW Coventry"]
-        },
-        {
-            "name": "David Chen",
-            "location": "Sytner BMW Nottingham",
-            "area": "East Midlands",
-            "phone": "0115 789 0123",
-            "email": "david.chen@sytner.co.uk",
-            "specialties": ["3 Series", "Saloon", "Hybrid"],
-            "rating": 4.7,
-            "deals_completed": 198,
-            "covers_garages": ["Sytner BMW Nottingham", "Sytner BMW Sheffield"]
-        },
-        {
-            "name": "Sophie Williams",
-            "location": "Sytner BMW Coventry",
-            "area": "West Midlands",
-            "phone": "024 7655 4321",
-            "email": "sophie.williams@sytner.co.uk",
-            "specialties": ["All Models", "Quick Deals", "Part Exchange"],
-            "rating": 4.9,
-            "deals_completed": 356,
-            "covers_garages": ["Sytner BMW Coventry", "Sytner BMW Solihull", "Sytner BMW Warwick"]
-        },
-        {
-            "name": "Michael O'Brien",
-            "location": "Sytner BMW Sheffield",
-            "area": "South Yorkshire",
-            "phone": "0114 567 8901",
-            "email": "michael.obrien@sytner.co.uk",
-            "specialties": ["X Series", "High Mileage", "Commercial"],
-            "rating": 4.8,
-            "deals_completed": 276,
-            "covers_garages": ["Sytner BMW Sheffield", "Sytner BMW Shrewsbury"]
-        },
-        {
-            "name": "Lucy Anderson",
-            "location": "Sytner BMW Solihull",
-            "area": "West Midlands",
-            "phone": "0121 789 4561",
-            "email": "lucy.anderson@sytner.co.uk",
-            "specialties": ["Premium Models", "Low Mileage", "Executive"],
-            "rating": 4.9,
-            "deals_completed": 423,
-            "covers_garages": ["Sytner BMW Solihull", "Sytner BMW Worcester"]
-        },
-        {
-            "name": "Robert Taylor",
-            "location": "Sytner BMW Newport",
-            "area": "South Wales",
-            "phone": "01633 456 789",
-            "email": "robert.taylor@sytner.co.uk",
-            "specialties": ["Diesel", "Estate", "Family Cars"],
-            "rating": 4.7,
-            "deals_completed": 234,
-            "covers_garages": ["Sytner BMW Newport", "Sytner BMW Cardiff"]
-        }
-    ]
-
-def render_sytner_buyers(vehicle, reg):
-    """Render location-based buyer assignment with GPS auto-detection"""
-    
-    buyers = get_sytner_buyers()
-    
-    # Initialize session state for GPS location
-    if 'user_location' not in st.session_state:
-        st.session_state.user_location = None
-    if 'nearest_garage' not in st.session_state:
-        st.session_state.nearest_garage = None
-    
-    # GPS Auto-detection button
-    st.markdown("##### 📍 Your Location")
-    col_gps, col_manual = st.columns([1, 2])
-    
-    with col_gps:
-        if st.button("📡 Use My Location", use_container_width=True, type="secondary"):
-            # Use JavaScript to get GPS coordinates
-            st.components.v1.html("""
-            <script>
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        window.parent.postMessage({
-                            type: 'streamlit:setComponentValue',
-                            data: {lat: lat, lon: lon}
-                        }, '*');
-                    },
-                    function(error) {
-                        alert('Unable to get location: ' + error.message);
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by this browser');
-            }
-            </script>
-            <p style='font-size: 12px; color: #666; margin: 10px 0;'>Click "Use My Location" to detect nearest garage</p>
-            """, height=60)
-    
-    with col_manual:
-        # Try to auto-detect nearest garage if we have GPS coordinates
-        default_index = 0
-        if st.session_state.nearest_garage:
-            try:
-                default_index = GARAGES.index(st.session_state.nearest_garage)
-                st.success(f"📍 Nearest location detected: {st.session_state.nearest_garage.split(' - ')[0]}")
-            except ValueError:
-                pass
-        
-        selected_garage = st.selectbox(
-            "Or choose your nearest location manually",
-            GARAGES,
-            index=default_index,
-            key="garage_selector",
-            help="The allocated buyer for this location will be shown below",
-            label_visibility="collapsed"
-        )
-    
-    # Extract just the location name (e.g., "Sytner BMW Cardiff")
-    garage_name = selected_garage.split(" - ")[0] if " - " in selected_garage else selected_garage
-    
-    # Find the buyer allocated to this garage
-    allocated_buyer = None
-    for buyer in buyers:
-        if garage_name in buyer['covers_garages']:
-            allocated_buyer = buyer
-            break
-    
-    if allocated_buyer:
-        buyer = allocated_buyer
-        is_specialty = any(spec.lower() in vehicle['model'].lower() for spec in buyer['specialties'])
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        # Show the allocated buyer card
-        st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
-                    padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; color: white;'>
-            <div style='font-size: 13px; opacity: 0.9; margin-bottom: 6px;'>
-                ✅ <strong>Allocated Buyer for {garage_name}</strong>
-            </div>
-            <div style='font-size: 16px; font-weight: 700;'>{buyer['name']}</div>
-            <div style='font-size: 12px; opacity: 0.85; margin-top: 4px;'>
-                📍 Based at {buyer['location']} • ★ {buyer['rating']}/5.0 • {buyer['deals_completed']} deals completed
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Detailed buyer card with specialties
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; 
-                    border-left: 4px solid {"#4caf50" if is_specialty else ACCENT};'>
-            <div style='margin: 6px 0;'>
-                <div style='font-size: 11px; color: #999; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;'>Specialties</div>
-                <div style='line-height: 1.8;'>
-        """, unsafe_allow_html=True)
-        
-        # Build all badges in a single string
-        badges_html = ""
-        for specialty in buyer['specialties']:
-            badge_color = "#4caf50" if specialty.lower() in vehicle['model'].lower() else "#e0e0e0"
-            text_color = "white" if specialty.lower() in vehicle['model'].lower() else "#666"
-            badges_html += f"""<span style='display: inline-block; background-color: {badge_color}; color: {text_color}; 
-                        padding: 3px 8px; border-radius: 10px; font-size: 11px; margin: 2px 3px 2px 0; white-space: nowrap;'>
-                {specialty}
-            </span>"""
-        
-        st.markdown(badges_html + "</div></div></div>", unsafe_allow_html=True)
-        
-        # Contact section
-        col_a, col_b = st.columns([1.5, 1])
-        with col_a:
-            st.markdown(f"""
-            <div style='font-size: 12px; color: #666; margin: 4px 0 8px 0;'>
-                📞 {buyer['phone']}<br>
-                📧 {buyer['email']}
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_b:
-            if st.button(f"📲 Ping {buyer['name'].split()[0]}", key=f"ping_{buyer['email']}", use_container_width=True, type="primary"):
-                st.session_state[f"ping_form_{buyer['email']}"] = True
-                st.rerun()
-        
-        # Ping form (appears when button clicked)
-        if st.session_state.get(f"ping_form_{buyer['email']}", False):
-            st.markdown(f"""
-            <div style='background-color: #e3f2fd; padding: 12px; border-radius: 8px; margin-top: 8px;'>
-                <div style='margin: 0 0 8px 0; color: {PRIMARY}; font-size: 15px; font-weight: 600;'>📤 Send Request to {buyer['name']}</div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            with st.form(key=f"ping_form_submit_{buyer['email']}"):
-                col_x, col_y = st.columns(2)
-                with col_x:
-                    customer_name = st.text_input("Your Name *", placeholder="John Smith", key=f"ping_name_{buyer['email']}")
-                with col_y:
-                    customer_phone = st.text_input("Your Phone *", placeholder="07700 900000", key=f"ping_phone_{buyer['email']}")
-                
-                customer_email = st.text_input("Your Email *", placeholder="customer@example.com", key=f"ping_email_{buyer['email']}")
-                
-                preferred_contact = st.radio(
-                    "Preferred Contact Method",
-                    ["Phone", "Email", "Either"],
-                    horizontal=True,
-                    key=f"ping_contact_{buyer['email']}"
-                )
-                
-                urgency = st.select_slider(
-                    "How soon are you looking to sell?",
-                    options=["This week", "Within 2 weeks", "Within a month", "Just exploring"],
-                    key=f"ping_urgency_{buyer['email']}"
-                )
-                
-                additional_notes = st.text_area(
-                    "Additional Information (optional)",
-                    placeholder="Any specific questions or requirements...",
-                    key=f"ping_notes_{buyer['email']}"
-                )
-                
-                col_submit, col_cancel = st.columns(2)
-                with col_submit:
-                    submitted = st.form_submit_button("✅ Send Request", use_container_width=True, type="primary")
-                with col_cancel:
-                    cancelled = st.form_submit_button("❌ Cancel", use_container_width=True)
-                
-                if submitted:
-                    if customer_name and customer_phone and customer_email:
-                        request_ref = f"REQ-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
-                        st.success(f"""
-                        ✅ **Request Sent Successfully!**
-                        
-                        **Reference:** {request_ref}  
-                        **Buyer:** {buyer['name']} at {buyer['location']}  
-                        **Your Location:** {garage_name}  
-                        **Vehicle:** {vehicle['year']} {vehicle['make']} {vehicle['model']} ({reg})  
-                        **Contact Method:** {preferred_contact}  
-                        **Urgency:** {urgency}
-                        
-                        📧 Confirmation sent to: {customer_email}  
-                        ⏱️ **Expected Response Time:** Within 2 hours during business hours
-                        
-                        {buyer['name']} will contact you shortly to arrange a valuation!
-                        """)
-                        st.balloons()
-                        del st.session_state[f"ping_form_{buyer['email']}"]
-                    else:
-                        st.error("⚠️ Please fill in all required fields")
-                
-                if cancelled:
-                    del st.session_state[f"ping_form_{buyer['email']}"]
-                    st.rerun()
-        
-        # Coverage info
-        st.markdown("---")
-        covered_locations = [g.replace('Sytner BMW ', '') for g in buyer['covers_garages'] if g != garage_name]
-        if covered_locations:
-            st.markdown(f"""
-            <div style='background-color: #e8f5e9; padding: 12px; border-radius: 8px; border-left: 4px solid #4caf50;'>
-                <p style='margin: 0; font-size: 13px;'><strong>📍 {buyer['name']}'s Coverage Area:</strong></p>
-                <p style='margin: 6px 0 0 0; font-size: 12px; color: #666; line-height: 1.6;'>
-                    Also covers: {', '.join(covered_locations)}
-                </p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    else:
-        st.warning("⚠️ No buyer allocated to this location yet. Please contact Sytner directly.")
-
-def render_market_trends(vehicle):
-    """Display market trends and seasonal forecasting"""
-    st.markdown("#### 📊 Market Intelligence & Trends")
-    st.markdown("*Real-time insights to help you make the best deal*")
-    
-    # Current market demand for this vehicle type
-    vehicle_type = vehicle['model'].split()[0] if vehicle['model'] else "Series"
-    
-    st.markdown("---")
-    st.markdown("##### 🎯 Current Market Demand")
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(f"""
-        <div style='background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); 
-                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
-            <div style='font-size: 32px; font-weight: 700;'>HIGH</div>
-            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Demand Level</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {ACCENT} 0%, #1873cc 100%); 
-                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
-            <div style='font-size: 32px; font-weight: 700;'>12</div>
-            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Days avg. to sell</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown(f"""
-        <div style='background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); 
-                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
-            <div style='font-size: 32px; font-weight: 700;'>87%</div>
-            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Of asking price</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Seasonal trends
-    st.markdown("---")
-    st.markdown("##### 🌦️ Seasonal Demand Forecast")
-    
-    current_month = datetime.date.today().month
-    current_season = ""
-    if current_month in [12, 1, 2]:
-        current_season = "Winter"
-        season_icon = "❄️"
-    elif current_month in [3, 4, 5]:
-        current_season = "Spring"
-        season_icon = "🌸"
-    elif current_month in [6, 7, 8]:
-        current_season = "Summer"
-        season_icon = "☀️"
-    else:
-        current_season = "Autumn"
-        season_icon = "🍂"
-    
-    st.markdown(f"**Current Season: {season_icon} {current_season}**")
-    
-    # Seasonal performance by vehicle type
-    seasonal_data = {
-        "Winter": {
-            "SUV/4x4": {"demand": "Very High", "trend": "↑ +25%", "color": "#4caf50"},
-            "Saloon": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"},
-            "Convertible": {"demand": "Low", "trend": "↓ -40%", "color": "#f44336"},
-            "Estate": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"}
-        },
-        "Spring": {
-            "SUV/4x4": {"demand": "High", "trend": "↑ +10%", "color": "#4caf50"},
-            "Saloon": {"demand": "High", "trend": "↑ +20%", "color": "#4caf50"},
-            "Convertible": {"demand": "Very High", "trend": "↑ +60%", "color": "#4caf50"},
-            "Estate": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"}
-        },
-        "Summer": {
-            "SUV/4x4": {"demand": "Moderate", "trend": "↓ -10%", "color": "#ff9800"},
-            "Saloon": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"},
-            "Convertible": {"demand": "Very High", "trend": "↑ +50%", "color": "#4caf50"},
-            "Estate": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"}
-        },
-        "Autumn": {
-            "SUV/4x4": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"},
-            "Saloon": {"demand": "High", "trend": "↑ +10%", "color": "#4caf50"},
-            "Convertible": {"demand": "Low", "trend": "↓ -30%", "color": "#f44336"},
-            "Estate": {"demand": "High", "trend": "↑ +20%", "color": "#4caf50"}
-        }
-    }
-    
-    season_trends = seasonal_data.get(current_season, seasonal_data["Spring"])
-    
-    for vehicle_type, data in season_trends.items():
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 12px 16px; border-radius: 8px; 
-                    margin: 8px 0; border-left: 4px solid {data["color"]};'>
-            <div style='display: flex; justify-content: space-between; align-items: center;'>
-                <div>
-                    <strong>{vehicle_type}</strong>
-                </div>
-                <div style='text-align: right;'>
-                    <span style='color: {data["color"]}; font-weight: 600;'>{data["trend"]}</span>
-                    <span style='color: #666; margin-left: 12px;'>{data["demand"]} demand</span>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Local market insights
-    st.markdown("---")
-    st.markdown("##### 📍 Local Area Insights (30 mile radius)")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**🔥 Hot Sellers This Month:**")
-        hot_sellers = [
-            "BMW 3 Series - 45 sold",
-            "BMW X3 - 38 sold",
-            "BMW 5 Series - 32 sold",
-            "BMW X5 - 28 sold"
-        ]
-        for seller in hot_sellers:
-            st.markdown(f"• {seller}")
-    
-    with col2:
-        st.markdown("**💰 Best Value Opportunities:**")
-        opportunities = [
-            "Estate cars (+12% over book)",
-            "Diesel models (High demand)",
-            "2018-2020 models (Sweet spot)",
-            "Full service history (+£800)"
-        ]
-        for opp in opportunities:
-            st.markdown(f"• {opp}")
-    
-    # Price forecast
-    st.markdown("---")
-    st.markdown("##### 📈 6-Month Price Forecast")
-    
-    current_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
-    
-    forecast_months = []
-    for i in range(1, 7):
-        month_date = datetime.date.today() + datetime.timedelta(days=30*i)
-        # Simulate depreciation with seasonal adjustments
-        base_depreciation = -2.5  # 2.5% per month base
-        seasonal_adj = 0
-        month_num = month_date.month
-        
-        # Adjust for seasons
-        if month_num in [3, 4, 5, 6, 7]:  # Spring/Summer
-            seasonal_adj = 1.0
-        elif month_num in [12, 1, 2]:  # Winter
-            seasonal_adj = -1.5
-        
-        total_change = base_depreciation + seasonal_adj
-        projected_value = current_value * (1 + (total_change * i) / 100)
-        
-        forecast_months.append({
-            "month": month_date.strftime("%b %Y"),
-            "value": int(projected_value),
-            "change": total_change * i
-        })
-    
-    st.markdown(f"""
-    <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; margin: 12px 0;'>
-        <p style='margin: 0 0 12px 0;'><strong>Current Value:</strong> £{current_value:,}</p>
-    """, unsafe_allow_html=True)
-    
-    for forecast in forecast_months:
-        change_color = "#4caf50" if forecast['change'] > 0 else "#f44336"
-        change_symbol = "+" if forecast['change'] > 0 else ""
-        st.markdown(f"""
-        <div style='padding: 8px 0; border-bottom: 1px solid #ddd;'>
-            <div style='display: flex; justify-content: space-between;'>
-                <span>{forecast['month']}</span>
-                <span>
-                    <strong>£{forecast['value']:,}</strong>
-                    <span style='color: {change_color}; margin-left: 8px; font-size: 13px;'>
-                        ({change_symbol}{forecast['change']:.1f}%)
-                    </span>
-                </span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.info("💡 **Tip:** Values typically peak in Spring/Summer. Current market conditions suggest selling now could maximize returns.")
-    
-    # Competition analysis
-    st.markdown("---")
-    st.markdown("##### 🏁 Competition Analysis")
-    
-    st.markdown(f"""
-    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;'>
-        <p style='margin: 0 0 8px 0;'><strong>⚡ Market Opportunity Alert</strong></p>
-        <p style='margin: 0; font-size: 14px; line-height: 1.6;'>
-            • Only <strong>3 similar vehicles</strong> available within 50 miles<br>
-            • Average listing time: <strong>8 days</strong> (vs. 21 day average)<br>
-            • Prices trending <strong>↑ +5%</strong> this month<br>
-            • <strong>Recommendation:</strong> Strong seller's market - excellent time to trade
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-def render_upgrade_options(vehicle):
-    """Show potential upgrade options for the customer"""
-    st.markdown("#### Potential Upgrade Options")
-    st.markdown("*Show customer what they could upgrade to with trade-in + finance*")
-    
-    trade_in_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
-    
-    # Mock upgrade vehicles
-    upgrade_options = [
-        {
-            "model": "BMW 5 Series 530e M Sport",
-            "year": 2023,
-            "price": 45000,
-            "monthly": 520,
-            "deposit_needed": 45000 - trade_in_value
-        },
-        {
-            "model": "BMW X3 xDrive30e",
-            "year": 2024,
-            "price": 52000,
-            "monthly": 580,
-            "deposit_needed": 52000 - trade_in_value
-        },
-        {
-            "model": "BMW 4 Series 420i Coupe",
-            "year": 2023,
-            "price": 38000,
-            "monthly": 420,
-            "deposit_needed": 38000 - trade_in_value
-        }
-    ]
-    
-    for car in upgrade_options:
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 4px solid {PRIMARY};'>
-            <p style='margin: 0; font-size: 18px;'><strong>{car['model']}</strong> ({car['year']})</p>
-            <p style='margin: 8px 0; color: #666;'>
-                <strong>£{car['price']:,}</strong> | 
-                £{car['deposit_needed']:,} additional needed | 
-                From <strong>£{car['monthly']}/month</strong>
-            </p>
-            <p style='margin: 8px 0 0 0; font-size: 13px; color: {ACCENT};'>
-                Your £{trade_in_value:,} trade-in covers {int((trade_in_value/car['price'])*100)}% of the price
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.info("Speak to our sales team about part-exchange deals and finance options")
-def render_summary_page():
-    """Render the vehicle summary page with tabbed interface"""
-    reg = st.session_state.reg
-    image = st.session_state.image
-
-    # Display captured image
-    if image:
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.image(ImageOps.exif_transpose(Image.open(image)), use_container_width=True)
-
-    # Display number plate
-    st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
-
-    # Fetch vehicle data
-    try:
-        with st.spinner("🔄 Fetching vehicle information..."):
-            vehicle = lookup_vehicle_basic(reg)
-            mot_tax = lookup_mot_and_tax(reg)
-            recalls = lookup_recalls(reg)
-            history_flags = get_history_flags(reg)
-    except Exception as e:
-        st.error(f"⚠️ Error fetching vehicle data: {str(e)}")
-        st.stop()
-
-    open_recalls = sum(1 for r in recalls if r["open"])
-    
-    # Core vehicle summary (always visible)
-    render_vehicle_summary(vehicle, mot_tax, history_flags, open_recalls)
-    
-    # Quick Market Insights Card (always visible)
-    st.markdown(f"""
-    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
-                padding: 20px; border-radius: 12px; margin-bottom: 20px; color: white;'>
-        <h4 style='margin: 0 0 12px 0;'>📊 Quick Market Snapshot</h4>
-        <div style='display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px;'>
-            <div style='text-align: center;'>
-                <div style='font-size: 24px; font-weight: 700;'>HIGH</div>
-                <div style='font-size: 13px; opacity: 0.9;'>Demand</div>
-            </div>
-            <div style='text-align: center;'>
-                <div style='font-size: 24px; font-weight: 700;'>12 days</div>
-                <div style='font-size: 13px; opacity: 0.9;'>To Sell</div>
-            </div>
-            <div style='text-align: center;'>
-                <div style='font-size: 24px; font-weight: 700;'>↑ +5%</div>
-                <div style='font-size: 13px; opacity: 0.9;'>Price Trend</div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Main tabbed interface for detailed information
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "📋 MOT & Recalls",
-        "👤 Contact Buyer",
-        "💰 Trade-In Value",
-        "🏆 Best Offers",
-        "📈 Market Intel"
-    ])
-    
-    with tab1:
-        st.markdown("### 📋 MOT Test History")
-        render_mot_history_tab(mot_tax['mot_history'])
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("---")
-        render_recalls_tab(recalls, vehicle, reg)
-    
-    with tab2:
-        render_buyer_contact_tab(vehicle, reg)
-    
-    with tab3:
-        render_valuation_tab(vehicle)
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("---")
-        st.markdown("### 🚀 Deal Accelerator Bonuses")
-        render_deal_accelerator_tab(vehicle)
-    
-    with tab4:
-        render_network_offers_tab(vehicle)
-    
-    with tab5:
-        render_market_trends_tab(vehicle)
-
-
-# New tab rendering functions
-def render_mot_history_tab(mot_history):
-    """Render MOT history in tab"""
-    if mot_history:
-        for record in mot_history:
-            result_icon = "✅" if record['result'] == "Pass" else "⚠️"
-            result_color = "#4caf50" if record['result'] == "Pass" else "#ff9800"
-            st.markdown(f"""
-            <div style='background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid {result_color};'>
-                <div style='display: flex; justify-content: space-between; align-items: center;'>
-                    <div><strong>{result_icon} {record['result']}</strong> - {record['date']}</div>
-                    <div style='color: #666;'><span style='font-size: 20px;'>📏</span> {record['mileage']:,} miles</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.info("ℹ️ No MOT history available")
-
-def render_recalls_tab(recalls, vehicle, reg):
-    """Render recalls management in tab"""
-    st.markdown("### ⚠️ Safety Recalls Management")
-    
-    if not recalls:
-        st.success("✅ No outstanding recalls found for this vehicle")
-        return
-    
-    open_count = sum(1 for r in recalls if r["open"])
-    if open_count > 0:
-        st.warning(f"⚠️ {open_count} open recall(s) require attention")
-    
-    for recall in recalls:
-        status_icon = "🔴" if recall['open'] else "✅"
-        status_text = "OPEN - ACTION REQUIRED" if recall['open'] else "COMPLETED"
-        status_color = "#f44336" if recall['open'] else "#4caf50"
-        
-        st.markdown(f"""
-        <div style='background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid {status_color};'>
-            <div style='margin-bottom: 8px;'>
-                <strong>{status_icon} {status_text}</strong>
-                <span style='color: #666; margin-left: 12px; font-size: 13px;'>{recall['id']}</span>
-            </div>
-            <div style='color: #666; font-size: 15px;'>{recall['summary']}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if recall['open']:
-            recall_key = f"{recall['id']}_{reg}"
-            if st.button(f"📅 Book Repair for {recall['id']}", key=f"book_recall_{recall_key}"):
-                st.session_state.booking_forms[recall_key] = True
-                st.rerun()
-            
-            if st.session_state.booking_forms.get(recall_key):
-                render_recall_booking_form(recall, recall_key, vehicle)
-
-def render_buyer_contact_tab(vehicle, reg):
-    """Render buyer contact in tab"""
-    st.markdown("### 👤 Connect with Sytner Vehicle Buyer")
-    
-    render_sytner_buyers(vehicle, reg)
-
-def render_valuation_tab(vehicle):
-    """Render valuation information in tab"""
-    st.markdown("### 💰 Estimated Trade-In Value")
-    st.markdown("*Guide price based on current market data. Final offer subject to vehicle inspection.*")
-    
-    base_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], "good")
-    min_value = int(base_value * 0.85)
-    max_value = int(base_value * 1.05)
-    mid_value = base_value
-    
-    st.markdown(f"""
-    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
-                padding: 28px; border-radius: 12px; text-align: center; color: white; margin-bottom: 24px;'>
-        <div style='font-size: 16px; opacity: 0.9; margin-bottom: 8px;'>Estimated Vehicle Value</div>
-        <div style='font-size: 48px; font-weight: 900; margin: 12px 0;'>£{min_value:,} - £{max_value:,}</div>
-        <div style='font-size: 14px; opacity: 0.85;'>
-            Typical value: £{mid_value:,} • {vehicle['year']} {vehicle['make']} {vehicle['model']}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(f"""
-        <div style='text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;'>
-            <div style='font-size: 24px; font-weight: 600; color: {PRIMARY};'>£{min_value:,}</div>
-            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Fair Condition</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-        <div style='text-align: center; padding: 20px; background-color: #e3f2fd; border-radius: 8px;'>
-            <div style='font-size: 24px; font-weight: 600; color: {PRIMARY};'>£{mid_value:,}</div>
-            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Good Condition</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown(f"""
-        <div style='text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;'>
-            <div style='font-size: 24px; font-weight: 600; color: {PRIMARY};'>£{max_value:,}</div>
-            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Excellent Condition</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Upgrade options section
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown("### 🚗 Potential Upgrade Options")
-    st.markdown("*Show customer what they could upgrade to with trade-in + finance*")
-    
-    trade_in_value = mid_value  # Use good condition value
-    
-    # Available upgrade vehicles with realistic BMW pricing
-    upgrade_options = [
-        {
-            "model": "BMW 3 Series 320d M Sport",
-            "year": 2023,
-            "price": 38000,
-            "image_icon": "🚘"
-        },
-        {
-            "model": "BMW X3 xDrive20d M Sport",
-            "year": 2023,
-            "price": 48000,
-            "image_icon": "🚙"
-        },
-        {
-            "model": "BMW 5 Series 530e M Sport",
-            "year": 2024,
-            "price": 52000,
-            "image_icon": "🚗"
-        },
-        {
-            "model": "BMW X5 xDrive40i M Sport",
-            "year": 2024,
-            "price": 68000,
-            "image_icon": "🚙"
-        }
-    ]
-    
-    for car in upgrade_options:
-        # Calculate values
-        remaining_amount = car['price'] - trade_in_value
-        trade_in_percentage = int((trade_in_value / car['price']) * 100)
-        
-        # Typical finance: 10% deposit, 4.9% APR, 48 months
-        deposit = int(car['price'] * 0.10)
-        amount_to_finance = car['price'] - deposit - trade_in_value
-        
-        # Monthly payment calculation (simplified)
-        monthly_rate = 0.049 / 12
-        num_payments = 48
-        if amount_to_finance > 0:
-            monthly_payment = int((amount_to_finance * monthly_rate * (1 + monthly_rate)**num_payments) / 
-                                ((1 + monthly_rate)**num_payments - 1))
-        else:
-            monthly_payment = 0
-        
-        # Color coding based on affordability
-        if trade_in_percentage >= 40:
-            border_color = "#4caf50"  # Green - great deal
-        elif trade_in_percentage >= 25:
-            border_color = ACCENT  # Blue - good deal
-        else:
-            border_color = "#ff9800"  # Orange - stretch
-        
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 16px 20px; border-radius: 12px; margin: 12px 0; 
-                    border-left: 6px solid {border_color}; box-shadow: 0 2px 4px rgba(0,0,0,0.08);'>
-            <div style='display: flex; justify-content: space-between; align-items: center;'>
-                <div>
-                    <div style='font-size: 18px; font-weight: 700; color: {PRIMARY}; margin-bottom: 2px;'>
-                        {car['image_icon']} {car['model']}
-                    </div>
-                    <div style='font-size: 13px; color: #666;'>{car['year']} Model • £{car['price']:,}</div>
-                </div>
-                <div style='text-align: right;'>
-                    <div style='background-color: {border_color}; color: white; padding: 4px 10px; 
-                                border-radius: 16px; font-weight: 700; font-size: 13px;'>
-                        {trade_in_percentage}% Covered
-                    </div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Use columns for the three metrics
-        col_a, col_b, col_c = st.columns(3)
-        with col_a:
-            st.markdown(f"""
-            <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
-                <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
-                    TRADE-IN COVERS
-                </div>
-                <div style='font-size: 20px; font-weight: 700; color: #4caf50;'>
-                    £{trade_in_value:,}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_b:
-            st.markdown(f"""
-            <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
-                <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
-                    CUSTOMER PAYS
-                </div>
-                <div style='font-size: 20px; font-weight: 700; color: {PRIMARY};'>
-                    £{remaining_amount:,}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_c:
-            st.markdown(f"""
-            <div style='background-color: white; padding: 12px 8px; border-radius: 8px; text-align: center;'>
-                <div style='font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;'>
-                    MONTHLY PAYMENT*
-                </div>
-                <div style='font-size: 20px; font-weight: 700; color: {ACCENT};'>
-                    £{monthly_payment}/mo
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div style='background-color: #fffbf0; padding: 8px 12px; border-radius: 8px; margin: 8px 0 0 0;'>
-            <div style='font-size: 11px; color: #666; line-height: 1.4;'>
-                💡 With £{deposit:,} deposit + trade-in • 48-month term @ 4.9% APR (indicative)
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107; margin-top: 24px;'>
-        <p style='margin: 0; font-size: 13px; color: #666;'>
-            <strong>*Finance Example:</strong> Monthly payments are indicative based on typical Sytner finance terms. 
-            Actual rates depend on credit approval, deposit amount, and term length. Speak to our sales team for a personalized quote.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-def render_deal_accelerator_tab(vehicle):
-    """Render deal accelerator bonuses in tab"""
-    st.markdown("*Maximize your offer with these available bonuses*")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"""
-        <div style='background-color: #e8f5e9; padding: 24px; border-radius: 12px; border-left: 6px solid #4caf50;'>
-            <div style='font-size: 20px; font-weight: 600; color: #2e7d32; margin-bottom: 12px;'>
-                📦 Stock Priority Bonus
-            </div>
-            <div style='font-size: 36px; font-weight: 900; color: #1b5e20; margin-bottom: 8px;'>+£500</div>
-            <div style='font-size: 14px; color: #666;'>We need this model in stock!</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-        <div style='background-color: #e3f2fd; padding: 24px; border-radius: 12px; border-left: 6px solid {ACCENT};'>
-            <div style='font-size: 20px; font-weight: 600; color: #1565c0; margin-bottom: 12px;'>
-                ⚡ Same-Day Completion
-            </div>
-            <div style='font-size: 36px; font-weight: 900; color: #0d47a1; margin-bottom: 8px;'>+£200</div>
-            <div style='font-size: 14px; color: #666;'>If completed today</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    base_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], "good")
-    total_with_bonuses = base_value + 700
-    
-    st.markdown(f"""
-    <div style='background-color: #fff3cd; padding: 24px; border-radius: 12px; border-left: 4px solid #ffc107; margin-top: 24px;'>
-        <div style='text-align: center;'>
-            <div style='font-size: 16px; color: #666; margin-bottom: 8px;'><strong>Maximum Potential Offer</strong></div>
-            <div style='font-size: 42px; font-weight: 900; color: {PRIMARY};'>£{total_with_bonuses:,}</div>
-            <div style='font-size: 14px; color: #666; margin-top: 8px;'><em>Base value + all bonuses • Valid for 48 hours</em></div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def render_network_offers_tab(vehicle):
-    """Render network comparison in tab"""
-    st.markdown("### 🏆 Best Offers Across Sytner Network")
-    st.markdown("*Compare estimated offers from different locations*")
-    
-    base_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], "good")
-    total_value = base_value + 700
-    
-    network_data = [
-        {"location": "Sytner BMW Solihull", "offer": total_value, "distance": "Your Location", "badge": "🏆 Best Offer"},
-        {"location": "Sytner BMW Birmingham", "offer": total_value - 200, "distance": "8 miles", "badge": ""},
-        {"location": "Sytner BMW Coventry", "offer": total_value - 400, "distance": "15 miles", "badge": ""},
-    ]
-    
-    for loc in network_data:
-        badge_html = f"<span style='color: #ffa726; margin-left: 8px;'>{loc['badge']}</span>" if loc['badge'] else ""
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 16px 20px; border-radius: 8px; margin: 12px 0; 
-                    display: flex; justify-content: space-between; align-items: center; border-left: 4px solid {ACCENT};'>
-            <div>
-                <strong style='font-size: 16px;'>{loc['location']}</strong>{badge_html}
-                <div style='font-size: 13px; color: #666; margin-top: 4px;'>{loc['distance']}</div>
-            </div>
-            <div style='text-align: right;'>
-                <div style='font-size: 24px; font-weight: 700; color: {PRIMARY};'>£{loc['offer']:,}</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.info("💡 All offers subject to vehicle inspection and final valuation by Sytner buyer")
-
-def render_market_trends_tab(vehicle):
-    """Render market trends in tab"""
-    st.markdown("### 📈 Market Intelligence & Forecasting")
-    render_market_trends(vehicle)
-
-def render_recall_booking_form(recall, recall_key, vehicle):
-    """Render booking form for recalls"""
-    st.markdown("---")
-    st.markdown("#### 📅 Book Recall Repair")
-    
-    with st.form(key=f"recall_form_{recall_key}"):
-        col1, col2 = st.columns(2)
-        with col1:
-            garage = st.selectbox("Select Sytner Garage", GARAGES, key=f"garage_{recall_key}")
-            booking_date = st.date_input(
-                "Preferred Date",
-                min_value=datetime.date.today() + datetime.timedelta(days=1),
-                max_value=datetime.date.today() + datetime.timedelta(days=60),
-                key=f"date_{recall_key}"
-            )
-        with col2:
-            time_slot = st.selectbox("Time Slot", TIME_SLOTS, key=f"time_{recall_key}")
-            customer_name = st.text_input("Customer Name *", key=f"name_{recall_key}")
-        
-        customer_phone = st.text_input("Phone Number *", key=f"phone_{recall_key}")
-        customer_email = st.text_input("Email (optional)", key=f"email_{recall_key}")
-        
-        col_x, col_y = st.columns(2)
-        with col_x:
-            submitted = st.form_submit_button("✅ Confirm Booking", use_container_width=True, type="primary")
-        with col_y:
-            cancelled = st.form_submit_button("❌ Cancel", use_container_width=True)
-        
-        if submitted:
-            if customer_name and validate_phone(customer_phone):
-                booking_ref = f"RCL-{recall['id']}-{datetime.datetime.now().strftime('%Y%m%d%H%M')}"
-                st.success(f"""
-                ✅ **Booking Confirmed!**
-                
-                **Reference:** {booking_ref}  
-                **Garage:** {garage}  
-                **Date:** {booking_date.strftime('%d %B %Y')} at {time_slot}  
-                **Customer:** {customer_name} | {customer_phone}
-                """)
-                del st.session_state.booking_forms[recall_key]
-                st.balloons()
-            else:
-                st.error("⚠️ Please fill in all required fields")
-        
-        if cancelled:
-            del st.session_state.booking_forms[recall_key]
+    if st.button("🔍 Look Up Vehicle", type="primary"):
+        if validate_registration(manual_reg):
+            st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
+            st.session_state.show_summary = True
             st.rerun()
+        else:
+            st.error("❌ Please enter a valid registration")
+
+def render_summary_page():
+    """Render the vehicle summary page"""
+    reg = st.session_state.reg
+    
+    st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
+    
+    try:
+        vehicle = lookup_vehicle_basic(reg)
+        mot_tax = lookup_mot_and_tax(reg)
+    except Exception as e:
+        st.error(f"⚠️ Error: {str(e)}")
+        st.stop()
+    
+    st.markdown("### Vehicle Summary")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write(f"**Make:** {vehicle['make']}")
+        st.write(f"**Model:** {vehicle['model']}")
+    with col2:
+        st.write(f"**Year:** {vehicle['year']}")
+        st.write(f"**Mileage:** {vehicle['mileage']:,}")
+    
+    # Customer Journey Creation Section
+    st.markdown("---")
+    st.markdown("### ✨ Create Customer Journey")
+    
+    if st.button("🚀 Start Customer Journey", use_container_width=True, type="primary"):
+        st.session_state.create_journey_mode = True
+        st.rerun()
+    
+    if st.session_state.get('create_journey_mode', False):
+        with st.form("journey_creation_form"):
+            st.markdown("#### Customer Details")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                customer_name = st.text_input("Name *")
+                customer_email = st.text_input("Email *")
+            with col2:
+                customer_phone = st.text_input("Phone *")
+                deposit_amount = st.number_input("Deposit (£)", min_value=0, value=1000)
+            
+            garage = st.selectbox("Garage", GARAGES)
+            collection_date = st.date_input("Collection Date", 
+                value=datetime.date.today() + datetime.timedelta(days=30))
+            
+            col_a, col_b = st.columns(2)
+            with col_a:
+                submitted = st.form_submit_button("✅ Create", type="primary")
+            with col_b:
+                cancelled = st.form_submit_button("❌ Cancel")
+            
+            if submitted and customer_name and customer_email and customer_phone:
+                tracking_id = generate_tracking_id()
+                
+                journey = {
+                    "tracking_id": tracking_id,
+                    "created_date": datetime.datetime.now().isoformat(),
+                    "customer": {"name": customer_name, "email": customer_email, "phone": customer_phone},
+                    "vehicle": vehicle,
+                    "financial": {"deposit": deposit_amount},
+                    "garage": garage,
+                    "collection_date": collection_date.isoformat(),
+                    "current_stage": 0
+                }
+                
+                save_customer_journey(journey)
+                st.success(f"✅ Journey Created! Tracking ID: {tracking_id}")
+                st.balloons()
+                st.session_state.create_journey_mode = False
+            
+            if cancelled:
+                st.session_state.create_journey_mode = False
+                st.rerun()
+
+# ============================================================================
+# SALES PIPELINE PAGE
+# ============================================================================
+
+def render_sales_pipeline_page():
+    """Render sales pipeline dashboard"""
+    st.markdown("### 📊 Sales Pipeline Dashboard")
+    
+    sales_data = load_sales_data()
+    
+    if sales_data:
+        st.metric("Total Active Sales", len(sales_data))
+        
+        for sale in sales_data[:10]:
+            with st.expander(f"{sale['customer']['first_name']} {sale['customer']['last_name']}"):
+                st.write(f"**Sale ID:** {sale['sale_id']}")
+                st.write(f"**Stage:** {sale['pipeline']['current_stage']}")
+                progress = sale['pipeline']['progress_percentage'] / 100
+                st.progress(progress)
+    else:
+        st.info("📋 No sales data. Create journeys from TradeSnap!")
+
+# ============================================================================
+# CUSTOMER TRACKER PAGE
+# ============================================================================
+
+def render_customer_tracker_page():
+    """Customer-facing tracking page"""
+    st.markdown("### 🔍 Track Your Vehicle")
+    
+    tracking_id = st.text_input("Enter Tracking ID", placeholder="ABC123XYZ456")
+    
+    if tracking_id:
+        journey = get_journey_by_tracking_id(tracking_id.upper())
+        
+        if journey:
+            render_wheel_tracker(journey.get('current_stage', 0), SALES_STAGES)
+            
+            st.markdown("### Your Details")
+            st.write(f"**Name:** {journey['customer']['name']}")
+            st.write(f"**Vehicle:** {journey['vehicle']['year']} {journey['vehicle']['make']}")
+        else:
+            st.error("❌ Tracking ID not found")
 
 # ============================================================================
 # MAIN APPLICATION
@@ -1639,22 +690,36 @@ def render_recall_booking_form(recall, recall_key, vehicle):
 def main():
     """Main application entry point"""
     st.set_page_config(
-        page_title="Sytner TradeSnap",
-        page_icon="⚡",
+        page_title="Sytner Complete Journey",
+        page_icon="🚗",
         layout="centered"
     )
     
     init_session_state()
     apply_custom_css()
-    render_header()
-    render_reset_button()
     
-    if st.session_state.show_summary and st.session_state.reg:
-        render_summary_page()
+    # Sidebar navigation
+    with st.sidebar:
+        st.markdown("### 🎯 Navigation")
+        page = st.radio(
+            "Select Feature",
+            ["🚗 TradeSnap", "📊 Sales Pipeline", "🔍 Customer Tracker"],
+            label_visibility="collapsed"
+        )
+    
+    render_header()
+    
+    # Route to pages
+    if "TradeSnap" in page:
+        render_reset_button()
+        if st.session_state.show_summary and st.session_state.reg:
+            render_summary_page()
+        else:
+            render_input_page()
+    elif "Sales Pipeline" in page:
+        render_sales_pipeline_page()
     else:
-        render_input_page()
+        render_customer_tracker_page()
 
 if __name__ == "__main__":
     main()
-
-
