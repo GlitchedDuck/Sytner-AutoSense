@@ -303,6 +303,7 @@ def init_session_state():
         "booking_forms": {},
         "create_journey_mode": False,
         "journey_data": {},
+        "journey_created": None,
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -353,11 +354,12 @@ def render_wheel_tracker(current_stage_index, stages):
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        padding: 40px 20px 60px 20px;
+        padding: 40px 20px 80px 20px;
         background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%);
         border-radius: 20px;
         margin: 20px 0;
-        min-height: 600px;
+        min-height: 700px;
+        overflow: hidden;
     }}
     
     .wheel-wrapper {{
@@ -416,6 +418,7 @@ def render_wheel_tracker(current_stage_index, stages):
     .progress-text {{
         color: white;
         text-align: center;
+        margin-bottom: 30px;
     }}
     
     .stage-name {{
@@ -435,7 +438,7 @@ def render_wheel_tracker(current_stage_index, stages):
         justify-content: center;
         gap: 15px;
         margin-top: 20px;
-        padding: 10px 20px 20px 20px;
+        padding: 20px 20px 40px 20px;
         flex-wrap: wrap;
     }}
     
@@ -1161,98 +1164,124 @@ def render_summary_page():
                     
                     save_customer_journey(journey)
                     
-                    tracking_url = f"https://your-app.streamlit.app/?track={tracking_id}"
+                    # Save to session state to show share section outside form
+                    st.session_state.journey_created = {
+                        "tracking_id": tracking_id,
+                        "customer_name": customer_name,
+                        "customer_email": customer_email,
+                        "customer_phone": customer_phone,
+                        "vehicle_info": f"{vehicle['year']} {vehicle['make']} {vehicle['model']}",
+                        "tracking_url": f"https://your-app.streamlit.app/?track={tracking_id}"
+                    }
                     
-                    st.success(f"""
-                    ✅ **Customer Journey Created!**
-                    
-                    **Tracking ID:** `{tracking_id}`
-                    **Customer:** {customer_name}
-                    **Vehicle:** {vehicle['year']} {vehicle['make']} {vehicle['model']}
-                    """)
-                    
-                    st.code(tracking_url, language=None)
-                    
-                    # Share tracking link section
-                    st.markdown("---")
-                    st.markdown("### 📱 Share Tracking Link with Customer")
-                    
-                    share_method = st.radio(
-                        "How would you like to share?",
-                        ["📧 Email", "📱 SMS/Text", "📋 Copy Link"],
-                        horizontal=True
-                    )
-                    
-                    if share_method == "📧 Email":
-                        with st.form("email_tracking_form"):
-                            st.markdown("#### Send via Email")
-                            email_to = st.text_input("Customer Email", value=customer_email)
-                            email_subject = st.text_input(
-                                "Subject", 
-                                value=f"Track Your {vehicle['year']} {vehicle['make']} {vehicle['model']} Purchase"
-                            )
-                            email_message = st.text_area(
-                                "Message",
-                                value=f"""Hi {customer_name},
-
-Thank you for your purchase! You can track your vehicle's progress using the link below:
-
-{tracking_url}
-
-Your Tracking ID: {tracking_id}
-
-Expected Collection: {collection_date.strftime('%d %B %Y')}
-
-If you have any questions, please don't hesitate to contact us.
-
-Best regards,
-{salesperson_name}
-Sytner BMW"""
-                            )
-                            
-                            if st.form_submit_button("✉️ Send Email", type="primary"):
-                                # In production, integrate with SendGrid, AWS SES, or similar
-                                st.success(f"✅ Email sent to {email_to}")
-                                st.info("💡 **Note:** In production, integrate with SendGrid, AWS SES, or your email service")
-                    
-                    elif share_method == "📱 SMS/Text":
-                        with st.form("sms_tracking_form"):
-                            st.markdown("#### Send via SMS")
-                            sms_to = st.text_input("Customer Phone", value=customer_phone)
-                            sms_message = st.text_area(
-                                "Message (160 chars recommended)",
-                                value=f"Hi {customer_name}! Track your {vehicle['make']} {vehicle['model']}: {tracking_url} - Tracking ID: {tracking_id}",
-                                max_chars=320
-                            )
-                            st.caption(f"Character count: {len(sms_message)}/320")
-                            
-                            if st.form_submit_button("📲 Send SMS", type="primary"):
-                                # In production, integrate with Twilio, AWS SNS, or similar
-                                st.success(f"✅ SMS sent to {sms_to}")
-                                st.info("💡 **Note:** In production, integrate with Twilio, AWS SNS, or your SMS service")
-                    
-                    else:  # Copy Link
-                        st.markdown("#### 📋 Copy & Share Link")
-                        st.text_input("Tracking URL", value=tracking_url, key="copy_url_field")
-                        
-                        # QR Code option
-                        if st.button("📱 Generate QR Code"):
-                            st.info("💡 **Note:** Install `qrcode` package to generate QR codes: `pip install qrcode[pil]`")
-                            st.code(f"""
-# To generate QR code:
-import qrcode
-qr = qrcode.make('{tracking_url}')
-qr.save('tracking_qr.png')
-                            """)
-                    
-                    st.balloons()
                     st.session_state.create_journey_mode = False
+                    st.balloons()
+                    st.rerun()
                 else:
                     st.error("⚠️ Please fill in all required fields")
             
             if cancelled:
                 st.session_state.create_journey_mode = False
                 st.rerun()
+    
+    # Show share section after journey is created (outside the form)
+    if st.session_state.get('journey_created'):
+        journey_info = st.session_state.journey_created
+        
+        st.success(f"""
+        ✅ **Customer Journey Created!**
+        
+        **Tracking ID:** `{journey_info['tracking_id']}`
+        **Customer:** {journey_info['customer_name']}
+        **Vehicle:** {journey_info['vehicle_info']}
+        """)
+        
+        st.code(journey_info['tracking_url'], language=None)
+        
+        # Share tracking link section (now outside the form)
+        st.markdown("---")
+        st.markdown("### 📱 Share Tracking Link with Customer")
+        
+        share_method = st.radio(
+            "How would you like to share?",
+            ["📧 Email", "📱 SMS/Text", "📋 Copy Link"],
+            horizontal=True,
+            key="share_method_radio"
+        )
+        
+        if share_method == "📧 Email":
+            with st.form("email_tracking_form"):
+                st.markdown("#### Send via Email")
+                email_to = st.text_input("Customer Email", value=journey_info['customer_email'])
+                email_subject = st.text_input(
+                    "Subject", 
+                    value=f"Track Your {journey_info['vehicle_info']} Purchase"
+                )
+                email_message = st.text_area(
+                    "Message",
+                    value=f"""Hi {journey_info['customer_name']},
+
+Thank you for your purchase! You can track your vehicle's progress using the link below:
+
+{journey_info['tracking_url']}
+
+Your Tracking ID: {journey_info['tracking_id']}
+
+If you have any questions, please don't hesitate to contact us.
+
+Best regards,
+Sytner BMW Team"""
+                )
+                
+                col_x, col_y = st.columns(2)
+                with col_x:
+                    if st.form_submit_button("✉️ Send Email", type="primary"):
+                        st.success(f"✅ Email sent to {email_to}")
+                        st.info("💡 **Note:** In production, integrate with SendGrid, AWS SES, or your email service")
+                with col_y:
+                    if st.form_submit_button("Done"):
+                        del st.session_state.journey_created
+                        st.rerun()
+        
+        elif share_method == "📱 SMS/Text":
+            with st.form("sms_tracking_form"):
+                st.markdown("#### Send via SMS")
+                sms_to = st.text_input("Customer Phone", value=journey_info['customer_phone'])
+                sms_message = st.text_area(
+                    "Message (160 chars recommended)",
+                    value=f"Hi {journey_info['customer_name']}! Track your {journey_info['vehicle_info']}: {journey_info['tracking_url']} - ID: {journey_info['tracking_id']}",
+                    max_chars=320
+                )
+                st.caption(f"Character count: {len(sms_message)}/320")
+                
+                col_x, col_y = st.columns(2)
+                with col_x:
+                    if st.form_submit_button("📲 Send SMS", type="primary"):
+                        st.success(f"✅ SMS sent to {sms_to}")
+                        st.info("💡 **Note:** In production, integrate with Twilio, AWS SNS, or your SMS service")
+                with col_y:
+                    if st.form_submit_button("Done"):
+                        del st.session_state.journey_created
+                        st.rerun()
+        
+        else:  # Copy Link
+            st.markdown("#### 📋 Copy & Share Link")
+            st.text_input("Tracking URL", value=journey_info['tracking_url'], key="copy_url_field")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("📱 Generate QR Code Info"):
+                    st.info("💡 **Note:** Install `qrcode` package to generate QR codes: `pip install qrcode[pil]`")
+                    st.code(f"""
+# To generate QR code:
+import qrcode
+qr = qrcode.make('{journey_info['tracking_url']}')
+qr.save('tracking_qr.png')
+                    """)
+            with col2:
+                if st.button("✅ Done Sharing"):
+                    del st.session_state.journey_created
+                    st.rerun()
 
 # ============================================================================
 # SALES PIPELINE PAGE
