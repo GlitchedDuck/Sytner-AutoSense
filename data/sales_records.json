@@ -1,0 +1,3922 @@
+[
+  {
+    "sale_id": "SALE647624",
+    "customer": {
+      "customer_id": "CUST74755",
+      "first_name": "Christopher",
+      "last_name": "Lewis",
+      "email": "christopher.lewis@email.com",
+      "phone": "07172643490",
+      "postcode": "LE60 5C"
+    },
+    "vehicle": {
+      "vin": "SJPENKBFFS3ZE6N9L",
+      "registration": "YC24 SLY",
+      "make": "Land Rover",
+      "model": "Defender",
+      "variant": "110 X-Dynamic SE",
+      "year": 2024,
+      "base_price": 72900,
+      "color": "Alpine White",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-10-24T14:08:00.318875",
+        "Demands & Needs": "2025-10-29T14:08:00.318875",
+        "Sign/Ink Order": "2025-11-04T14:08:00.318875",
+        "Sell Option Extras": "2025-11-08T14:08:00.318875",
+        "Collection Day": "2025-11-13T14:08:00.318875"
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 72900,
+      "extras_total": 2130,
+      "total_price": 75030,
+      "deposit_paid": 1000,
+      "outstanding_balance": 74030,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Premium Floor Mats",
+        "price": 180
+      },
+      {
+        "name": "Tow Bar Fitting",
+        "price": 1100
+      },
+      {
+        "name": "Roof Bars & Storage Box",
+        "price": 850
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-17T14:08:00.318875",
+      "expected_collection": "2025-12-08T14:08:00.318875",
+      "last_updated": "2025-12-12T14:08:00.318958"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": 29,
+      "needs_attention": true
+    },
+    "notes": [
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST74755/799528"
+  },
+  {
+    "sale_id": "SALE193420",
+    "customer": {
+      "customer_id": "CUST82864",
+      "first_name": "Sarah",
+      "last_name": "Rodriguez",
+      "email": "sarah.rodriguez@email.com",
+      "phone": "07143933460",
+      "postcode": "NN82 2A"
+    },
+    "vehicle": {
+      "vin": "XWJM0WCNN3YMNT1ST",
+      "registration": "ED24 YVG",
+      "make": "Jaguar",
+      "model": "F-PACE",
+      "variant": "P400e R-Dynamic SE",
+      "year": 2024,
+      "base_price": 56900,
+      "color": "Sapphire Black",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Sign/Ink Order",
+      "stage_index": 2,
+      "total_stages": 5,
+      "progress_percentage": 60,
+      "stage_history": {
+        "Deposit Taken": "2025-10-25T14:08:00.318976",
+        "Demands & Needs": "2025-10-29T14:08:00.318976",
+        "Sign/Ink Order": "2025-11-05T14:08:00.318976",
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56900,
+      "extras_total": 0,
+      "total_price": 56900,
+      "deposit_paid": 1000,
+      "outstanding_balance": 55900,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-23T14:08:00.318976",
+      "expected_collection": "2025-12-05T14:08:00.318976",
+      "last_updated": "2025-12-12T14:08:00.319009"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 37,
+      "needs_attention": true
+    },
+    "notes": [
+      "Business purchase - requires VAT invoice"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST82864/354603"
+  },
+  {
+    "sale_id": "SALE382438",
+    "customer": {
+      "customer_id": "CUST70806",
+      "first_name": "Jack",
+      "last_name": "Jones",
+      "email": "jack.jones@email.com",
+      "phone": "07460606432",
+      "postcode": "LE25 8C"
+    },
+    "vehicle": {
+      "vin": "SKAMDA70MZJ0DSRWX",
+      "registration": "VZ25 NTE",
+      "make": "Porsche",
+      "model": "Taycan",
+      "variant": "4S",
+      "year": 2024,
+      "base_price": 89500,
+      "color": "Glacier White",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Sign/Ink Order",
+      "stage_index": 2,
+      "total_stages": 5,
+      "progress_percentage": 60,
+      "stage_history": {
+        "Deposit Taken": "2025-10-18T14:08:00.319025",
+        "Demands & Needs": "2025-10-20T14:08:00.319025",
+        "Sign/Ink Order": "2025-10-22T14:08:00.319025",
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89500,
+      "extras_total": 0,
+      "total_price": 89500,
+      "deposit_paid": 500,
+      "outstanding_balance": 89000,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-13T14:08:00.319025",
+      "expected_collection": "2025-11-30T14:08:00.319025",
+      "last_updated": "2025-12-12T14:08:00.319054"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 51,
+      "needs_attention": true
+    },
+    "notes": [
+      "Finance application in progress",
+      "Trading in previous vehicle - awaiting valuation",
+      "Prefer communication via email"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST70806/491498"
+  },
+  {
+    "sale_id": "SALE498212",
+    "customer": {
+      "customer_id": "CUST73339",
+      "first_name": "Michael",
+      "last_name": "Davis",
+      "email": "michael.davis@email.com",
+      "phone": "07814913375",
+      "postcode": "OX75 8D"
+    },
+    "vehicle": {
+      "vin": "VGZBN8Y81P7KLYBH6",
+      "registration": "TK73 NET",
+      "make": "Porsche",
+      "model": "Taycan",
+      "variant": "4S",
+      "year": 2024,
+      "base_price": 89500,
+      "color": "Alpine White",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-10-25T14:08:00.319065",
+        "Demands & Needs": "2025-10-27T14:08:00.319065",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89500,
+      "extras_total": 0,
+      "total_price": 89500,
+      "deposit_paid": 1000,
+      "outstanding_balance": 88500,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-23T14:08:00.319065",
+      "expected_collection": "2025-11-25T14:08:00.319065",
+      "last_updated": "2025-12-12T14:08:00.319090"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 46,
+      "needs_attention": true
+    },
+    "notes": [
+      "Requested early morning collection slot",
+      "Customer has questions about warranty options",
+      "Trading in previous vehicle - awaiting valuation"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST73339/784023"
+  },
+  {
+    "sale_id": "SALE492906",
+    "customer": {
+      "customer_id": "CUST17821",
+      "first_name": "Jessica",
+      "last_name": "Davis",
+      "email": "jessica.davis@email.com",
+      "phone": "07396896992",
+      "postcode": "CV4 8D"
+    },
+    "vehicle": {
+      "vin": "DXFDLKWXTW8P0623N",
+      "registration": "LT24 MDT",
+      "make": "Audi",
+      "model": "A6",
+      "variant": "50 TFSI e S Line",
+      "year": 2024,
+      "base_price": 58900,
+      "color": "Portimao Blue",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-22T14:08:00.319102",
+        "Demands & Needs": "2025-10-26T14:08:00.319102",
+        "Sign/Ink Order": "2025-10-30T14:08:00.319102",
+        "Sell Option Extras": "2025-11-01T14:08:00.319102",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 58900,
+      "extras_total": 3479,
+      "total_price": 62379,
+      "deposit_paid": 500,
+      "outstanding_balance": 61879,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [
+      {
+        "name": "Extended Warranty (3 Years)",
+        "price": 1500
+      },
+      {
+        "name": "Premium Floor Mats",
+        "price": 180
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-17T14:08:00.319102",
+      "expected_collection": "2025-11-06T14:08:00.319102",
+      "last_updated": "2025-12-12T14:08:00.319138"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 41,
+      "needs_attention": true
+    },
+    "notes": [
+      "VIP customer - previous purchaser",
+      "Requested early morning collection slot"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST17821/772942"
+  },
+  {
+    "sale_id": "SALE693468",
+    "customer": {
+      "customer_id": "CUST29102",
+      "first_name": "David",
+      "last_name": "Garcia",
+      "email": "david.garcia@email.com",
+      "phone": "07590635636",
+      "postcode": "WS93 1B"
+    },
+    "vehicle": {
+      "vin": "JRED4D5LRX09RW21U",
+      "registration": "KR73 ZEP",
+      "make": "BMW",
+      "model": "X3",
+      "variant": "xDrive30d M Sport",
+      "year": 2024,
+      "base_price": 52900,
+      "color": "Sapphire Black",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-10-15T14:08:00.319219",
+        "Demands & Needs": "2025-10-21T14:08:00.319219",
+        "Sign/Ink Order": "2025-10-22T14:08:00.319219",
+        "Sell Option Extras": "2025-10-23T14:08:00.319219",
+        "Collection Day": "2025-10-29T14:08:00.319219"
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 52900,
+      "extras_total": 0,
+      "total_price": 52900,
+      "deposit_paid": 5000,
+      "outstanding_balance": 47900,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-14T14:08:00.319219",
+      "expected_collection": "2025-11-04T14:08:00.319219",
+      "last_updated": "2025-12-12T14:08:00.319249"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": 44,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST29102/237583"
+  },
+  {
+    "sale_id": "SALE686674",
+    "customer": {
+      "customer_id": "CUST38469",
+      "first_name": "Thomas",
+      "last_name": "Brown",
+      "email": "thomas.brown@email.com",
+      "phone": "07129993465",
+      "postcode": "B56 6C"
+    },
+    "vehicle": {
+      "vin": "DTTX8RPS5XAXP93VY",
+      "registration": "SK23 HCE",
+      "make": "Audi",
+      "model": "Q7",
+      "variant": "50 TDI S Line",
+      "year": 2024,
+      "base_price": 68900,
+      "color": "Manhattan Grey",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-10-25T14:08:00.319259",
+        "Demands & Needs": "2025-10-31T14:08:00.319259",
+        "Sign/Ink Order": "2025-11-03T14:08:00.319259",
+        "Sell Option Extras": "2025-11-09T14:08:00.319259",
+        "Collection Day": "2025-11-16T14:08:00.319259"
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 68900,
+      "extras_total": 3299,
+      "total_price": 72199,
+      "deposit_paid": 2000,
+      "outstanding_balance": 70199,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [
+      {
+        "name": "Extended Warranty (3 Years)",
+        "price": 1500
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-22T14:08:00.319259",
+      "expected_collection": "2025-12-12T14:08:00.319259",
+      "last_updated": "2025-12-12T14:08:00.319287"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": 26,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST38469/967612"
+  },
+  {
+    "sale_id": "SALE845200",
+    "customer": {
+      "customer_id": "CUST63681",
+      "first_name": "David",
+      "last_name": "Garcia",
+      "email": "david.garcia@email.com",
+      "phone": "07675804507",
+      "postcode": "LE90 5C"
+    },
+    "vehicle": {
+      "vin": "GDJJ6XZK91AVSTAYT",
+      "registration": "AH73 WVV",
+      "make": "Mercedes-Benz",
+      "model": "C-Class",
+      "variant": "C220d AMG Line",
+      "year": 2024,
+      "base_price": 46900,
+      "color": "Portimao Blue",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-10-24T14:08:00.319301",
+        "Demands & Needs": "2025-10-25T14:08:00.319301",
+        "Sign/Ink Order": "2025-10-31T14:08:00.319301",
+        "Sell Option Extras": "2025-11-07T14:08:00.319301",
+        "Collection Day": "2025-11-12T14:08:00.319301"
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 46900,
+      "extras_total": 779,
+      "total_price": 47679,
+      "deposit_paid": 500,
+      "outstanding_balance": 47179,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      },
+      {
+        "name": "Premium Floor Mats",
+        "price": 180
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-17T14:08:00.319301",
+      "expected_collection": "2025-11-24T14:08:00.319301",
+      "last_updated": "2025-12-12T14:08:00.319329"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": 30,
+      "needs_attention": true
+    },
+    "notes": [
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST63681/448462"
+  },
+  {
+    "sale_id": "SALE499750",
+    "customer": {
+      "customer_id": "CUST79476",
+      "first_name": "Robert",
+      "last_name": "Martinez",
+      "email": "robert.martinez@email.com",
+      "phone": "07111655612",
+      "postcode": "LE9 6B"
+    },
+    "vehicle": {
+      "vin": "HVDYR76YL651JPEL9",
+      "registration": "UU23 JVU",
+      "make": "BMW",
+      "model": "5 Series",
+      "variant": "530e M Sport",
+      "year": 2024,
+      "base_price": 56800,
+      "color": "Glacier White",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-11-26T14:08:00.319340",
+        "Demands & Needs": "2025-12-02T14:08:00.319340",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56800,
+      "extras_total": 0,
+      "total_price": 56800,
+      "deposit_paid": 500,
+      "outstanding_balance": 56300,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-22T14:08:00.319340",
+      "expected_collection": "2026-01-03T14:08:00.319340",
+      "last_updated": "2025-12-12T14:08:00.319365"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 10,
+      "needs_attention": true
+    },
+    "notes": [
+      "Finance application in progress"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST79476/296522"
+  },
+  {
+    "sale_id": "SALE486402",
+    "customer": {
+      "customer_id": "CUST36121",
+      "first_name": "Robert",
+      "last_name": "Thomas",
+      "email": "robert.thomas@email.com",
+      "phone": "07251046171",
+      "postcode": "B98 3E"
+    },
+    "vehicle": {
+      "vin": "CAVBMU52G1TXBSHFN",
+      "registration": "UX23 XAL",
+      "make": "Jaguar",
+      "model": "F-PACE",
+      "variant": "P400e R-Dynamic SE",
+      "year": 2024,
+      "base_price": 56900,
+      "color": "Glacier White",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-11-03T14:08:00.319375",
+        "Demands & Needs": "2025-11-09T14:08:00.319375",
+        "Sign/Ink Order": "2025-11-13T14:08:00.319375",
+        "Sell Option Extras": "2025-11-17T14:08:00.319375",
+        "Collection Day": "2025-11-19T14:08:00.319375"
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56900,
+      "extras_total": 2500,
+      "total_price": 59400,
+      "deposit_paid": 1000,
+      "outstanding_balance": 58400,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [
+      {
+        "name": "Paint Protection Film",
+        "price": 2500
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-27T14:08:00.319375",
+      "expected_collection": "2025-11-16T14:08:00.319375",
+      "last_updated": "2025-12-12T14:08:00.319405"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": 23,
+      "needs_attention": true
+    },
+    "notes": [
+      "VIP customer - previous purchaser",
+      "Business purchase - requires VAT invoice",
+      "Interested in test driving similar models"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST36121/390451"
+  },
+  {
+    "sale_id": "SALE199588",
+    "customer": {
+      "customer_id": "CUST80195",
+      "first_name": "Grace",
+      "last_name": "Lee",
+      "email": "grace.lee@email.com",
+      "phone": "07386954574",
+      "postcode": "OX51 4A"
+    },
+    "vehicle": {
+      "vin": "VVPZYR03P7CHSB3JC",
+      "registration": "ET24 XRB",
+      "make": "Land Rover",
+      "model": "Defender",
+      "variant": "110 X-Dynamic SE",
+      "year": 2024,
+      "base_price": 72900,
+      "color": "Glacier White",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-12-11T14:08:00.319414",
+        "Demands & Needs": "2025-12-13T14:08:00.319414",
+        "Sign/Ink Order": "2025-12-17T14:08:00.319414",
+        "Sell Option Extras": "2025-12-24T14:08:00.319414",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 72900,
+      "extras_total": 3568,
+      "total_price": 76468,
+      "deposit_paid": 5000,
+      "outstanding_balance": 71468,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Key Cover",
+        "price": 149
+      },
+      {
+        "name": "Alloy Wheel Insurance",
+        "price": 299
+      },
+      {
+        "name": "Boot Liner",
+        "price": 120
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Service Plan (3 Years)",
+        "price": 1800
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-12-05T14:08:00.319414",
+      "expected_collection": "2026-01-04T14:08:00.319414",
+      "last_updated": "2025-12-12T14:08:00.319440"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -12,
+      "needs_attention": false
+    },
+    "notes": [
+      "Business purchase - requires VAT invoice",
+      "Customer has questions about warranty options"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST80195/884098"
+  },
+  {
+    "sale_id": "SALE416123",
+    "customer": {
+      "customer_id": "CUST27416",
+      "first_name": "Emily",
+      "last_name": "Davis",
+      "email": "emily.davis@email.com",
+      "phone": "07529528242",
+      "postcode": "LE34 8B"
+    },
+    "vehicle": {
+      "vin": "HRY3A815VTK9AP23T",
+      "registration": "XS74 TUE",
+      "make": "Porsche",
+      "model": "Macan",
+      "variant": "S",
+      "year": 2024,
+      "base_price": 62900,
+      "color": "Manhattan Grey",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Deposit Taken",
+      "stage_index": 0,
+      "total_stages": 5,
+      "progress_percentage": 20,
+      "stage_history": {
+        "Deposit Taken": "2025-11-01T14:08:00.319456",
+        "Demands & Needs": null,
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 62900,
+      "extras_total": 0,
+      "total_price": 62900,
+      "deposit_paid": 2000,
+      "outstanding_balance": 60900,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-31T14:08:00.319456",
+      "expected_collection": "2025-12-23T14:08:00.319456",
+      "last_updated": "2025-12-12T14:08:00.319476"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 41,
+      "needs_attention": true
+    },
+    "notes": [
+      "Finance application in progress",
+      "Customer very excited about the purchase",
+      "Business purchase - requires VAT invoice"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST27416/812751"
+  },
+  {
+    "sale_id": "SALE373135",
+    "customer": {
+      "customer_id": "CUST79519",
+      "first_name": "Lucy",
+      "last_name": "Taylor",
+      "email": "lucy.taylor@email.com",
+      "phone": "07854161520",
+      "postcode": "CV79 8A"
+    },
+    "vehicle": {
+      "vin": "GWXX18U63938Z095F",
+      "registration": "YS24 TGH",
+      "make": "BMW",
+      "model": "5 Series",
+      "variant": "530e M Sport",
+      "year": 2024,
+      "base_price": 56800,
+      "color": "Portimao Blue",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-23T14:08:00.319486",
+        "Demands & Needs": "2025-10-26T14:08:00.319486",
+        "Sign/Ink Order": "2025-10-27T14:08:00.319486",
+        "Sell Option Extras": "2025-10-31T14:08:00.319486",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56800,
+      "extras_total": 0,
+      "total_price": 56800,
+      "deposit_paid": 2000,
+      "outstanding_balance": 54800,
+      "payment_method": "Cash"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-21T14:08:00.319486",
+      "expected_collection": "2025-12-07T14:08:00.319486",
+      "last_updated": "2025-12-12T14:08:00.319512"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 42,
+      "needs_attention": true
+    },
+    "notes": [
+      "First-time premium brand buyer - extra support needed"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST79519/710940"
+  },
+  {
+    "sale_id": "SALE976523",
+    "customer": {
+      "customer_id": "CUST84521",
+      "first_name": "Lily",
+      "last_name": "Garcia",
+      "email": "lily.garcia@email.com",
+      "phone": "07164635366",
+      "postcode": "B33 8E"
+    },
+    "vehicle": {
+      "vin": "JJLVJSMRU8FCT8C30",
+      "registration": "WT23 NFP",
+      "make": "Porsche",
+      "model": "Cayenne",
+      "variant": "E-Hybrid",
+      "year": 2024,
+      "base_price": 78900,
+      "color": "Glacier White",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-12-05T14:08:00.319522",
+        "Demands & Needs": "2025-12-08T14:08:00.319522",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 78900,
+      "extras_total": 0,
+      "total_price": 78900,
+      "deposit_paid": 2000,
+      "outstanding_balance": 76900,
+      "payment_method": "Cash"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-12-04T14:08:00.319522",
+      "expected_collection": "2026-01-23T14:08:00.319522",
+      "last_updated": "2025-12-12T14:08:00.319542"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 4,
+      "needs_attention": false
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST84521/205492"
+  },
+  {
+    "sale_id": "SALE106717",
+    "customer": {
+      "customer_id": "CUST28357",
+      "first_name": "Jack",
+      "last_name": "Thomas",
+      "email": "jack.thomas@email.com",
+      "phone": "07437886705",
+      "postcode": "LE69 2C"
+    },
+    "vehicle": {
+      "vin": "WCKDRC39V78BLBJZA",
+      "registration": "GV24 ZBM",
+      "make": "Mercedes-Benz",
+      "model": "GLC",
+      "variant": "GLC 300d AMG Line",
+      "year": 2024,
+      "base_price": 54900,
+      "color": "Portimao Blue",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-12-12T14:08:00.319552",
+        "Demands & Needs": "2025-12-14T14:08:00.319552",
+        "Sign/Ink Order": "2025-12-15T14:08:00.319552",
+        "Sell Option Extras": "2025-12-16T14:08:00.319552",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 54900,
+      "extras_total": 3249,
+      "total_price": 58149,
+      "deposit_paid": 1000,
+      "outstanding_balance": 57149,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [
+      {
+        "name": "Roof Bars & Storage Box",
+        "price": 850
+      },
+      {
+        "name": "Extended Warranty (3 Years)",
+        "price": 1500
+      },
+      {
+        "name": "Boot Liner",
+        "price": 120
+      },
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      },
+      {
+        "name": "Premium Floor Mats",
+        "price": 180
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-12-10T14:08:00.319552",
+      "expected_collection": "2026-01-24T14:08:00.319552",
+      "last_updated": "2025-12-12T14:08:00.319582"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -4,
+      "needs_attention": false
+    },
+    "notes": [
+      "Finance application in progress",
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST28357/488473"
+  },
+  {
+    "sale_id": "SALE964962",
+    "customer": {
+      "customer_id": "CUST17330",
+      "first_name": "Jack",
+      "last_name": "Wilson",
+      "email": "jack.wilson@email.com",
+      "phone": "07644430613",
+      "postcode": "OX19 8D"
+    },
+    "vehicle": {
+      "vin": "PAA0XY3F1YJP2JBJ8",
+      "registration": "EV74 XUX",
+      "make": "Mercedes-Benz",
+      "model": "C-Class",
+      "variant": "C220d AMG Line",
+      "year": 2024,
+      "base_price": 46900,
+      "color": "Manhattan Grey",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-24T14:08:00.319592",
+        "Demands & Needs": "2025-10-29T14:08:00.319592",
+        "Sign/Ink Order": "2025-11-03T14:08:00.319592",
+        "Sell Option Extras": "2025-11-10T14:08:00.319592",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 46900,
+      "extras_total": 2399,
+      "total_price": 49299,
+      "deposit_paid": 2000,
+      "outstanding_balance": 47299,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      },
+      {
+        "name": "Winter Wheel Package",
+        "price": 1800
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-22T14:08:00.319592",
+      "expected_collection": "2025-12-10T14:08:00.319592",
+      "last_updated": "2025-12-12T14:08:00.319617"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 32,
+      "needs_attention": true
+    },
+    "notes": [
+      "Buying as a surprise gift - need discretion",
+      "Flexible on collection date",
+      "Prefer communication via email"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST17330/920739"
+  },
+  {
+    "sale_id": "SALE772033",
+    "customer": {
+      "customer_id": "CUST74802",
+      "first_name": "James",
+      "last_name": "Garcia",
+      "email": "james.garcia@email.com",
+      "phone": "07882539659",
+      "postcode": "LE89 3D"
+    },
+    "vehicle": {
+      "vin": "PJG7511GVH5NGVKXN",
+      "registration": "TW23 DAL",
+      "make": "BMW",
+      "model": "5 Series",
+      "variant": "530e M Sport",
+      "year": 2024,
+      "base_price": 56800,
+      "color": "Alpine White",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sign/Ink Order",
+      "stage_index": 2,
+      "total_stages": 5,
+      "progress_percentage": 60,
+      "stage_history": {
+        "Deposit Taken": "2025-12-06T14:08:00.319627",
+        "Demands & Needs": "2025-12-11T14:08:00.319627",
+        "Sign/Ink Order": "2025-12-15T14:08:00.319627",
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56800,
+      "extras_total": 0,
+      "total_price": 56800,
+      "deposit_paid": 5000,
+      "outstanding_balance": 51800,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-30T14:08:00.319627",
+      "expected_collection": "2025-12-25T14:08:00.319627",
+      "last_updated": "2025-12-12T14:08:00.319648"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -3,
+      "needs_attention": false
+    },
+    "notes": [
+      "Customer has questions about warranty options",
+      "Prefer communication via email"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST74802/929157"
+  },
+  {
+    "sale_id": "SALE735179",
+    "customer": {
+      "customer_id": "CUST57846",
+      "first_name": "Sarah",
+      "last_name": "Jackson",
+      "email": "sarah.jackson@email.com",
+      "phone": "07579937140",
+      "postcode": "WS52 9B"
+    },
+    "vehicle": {
+      "vin": "MGUJ2SP9Z71ZELV74",
+      "registration": "HG24 HCN",
+      "make": "Porsche",
+      "model": "Taycan",
+      "variant": "4S",
+      "year": 2024,
+      "base_price": 89500,
+      "color": "Glacier White",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-12-02T14:08:00.319658",
+        "Demands & Needs": "2025-12-06T14:08:00.319658",
+        "Sign/Ink Order": "2025-12-13T14:08:00.319658",
+        "Sell Option Extras": "2025-12-18T14:08:00.319658",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89500,
+      "extras_total": 1699,
+      "total_price": 91199,
+      "deposit_paid": 1000,
+      "outstanding_balance": 90199,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      },
+      {
+        "name": "Tow Bar Fitting",
+        "price": 1100
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-28T14:08:00.319658",
+      "expected_collection": "2025-12-21T14:08:00.319658",
+      "last_updated": "2025-12-12T14:08:00.319686"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -6,
+      "needs_attention": false
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST57846/967165"
+  },
+  {
+    "sale_id": "SALE687365",
+    "customer": {
+      "customer_id": "CUST27857",
+      "first_name": "Grace",
+      "last_name": "Garcia",
+      "email": "grace.garcia@email.com",
+      "phone": "07733923050",
+      "postcode": "B89 3B"
+    },
+    "vehicle": {
+      "vin": "TRECWLKWVGAKV1V53",
+      "registration": "LZ24 NLL",
+      "make": "Mercedes-Benz",
+      "model": "EQE",
+      "variant": "EQE 350+ AMG Line",
+      "year": 2024,
+      "base_price": 72500,
+      "color": "Alpine White",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-07T14:08:00.319701",
+        "Demands & Needs": "2025-11-13T14:08:00.319701",
+        "Sign/Ink Order": "2025-11-20T14:08:00.319701",
+        "Sell Option Extras": "2025-11-27T14:08:00.319701",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 72500,
+      "extras_total": 499,
+      "total_price": 72999,
+      "deposit_paid": 500,
+      "outstanding_balance": 72499,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [
+      {
+        "name": "Gap Insurance",
+        "price": 499
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-31T14:08:00.319701",
+      "expected_collection": "2025-12-18T14:08:00.319701",
+      "last_updated": "2025-12-12T14:08:00.319744"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 15,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST27857/405969"
+  },
+  {
+    "sale_id": "SALE809462",
+    "customer": {
+      "customer_id": "CUST62498",
+      "first_name": "Daniel",
+      "last_name": "Jones",
+      "email": "daniel.jones@email.com",
+      "phone": "07543856243",
+      "postcode": "OX39 4D"
+    },
+    "vehicle": {
+      "vin": "EACWNG355NKXYFRN8",
+      "registration": "KC25 PNT",
+      "make": "BMW",
+      "model": "X5",
+      "variant": "xDrive40i M Sport",
+      "year": 2024,
+      "base_price": 72500,
+      "color": "Sapphire Black",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-12-09T14:08:00.319756",
+        "Demands & Needs": "2025-12-15T14:08:00.319756",
+        "Sign/Ink Order": "2025-12-21T14:08:00.319756",
+        "Sell Option Extras": "2025-12-25T14:08:00.319756",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 72500,
+      "extras_total": 4879,
+      "total_price": 77379,
+      "deposit_paid": 2000,
+      "outstanding_balance": 75379,
+      "payment_method": "Cash"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [
+      {
+        "name": "Dashcam Installation",
+        "price": 350
+      },
+      {
+        "name": "Winter Wheel Package",
+        "price": 1800
+      },
+      {
+        "name": "Gap Insurance",
+        "price": 499
+      },
+      {
+        "name": "Roof Bars & Storage Box",
+        "price": 850
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Premium Floor Mats",
+        "price": 180
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-12-04T14:08:00.319756",
+      "expected_collection": "2026-01-17T14:08:00.319756",
+      "last_updated": "2025-12-12T14:08:00.319788"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -13,
+      "needs_attention": false
+    },
+    "notes": [
+      "Finance application in progress"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST62498/419082"
+  },
+  {
+    "sale_id": "SALE745979",
+    "customer": {
+      "customer_id": "CUST94531",
+      "first_name": "Grace",
+      "last_name": "Clark",
+      "email": "grace.clark@email.com",
+      "phone": "07686174169",
+      "postcode": "WS67 5B"
+    },
+    "vehicle": {
+      "vin": "KLDJR17B59LH61WZV",
+      "registration": "CL24 YUL",
+      "make": "Porsche",
+      "model": "Cayenne",
+      "variant": "E-Hybrid",
+      "year": 2024,
+      "base_price": 78900,
+      "color": "Portimao Blue",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-31T14:08:00.319802",
+        "Demands & Needs": "2025-11-01T14:08:00.319802",
+        "Sign/Ink Order": "2025-11-04T14:08:00.319802",
+        "Sell Option Extras": "2025-11-07T14:08:00.319802",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 78900,
+      "extras_total": 7498,
+      "total_price": 86398,
+      "deposit_paid": 5000,
+      "outstanding_balance": 81398,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Paint Protection Film",
+        "price": 2500
+      },
+      {
+        "name": "Alloy Wheel Insurance",
+        "price": 299
+      },
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Tow Bar Fitting",
+        "price": 1100
+      },
+      {
+        "name": "Service Plan (3 Years)",
+        "price": 1800
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-28T14:08:00.319802",
+      "expected_collection": "2025-11-20T14:08:00.319802",
+      "last_updated": "2025-12-12T14:08:00.319832"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 35,
+      "needs_attention": true
+    },
+    "notes": [
+      "Trading in previous vehicle - awaiting valuation"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST94531/591366"
+  },
+  {
+    "sale_id": "SALE814073",
+    "customer": {
+      "customer_id": "CUST86093",
+      "first_name": "Jack",
+      "last_name": "Williams",
+      "email": "jack.williams@email.com",
+      "phone": "07629590052",
+      "postcode": "WS25 1D"
+    },
+    "vehicle": {
+      "vin": "CNDGK7JXERUBD4DU2",
+      "registration": "VM25 BGJ",
+      "make": "Audi",
+      "model": "Q5",
+      "variant": "40 TDI S Line",
+      "year": 2024,
+      "base_price": 51900,
+      "color": "Manhattan Grey",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-21T14:08:00.319847",
+        "Demands & Needs": "2025-10-26T14:08:00.319847",
+        "Sign/Ink Order": "2025-10-28T14:08:00.319847",
+        "Sell Option Extras": "2025-11-02T14:08:00.319847",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 51900,
+      "extras_total": 4850,
+      "total_price": 56750,
+      "deposit_paid": 5000,
+      "outstanding_balance": 51750,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Extended Warranty (3 Years)",
+        "price": 1500
+      },
+      {
+        "name": "Tow Bar Fitting",
+        "price": 1100
+      },
+      {
+        "name": "Window Tinting",
+        "price": 450
+      },
+      {
+        "name": "Winter Wheel Package",
+        "price": 1800
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-19T14:08:00.319847",
+      "expected_collection": "2025-11-18T14:08:00.319847",
+      "last_updated": "2025-12-12T14:08:00.319873"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 40,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST86093/282773"
+  },
+  {
+    "sale_id": "SALE768436",
+    "customer": {
+      "customer_id": "CUST46870",
+      "first_name": "James",
+      "last_name": "Miller",
+      "email": "james.miller@email.com",
+      "phone": "07172856835",
+      "postcode": "OX82 9D"
+    },
+    "vehicle": {
+      "vin": "HCF3G5ELCBTB8XTZN",
+      "registration": "RG25 NCL",
+      "make": "Mercedes-Benz",
+      "model": "GLC",
+      "variant": "GLC 300d AMG Line",
+      "year": 2024,
+      "base_price": 54900,
+      "color": "Portimao Blue",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-11-15T14:08:00.319895",
+        "Demands & Needs": "2025-11-16T14:08:00.319895",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 54900,
+      "extras_total": 0,
+      "total_price": 54900,
+      "deposit_paid": 2000,
+      "outstanding_balance": 52900,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-10T14:08:00.319895",
+      "expected_collection": "2025-12-17T14:08:00.319895",
+      "last_updated": "2025-12-12T14:08:00.319917"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 26,
+      "needs_attention": true
+    },
+    "notes": [
+      "Customer has questions about warranty options",
+      "Business purchase - requires VAT invoice"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST46870/709463"
+  },
+  {
+    "sale_id": "SALE927434",
+    "customer": {
+      "customer_id": "CUST64406",
+      "first_name": "Jessica",
+      "last_name": "White",
+      "email": "jessica.white@email.com",
+      "phone": "07957536203",
+      "postcode": "WS21 5A"
+    },
+    "vehicle": {
+      "vin": "MBF39GYBGJ7KWP5R2",
+      "registration": "WM24 GAV",
+      "make": "BMW",
+      "model": "X3",
+      "variant": "xDrive30d M Sport",
+      "year": 2024,
+      "base_price": 52900,
+      "color": "Alpine White",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-12-13T14:08:00.319926",
+        "Demands & Needs": "2025-12-16T14:08:00.319926",
+        "Sign/Ink Order": "2025-12-22T14:08:00.319926",
+        "Sell Option Extras": "2025-12-25T14:08:00.319926",
+        "Collection Day": "2025-12-27T14:08:00.319926"
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 52900,
+      "extras_total": 2650,
+      "total_price": 55550,
+      "deposit_paid": 5000,
+      "outstanding_balance": 50550,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Roof Bars & Storage Box",
+        "price": 850
+      },
+      {
+        "name": "Winter Wheel Package",
+        "price": 1800
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-12-08T14:08:00.319926",
+      "expected_collection": "2026-01-22T14:08:00.319926",
+      "last_updated": "2025-12-12T14:08:00.319954"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": -15,
+      "needs_attention": false
+    },
+    "notes": [
+      "Interested in test driving similar models",
+      "Prefer communication via email"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST64406/835068"
+  },
+  {
+    "sale_id": "SALE600234",
+    "customer": {
+      "customer_id": "CUST40413",
+      "first_name": "Matthew",
+      "last_name": "Lewis",
+      "email": "matthew.lewis@email.com",
+      "phone": "07549399935",
+      "postcode": "NN13 9C"
+    },
+    "vehicle": {
+      "vin": "YLZA92S85TKD2CGYK",
+      "registration": "WR24 NBA",
+      "make": "BMW",
+      "model": "X3",
+      "variant": "xDrive30d M Sport",
+      "year": 2024,
+      "base_price": 52900,
+      "color": "Glacier White",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-10-19T14:08:00.319963",
+        "Demands & Needs": "2025-10-22T14:08:00.319963",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 52900,
+      "extras_total": 0,
+      "total_price": 52900,
+      "deposit_paid": 5000,
+      "outstanding_balance": 47900,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-17T14:08:00.319963",
+      "expected_collection": "2025-11-22T14:08:00.319963",
+      "last_updated": "2025-12-12T14:08:00.319983"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 51,
+      "needs_attention": true
+    },
+    "notes": [
+      "VIP customer - previous purchaser"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST40413/577663"
+  },
+  {
+    "sale_id": "SALE604801",
+    "customer": {
+      "customer_id": "CUST92449",
+      "first_name": "Grace",
+      "last_name": "Thomas",
+      "email": "grace.thomas@email.com",
+      "phone": "07424608815",
+      "postcode": "LE6 3B"
+    },
+    "vehicle": {
+      "vin": "AWVBT2CHSJ2JC9394",
+      "registration": "MJ24 YHH",
+      "make": "Land Rover",
+      "model": "Discovery",
+      "variant": "D300 R-Dynamic SE",
+      "year": 2024,
+      "base_price": 64900,
+      "color": "Manhattan Grey",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-23T14:08:00.319995",
+        "Demands & Needs": "2025-11-27T14:08:00.319995",
+        "Sign/Ink Order": "2025-11-29T14:08:00.319995",
+        "Sell Option Extras": "2025-12-05T14:08:00.319995",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 64900,
+      "extras_total": 499,
+      "total_price": 65399,
+      "deposit_paid": 500,
+      "outstanding_balance": 64899,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [
+      {
+        "name": "Gap Insurance",
+        "price": 499
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-16T14:08:00.319995",
+      "expected_collection": "2026-01-08T14:08:00.319995",
+      "last_updated": "2025-12-12T14:08:00.320024"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 7,
+      "needs_attention": false
+    },
+    "notes": [
+      "Requested early morning collection slot",
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST92449/896140"
+  },
+  {
+    "sale_id": "SALE880248",
+    "customer": {
+      "customer_id": "CUST41960",
+      "first_name": "Robert",
+      "last_name": "Brown",
+      "email": "robert.brown@email.com",
+      "phone": "07486079215",
+      "postcode": "LE73 2D"
+    },
+    "vehicle": {
+      "vin": "LAW23J2LRKGCY69YZ",
+      "registration": "HM24 LTP",
+      "make": "Audi",
+      "model": "Q7",
+      "variant": "50 TDI S Line",
+      "year": 2024,
+      "base_price": 68900,
+      "color": "Sapphire Black",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-30T14:08:00.320035",
+        "Demands & Needs": "2025-12-03T14:08:00.320035",
+        "Sign/Ink Order": "2025-12-07T14:08:00.320035",
+        "Sell Option Extras": "2025-12-11T14:08:00.320035",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 68900,
+      "extras_total": 4649,
+      "total_price": 73549,
+      "deposit_paid": 2000,
+      "outstanding_balance": 71549,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [
+      {
+        "name": "Winter Wheel Package",
+        "price": 1800
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Key Cover",
+        "price": 149
+      },
+      {
+        "name": "Extended Warranty (3 Years)",
+        "price": 1500
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-25T14:08:00.320035",
+      "expected_collection": "2025-12-23T14:08:00.320035",
+      "last_updated": "2025-12-12T14:08:00.320065"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 1,
+      "needs_attention": false
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST41960/213113"
+  },
+  {
+    "sale_id": "SALE138265",
+    "customer": {
+      "customer_id": "CUST70786",
+      "first_name": "David",
+      "last_name": "White",
+      "email": "david.white@email.com",
+      "phone": "07305652470",
+      "postcode": "NN66 2C"
+    },
+    "vehicle": {
+      "vin": "JUY28LTF28AM9MRA8",
+      "registration": "MK73 EGV",
+      "make": "Audi",
+      "model": "A4",
+      "variant": "40 TDI S Line",
+      "year": 2024,
+      "base_price": 44800,
+      "color": "Sapphire Black",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-11-04T14:08:00.320076",
+        "Demands & Needs": "2025-11-09T14:08:00.320076",
+        "Sign/Ink Order": "2025-11-14T14:08:00.320076",
+        "Sell Option Extras": "2025-11-20T14:08:00.320076",
+        "Collection Day": "2025-11-26T14:08:00.320076"
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 44800,
+      "extras_total": 599,
+      "total_price": 45399,
+      "deposit_paid": 5000,
+      "outstanding_balance": 40399,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-31T14:08:00.320076",
+      "expected_collection": "2025-12-03T14:08:00.320076",
+      "last_updated": "2025-12-12T14:08:00.320106"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": 16,
+      "needs_attention": true
+    },
+    "notes": [
+      "Business purchase - requires VAT invoice",
+      "Interested in test driving similar models",
+      "Customer has questions about warranty options"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST70786/758982"
+  },
+  {
+    "sale_id": "SALE491381",
+    "customer": {
+      "customer_id": "CUST94553",
+      "first_name": "Daniel",
+      "last_name": "Davis",
+      "email": "daniel.davis@email.com",
+      "phone": "07147590783",
+      "postcode": "B7 7B"
+    },
+    "vehicle": {
+      "vin": "HGAV66ZNETBT3U71M",
+      "registration": "EU73 LKP",
+      "make": "MINI",
+      "model": "Countryman",
+      "variant": "Cooper SE ALL4",
+      "year": 2024,
+      "base_price": 38900,
+      "color": "Portimao Blue",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-11T14:08:00.320120",
+        "Demands & Needs": "2025-11-15T14:08:00.320120",
+        "Sign/Ink Order": "2025-11-16T14:08:00.320120",
+        "Sell Option Extras": "2025-11-21T14:08:00.320120",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 38900,
+      "extras_total": 4649,
+      "total_price": 43549,
+      "deposit_paid": 1000,
+      "outstanding_balance": 42549,
+      "payment_method": "Cash"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Key Cover",
+        "price": 149
+      },
+      {
+        "name": "Paint Protection Film",
+        "price": 2500
+      },
+      {
+        "name": "Dashcam Installation",
+        "price": 350
+      },
+      {
+        "name": "Window Tinting",
+        "price": 450
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-05T14:08:00.320120",
+      "expected_collection": "2025-12-17T14:08:00.320120",
+      "last_updated": "2025-12-12T14:08:00.320146"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 21,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST94553/247281"
+  },
+  {
+    "sale_id": "SALE277733",
+    "customer": {
+      "customer_id": "CUST80513",
+      "first_name": "William",
+      "last_name": "Brown",
+      "email": "william.brown@email.com",
+      "phone": "07138806574",
+      "postcode": "OX53 7A"
+    },
+    "vehicle": {
+      "vin": "VPUXB5V7UBBJZRBF3",
+      "registration": "HT23 FJA",
+      "make": "Audi",
+      "model": "Q7",
+      "variant": "50 TDI S Line",
+      "year": 2024,
+      "base_price": 68900,
+      "color": "Alpine White",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-12-15T14:08:00.320159",
+        "Demands & Needs": "2025-12-20T14:08:00.320159",
+        "Sign/Ink Order": "2025-12-25T14:08:00.320159",
+        "Sell Option Extras": "2025-12-31T14:08:00.320159",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 68900,
+      "extras_total": 2919,
+      "total_price": 71819,
+      "deposit_paid": 500,
+      "outstanding_balance": 71319,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [
+      {
+        "name": "Boot Liner",
+        "price": 120
+      },
+      {
+        "name": "Alloy Wheel Insurance",
+        "price": 299
+      },
+      {
+        "name": "Paint Protection Film",
+        "price": 2500
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-12-08T14:08:00.320159",
+      "expected_collection": "2026-01-07T14:08:00.320159",
+      "last_updated": "2025-12-12T14:08:00.320185"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -19,
+      "needs_attention": false
+    },
+    "notes": [
+      "Customer very excited about the purchase"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST80513/690567"
+  },
+  {
+    "sale_id": "SALE986084",
+    "customer": {
+      "customer_id": "CUST23009",
+      "first_name": "Christopher",
+      "last_name": "Thompson",
+      "email": "christopher.thompson@email.com",
+      "phone": "07938391444",
+      "postcode": "LE36 6E"
+    },
+    "vehicle": {
+      "vin": "WGS406H0D7EY7F6RE",
+      "registration": "HX73 VDF",
+      "make": "BMW",
+      "model": "5 Series",
+      "variant": "530e M Sport",
+      "year": 2024,
+      "base_price": 56800,
+      "color": "Portimao Blue",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Deposit Taken",
+      "stage_index": 0,
+      "total_stages": 5,
+      "progress_percentage": 20,
+      "stage_history": {
+        "Deposit Taken": "2025-11-19T14:08:00.320195",
+        "Demands & Needs": null,
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56800,
+      "extras_total": 0,
+      "total_price": 56800,
+      "deposit_paid": 500,
+      "outstanding_balance": 56300,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-16T14:08:00.320195",
+      "expected_collection": "2026-01-03T14:08:00.320195",
+      "last_updated": "2025-12-12T14:08:00.320214"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 23,
+      "needs_attention": true
+    },
+    "notes": [
+      "Urgently needs vehicle by end of month"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST23009/636927"
+  },
+  {
+    "sale_id": "SALE533266",
+    "customer": {
+      "customer_id": "CUST10127",
+      "first_name": "David",
+      "last_name": "Miller",
+      "email": "david.miller@email.com",
+      "phone": "07756947598",
+      "postcode": "LE28 1D"
+    },
+    "vehicle": {
+      "vin": "NPA69DNF60RTR6AL9",
+      "registration": "AU25 RYS",
+      "make": "BMW",
+      "model": "3 Series",
+      "variant": "320d M Sport",
+      "year": 2024,
+      "base_price": 42500,
+      "color": "Glacier White",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Deposit Taken",
+      "stage_index": 0,
+      "total_stages": 5,
+      "progress_percentage": 20,
+      "stage_history": {
+        "Deposit Taken": "2025-11-11T14:08:00.320225",
+        "Demands & Needs": null,
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 42500,
+      "extras_total": 0,
+      "total_price": 42500,
+      "deposit_paid": 5000,
+      "outstanding_balance": 37500,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-05T14:08:00.320225",
+      "expected_collection": "2025-12-26T14:08:00.320225",
+      "last_updated": "2025-12-12T14:08:00.320244"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 31,
+      "needs_attention": true
+    },
+    "notes": [
+      "Finance application in progress",
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST10127/568455"
+  },
+  {
+    "sale_id": "SALE890833",
+    "customer": {
+      "customer_id": "CUST92373",
+      "first_name": "Robert",
+      "last_name": "Jackson",
+      "email": "robert.jackson@email.com",
+      "phone": "07324731286",
+      "postcode": "OX75 9B"
+    },
+    "vehicle": {
+      "vin": "DZJJXSUG4RBWJX6ED",
+      "registration": "UZ24 ABE",
+      "make": "Mercedes-Benz",
+      "model": "EQE",
+      "variant": "EQE 350+ AMG Line",
+      "year": 2024,
+      "base_price": 72500,
+      "color": "Sapphire Black",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-26T14:08:00.320253",
+        "Demands & Needs": "2025-11-02T14:08:00.320253",
+        "Sign/Ink Order": "2025-11-06T14:08:00.320253",
+        "Sell Option Extras": "2025-11-07T14:08:00.320253",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 72500,
+      "extras_total": 2700,
+      "total_price": 75200,
+      "deposit_paid": 500,
+      "outstanding_balance": 74700,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      },
+      {
+        "name": "Extended Warranty (3 Years)",
+        "price": 1500
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-23T14:08:00.320253",
+      "expected_collection": "2025-11-08T14:08:00.320253",
+      "last_updated": "2025-12-12T14:08:00.320280"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 35,
+      "needs_attention": true
+    },
+    "notes": [
+      "Trading in previous vehicle - awaiting valuation",
+      "Business purchase - requires VAT invoice"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST92373/597846"
+  },
+  {
+    "sale_id": "SALE521115",
+    "customer": {
+      "customer_id": "CUST88741",
+      "first_name": "Michael",
+      "last_name": "Brown",
+      "email": "michael.brown@email.com",
+      "phone": "07209395698",
+      "postcode": "CV17 5A"
+    },
+    "vehicle": {
+      "vin": "DLTBHN99437K1KPW6",
+      "registration": "MT24 DAS",
+      "make": "Audi",
+      "model": "e-tron GT",
+      "variant": "quattro",
+      "year": 2024,
+      "base_price": 95900,
+      "color": "Manhattan Grey",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-11-27T14:08:00.320294",
+        "Demands & Needs": "2025-11-29T14:08:00.320294",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 95900,
+      "extras_total": 0,
+      "total_price": 95900,
+      "deposit_paid": 5000,
+      "outstanding_balance": 90900,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-21T14:08:00.320294",
+      "expected_collection": "2026-01-13T14:08:00.320294",
+      "last_updated": "2025-12-12T14:08:00.320314"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 13,
+      "needs_attention": true
+    },
+    "notes": [
+      "Customer very excited about the purchase",
+      "VIP customer - previous purchaser"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST88741/414107"
+  },
+  {
+    "sale_id": "SALE598669",
+    "customer": {
+      "customer_id": "CUST51156",
+      "first_name": "David",
+      "last_name": "Jones",
+      "email": "david.jones@email.com",
+      "phone": "07305099677",
+      "postcode": "WS58 2B"
+    },
+    "vehicle": {
+      "vin": "HWV7LS3FY32FUUW9M",
+      "registration": "SL24 HLN",
+      "make": "Porsche",
+      "model": "Taycan",
+      "variant": "4S",
+      "year": 2024,
+      "base_price": 89500,
+      "color": "Sapphire Black",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-24T14:08:00.320326",
+        "Demands & Needs": "2025-11-29T14:08:00.320326",
+        "Sign/Ink Order": "2025-11-30T14:08:00.320326",
+        "Sell Option Extras": "2025-12-05T14:08:00.320326",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89500,
+      "extras_total": 2597,
+      "total_price": 92097,
+      "deposit_paid": 500,
+      "outstanding_balance": 91597,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Key Cover",
+        "price": 149
+      },
+      {
+        "name": "Alloy Wheel Insurance",
+        "price": 299
+      },
+      {
+        "name": "Tracker/Security System",
+        "price": 599
+      },
+      {
+        "name": "Dashcam Installation",
+        "price": 350
+      },
+      {
+        "name": "Ceramic Coating",
+        "price": 1200
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-17T14:08:00.320326",
+      "expected_collection": "2026-01-06T14:08:00.320326",
+      "last_updated": "2025-12-12T14:08:00.320351"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 7,
+      "needs_attention": false
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST51156/584766"
+  },
+  {
+    "sale_id": "SALE445832",
+    "customer": {
+      "customer_id": "CUST25443",
+      "first_name": "Sarah",
+      "last_name": "Taylor",
+      "email": "sarah.taylor@email.com",
+      "phone": "07142578767",
+      "postcode": "B25 9C"
+    },
+    "vehicle": {
+      "vin": "CXNH80NN1GDREW0UK",
+      "registration": "CF74 AFA",
+      "make": "Audi",
+      "model": "e-tron GT",
+      "variant": "quattro",
+      "year": 2024,
+      "base_price": 95900,
+      "color": "Manhattan Grey",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-31T14:08:00.320361",
+        "Demands & Needs": "2025-11-01T14:08:00.320361",
+        "Sign/Ink Order": "2025-11-02T14:08:00.320361",
+        "Sell Option Extras": "2025-11-04T14:08:00.320361",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 95900,
+      "extras_total": 2598,
+      "total_price": 98498,
+      "deposit_paid": 500,
+      "outstanding_balance": 97998,
+      "payment_method": "Cash"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Roof Bars & Storage Box",
+        "price": 850
+      },
+      {
+        "name": "Key Cover",
+        "price": 149
+      },
+      {
+        "name": "Tow Bar Fitting",
+        "price": 1100
+      },
+      {
+        "name": "Gap Insurance",
+        "price": 499
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-30T14:08:00.320361",
+      "expected_collection": "2025-11-13T14:08:00.320361",
+      "last_updated": "2025-12-12T14:08:00.320388"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 38,
+      "needs_attention": true
+    },
+    "notes": [
+      "Requested early morning collection slot",
+      "Trading in previous vehicle - awaiting valuation",
+      "Finance application in progress"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST25443/769220"
+  },
+  {
+    "sale_id": "SALE809252",
+    "customer": {
+      "customer_id": "CUST33290",
+      "first_name": "Matthew",
+      "last_name": "Jackson",
+      "email": "matthew.jackson@email.com",
+      "phone": "07639622029",
+      "postcode": "CV61 5C"
+    },
+    "vehicle": {
+      "vin": "NMJ5A3654CSJ9UWRP",
+      "registration": "TR25 AUE",
+      "make": "MINI",
+      "model": "Cooper",
+      "variant": "S Classic",
+      "year": 2024,
+      "base_price": 28900,
+      "color": "Portimao Blue",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-23T14:08:00.320398",
+        "Demands & Needs": "2025-11-28T14:08:00.320398",
+        "Sign/Ink Order": "2025-12-02T14:08:00.320398",
+        "Sell Option Extras": "2025-12-05T14:08:00.320398",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 28900,
+      "extras_total": 1320,
+      "total_price": 30220,
+      "deposit_paid": 500,
+      "outstanding_balance": 29720,
+      "payment_method": "Bank Loan"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Boot Liner",
+        "price": 120
+      },
+      {
+        "name": "Roof Bars & Storage Box",
+        "price": 850
+      },
+      {
+        "name": "Dashcam Installation",
+        "price": 350
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-22T14:08:00.320398",
+      "expected_collection": "2025-12-19T14:08:00.320398",
+      "last_updated": "2025-12-12T14:08:00.320428"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 7,
+      "needs_attention": false
+    },
+    "notes": [
+      "Buying as a surprise gift - need discretion"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST33290/898464"
+  },
+  {
+    "sale_id": "SALE677649",
+    "customer": {
+      "customer_id": "CUST95073",
+      "first_name": "Lucy",
+      "last_name": "White",
+      "email": "lucy.white@email.com",
+      "phone": "07602898285",
+      "postcode": "CV66 3A"
+    },
+    "vehicle": {
+      "vin": "FAGLVTGFC919PKJ13",
+      "registration": "KR74 JAX",
+      "make": "Porsche",
+      "model": "Cayenne",
+      "variant": "E-Hybrid",
+      "year": 2024,
+      "base_price": 78900,
+      "color": "Manhattan Grey",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Collection Day",
+      "stage_index": 4,
+      "total_stages": 5,
+      "progress_percentage": 100,
+      "stage_history": {
+        "Deposit Taken": "2025-12-01T14:08:00.320437",
+        "Demands & Needs": "2025-12-07T14:08:00.320437",
+        "Sign/Ink Order": "2025-12-08T14:08:00.320437",
+        "Sell Option Extras": "2025-12-12T14:08:00.320437",
+        "Collection Day": "2025-12-15T14:08:00.320437"
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 78900,
+      "extras_total": 299,
+      "total_price": 79199,
+      "deposit_paid": 1000,
+      "outstanding_balance": 78199,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Alloy Wheel Insurance",
+        "price": 299
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-11-29T14:08:00.320437",
+      "expected_collection": "2025-12-23T14:08:00.320437",
+      "last_updated": "2025-12-12T14:08:00.320464"
+    },
+    "status": {
+      "is_active": false,
+      "is_completed": true,
+      "days_in_current_stage": -3,
+      "needs_attention": false
+    },
+    "notes": [
+      "Flexible on collection date",
+      "Customer very excited about the purchase"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST95073/292673"
+  },
+  {
+    "sale_id": "SALE951626",
+    "customer": {
+      "customer_id": "CUST93813",
+      "first_name": "Lucy",
+      "last_name": "Rodriguez",
+      "email": "lucy.rodriguez@email.com",
+      "phone": "07238204522",
+      "postcode": "NN85 7A"
+    },
+    "vehicle": {
+      "vin": "RURU2VLR1ER9U62F7",
+      "registration": "NX74 RCZ",
+      "make": "Audi",
+      "model": "Q7",
+      "variant": "50 TDI S Line",
+      "year": 2024,
+      "base_price": 68900,
+      "color": "Glacier White",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-29T14:08:00.320473",
+        "Demands & Needs": "2025-11-04T14:08:00.320473",
+        "Sign/Ink Order": "2025-11-09T14:08:00.320473",
+        "Sell Option Extras": "2025-11-13T14:08:00.320473",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 68900,
+      "extras_total": 0,
+      "total_price": 68900,
+      "deposit_paid": 1000,
+      "outstanding_balance": 67900,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-26T14:08:00.320473",
+      "expected_collection": "2025-12-20T14:08:00.320473",
+      "last_updated": "2025-12-12T14:08:00.320498"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 29,
+      "needs_attention": true
+    },
+    "notes": [
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST93813/623080"
+  },
+  {
+    "sale_id": "SALE725421",
+    "customer": {
+      "customer_id": "CUST51471",
+      "first_name": "Lucy",
+      "last_name": "Thomas",
+      "email": "lucy.thomas@email.com",
+      "phone": "07585465166",
+      "postcode": "WS61 9D"
+    },
+    "vehicle": {
+      "vin": "FZDCBA74TW3A786NX",
+      "registration": "EZ74 DEE",
+      "make": "Land Rover",
+      "model": "Range Rover Sport",
+      "variant": "P400e HSE",
+      "year": 2024,
+      "base_price": 89900,
+      "color": "Alpine White",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-11-20T14:08:00.320508",
+        "Demands & Needs": "2025-11-27T14:08:00.320508",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89900,
+      "extras_total": 0,
+      "total_price": 89900,
+      "deposit_paid": 500,
+      "outstanding_balance": 89400,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Ambient Lighting"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-17T14:08:00.320508",
+      "expected_collection": "2025-12-26T14:08:00.320508",
+      "last_updated": "2025-12-12T14:08:00.320535"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 15,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST51471/792263"
+  },
+  {
+    "sale_id": "SALE290768",
+    "customer": {
+      "customer_id": "CUST34772",
+      "first_name": "Amelia",
+      "last_name": "Jones",
+      "email": "amelia.jones@email.com",
+      "phone": "07466819953",
+      "postcode": "B65 2B"
+    },
+    "vehicle": {
+      "vin": "TBC3RYG1SCYZ75KZ6",
+      "registration": "AL74 JGE",
+      "make": "Porsche",
+      "model": "Taycan",
+      "variant": "4S",
+      "year": 2024,
+      "base_price": 89500,
+      "color": "Sapphire Black",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sign/Ink Order",
+      "stage_index": 2,
+      "total_stages": 5,
+      "progress_percentage": 60,
+      "stage_history": {
+        "Deposit Taken": "2025-11-06T14:08:00.320546",
+        "Demands & Needs": "2025-11-09T14:08:00.320546",
+        "Sign/Ink Order": "2025-11-15T14:08:00.320546",
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89500,
+      "extras_total": 0,
+      "total_price": 89500,
+      "deposit_paid": 5000,
+      "outstanding_balance": 84500,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "20\" Diamond Cut",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-05T14:08:00.320546",
+      "expected_collection": "2025-12-14T14:08:00.320546",
+      "last_updated": "2025-12-12T14:08:00.320573"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 27,
+      "needs_attention": true
+    },
+    "notes": [
+      "Considering lease vs purchase options",
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST34772/984456"
+  },
+  {
+    "sale_id": "SALE707506",
+    "customer": {
+      "customer_id": "CUST53526",
+      "first_name": "Emma",
+      "last_name": "Thompson",
+      "email": "emma.thompson@email.com",
+      "phone": "07644328699",
+      "postcode": "OX26 1E"
+    },
+    "vehicle": {
+      "vin": "BGAXFL180ZJY3MDGD",
+      "registration": "DG25 VBU",
+      "make": "Porsche",
+      "model": "Macan",
+      "variant": "S",
+      "year": 2024,
+      "base_price": 62900,
+      "color": "Manhattan Grey",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-10-21T14:08:00.320584",
+        "Demands & Needs": "2025-10-24T14:08:00.320584",
+        "Sign/Ink Order": "2025-10-25T14:08:00.320584",
+        "Sell Option Extras": "2025-10-28T14:08:00.320584",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 62900,
+      "extras_total": 1949,
+      "total_price": 64849,
+      "deposit_paid": 5000,
+      "outstanding_balance": 59849,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "360\u00b0 Camera",
+      "Comfort Features": "Electric Tailgate"
+    },
+    "selected_extras": [
+      {
+        "name": "Key Cover",
+        "price": 149
+      },
+      {
+        "name": "Service Plan (3 Years)",
+        "price": 1800
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-17T14:08:00.320584",
+      "expected_collection": "2025-11-11T14:08:00.320584",
+      "last_updated": "2025-12-12T14:08:00.320610"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 45,
+      "needs_attention": true
+    },
+    "notes": [
+      "Business purchase - requires VAT invoice",
+      "Buying as a surprise gift - need discretion",
+      "First-time premium brand buyer - extra support needed"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST53526/199875"
+  },
+  {
+    "sale_id": "SALE153330",
+    "customer": {
+      "customer_id": "CUST10326",
+      "first_name": "Charlotte",
+      "last_name": "Martinez",
+      "email": "charlotte.martinez@email.com",
+      "phone": "07231205600",
+      "postcode": "WS81 7D"
+    },
+    "vehicle": {
+      "vin": "AUAVKC5MDCDXTJ5P6",
+      "registration": "RU74 WNL",
+      "make": "BMW",
+      "model": "X5",
+      "variant": "xDrive40i M Sport",
+      "year": 2024,
+      "base_price": 72500,
+      "color": "Manhattan Grey",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Deposit Taken",
+      "stage_index": 0,
+      "total_stages": 5,
+      "progress_percentage": 20,
+      "stage_history": {
+        "Deposit Taken": "2025-11-28T14:08:00.320620",
+        "Demands & Needs": null,
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP001",
+      "name": "Marcus Thompson",
+      "email": "marcus.thompson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 72500,
+      "extras_total": 0,
+      "total_price": 72500,
+      "deposit_paid": 500,
+      "outstanding_balance": 72000,
+      "payment_method": "HP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-27T14:08:00.320620",
+      "expected_collection": "2025-12-30T14:08:00.320620",
+      "last_updated": "2025-12-12T14:08:00.320639"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 14,
+      "needs_attention": true
+    },
+    "notes": [
+      "Urgently needs vehicle by end of month",
+      "First-time premium brand buyer - extra support needed"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST10326/689497"
+  },
+  {
+    "sale_id": "SALE997042",
+    "customer": {
+      "customer_id": "CUST18975",
+      "first_name": "Charlotte",
+      "last_name": "Moore",
+      "email": "charlotte.moore@email.com",
+      "phone": "07851875789",
+      "postcode": "B59 7E"
+    },
+    "vehicle": {
+      "vin": "JFXHSGT72KM96CKZF",
+      "registration": "FG74 GGC",
+      "make": "MINI",
+      "model": "Countryman",
+      "variant": "Cooper SE ALL4",
+      "year": 2024,
+      "base_price": 38900,
+      "color": "Portimao Blue",
+      "interior": "Vernasca Black"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-12-07T14:08:00.320648",
+        "Demands & Needs": "2025-12-08T14:08:00.320648",
+        "Sign/Ink Order": "2025-12-14T14:08:00.320648",
+        "Sell Option Extras": "2025-12-21T14:08:00.320648",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 38900,
+      "extras_total": 1718,
+      "total_price": 40618,
+      "deposit_paid": 5000,
+      "outstanding_balance": 35618,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Vernasca Black",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [
+      {
+        "name": "Window Tinting",
+        "price": 450
+      },
+      {
+        "name": "Gap Insurance",
+        "price": 499
+      },
+      {
+        "name": "Dashcam Installation",
+        "price": 350
+      },
+      {
+        "name": "Boot Liner",
+        "price": 120
+      },
+      {
+        "name": "Alloy Wheel Insurance",
+        "price": 299
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-12-04T14:08:00.320648",
+      "expected_collection": "2026-01-28T14:08:00.320648",
+      "last_updated": "2025-12-12T14:08:00.320674"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": -9,
+      "needs_attention": false
+    },
+    "notes": [
+      "Prefer communication via email",
+      "First-time premium brand buyer - extra support needed"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST18975/531001"
+  },
+  {
+    "sale_id": "SALE229921",
+    "customer": {
+      "customer_id": "CUST34125",
+      "first_name": "Lily",
+      "last_name": "Lewis",
+      "email": "lily.lewis@email.com",
+      "phone": "07729854558",
+      "postcode": "CV57 9D"
+    },
+    "vehicle": {
+      "vin": "FWX49M65FSWG0R2DC",
+      "registration": "RJ74 MSP",
+      "make": "Audi",
+      "model": "Q7",
+      "variant": "50 TDI S Line",
+      "year": 2024,
+      "base_price": 68900,
+      "color": "Glacier White",
+      "interior": "Oyster Leather"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-10-23T14:08:00.320687",
+        "Demands & Needs": "2025-10-30T14:08:00.320687",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 68900,
+      "extras_total": 0,
+      "total_price": 68900,
+      "deposit_paid": 5000,
+      "outstanding_balance": 63900,
+      "payment_method": "Cash"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Glacier White",
+      "Interior Trim": "Oyster Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Head-Up Display",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-17T14:08:00.320687",
+      "expected_collection": "2025-11-16T14:08:00.320687",
+      "last_updated": "2025-12-12T14:08:00.320707"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 43,
+      "needs_attention": true
+    },
+    "notes": [
+      "Interested in test driving similar models",
+      "Customer very excited about the purchase",
+      "Flexible on collection date"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST34125/634270"
+  },
+  {
+    "sale_id": "SALE339315",
+    "customer": {
+      "customer_id": "CUST34056",
+      "first_name": "Thomas",
+      "last_name": "Rodriguez",
+      "email": "thomas.rodriguez@email.com",
+      "phone": "07250084988",
+      "postcode": "OX91 6B"
+    },
+    "vehicle": {
+      "vin": "AGEDEGV26HHB1WH5D",
+      "registration": "ZX74 EAG",
+      "make": "Mercedes-Benz",
+      "model": "GLE",
+      "variant": "GLE 400d AMG Line",
+      "year": 2024,
+      "base_price": 76900,
+      "color": "Portimao Blue",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sign/Ink Order",
+      "stage_index": 2,
+      "total_stages": 5,
+      "progress_percentage": 60,
+      "stage_history": {
+        "Deposit Taken": "2025-10-23T14:08:00.320717",
+        "Demands & Needs": "2025-10-25T14:08:00.320717",
+        "Sign/Ink Order": "2025-10-27T14:08:00.320717",
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 76900,
+      "extras_total": 0,
+      "total_price": 76900,
+      "deposit_paid": 1000,
+      "outstanding_balance": 75900,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "20\" Bi-Color",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-10-16T14:08:00.320717",
+      "expected_collection": "2025-11-15T14:08:00.320717",
+      "last_updated": "2025-12-12T14:08:00.320737"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 46,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST34056/195174"
+  },
+  {
+    "sale_id": "SALE342621",
+    "customer": {
+      "customer_id": "CUST84905",
+      "first_name": "Grace",
+      "last_name": "Williams",
+      "email": "grace.williams@email.com",
+      "phone": "07658480931",
+      "postcode": "WS45 9B"
+    },
+    "vehicle": {
+      "vin": "EFUP9ZXR1KXB1YXTM",
+      "registration": "UU74 EVK",
+      "make": "BMW",
+      "model": "5 Series",
+      "variant": "530e M Sport",
+      "year": 2024,
+      "base_price": 56800,
+      "color": "Alpine White",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sell Option Extras",
+      "stage_index": 3,
+      "total_stages": 5,
+      "progress_percentage": 80,
+      "stage_history": {
+        "Deposit Taken": "2025-11-02T14:08:00.320748",
+        "Demands & Needs": "2025-11-05T14:08:00.320748",
+        "Sign/Ink Order": "2025-11-12T14:08:00.320748",
+        "Sell Option Extras": "2025-11-16T14:08:00.320748",
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP003",
+      "name": "David Palmer",
+      "email": "david.palmer@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 56800,
+      "extras_total": 679,
+      "total_price": 57479,
+      "deposit_paid": 5000,
+      "outstanding_balance": 52479,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Alpine White",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Heated Seats"
+    },
+    "selected_extras": [
+      {
+        "name": "Premium Floor Mats",
+        "price": 180
+      },
+      {
+        "name": "Gap Insurance",
+        "price": 499
+      }
+    ],
+    "dates": {
+      "deposit_date": "2025-10-30T14:08:00.320748",
+      "expected_collection": "2025-11-21T14:08:00.320748",
+      "last_updated": "2025-12-12T14:08:00.320782"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 26,
+      "needs_attention": true
+    },
+    "notes": [
+      "Trading in previous vehicle - awaiting valuation",
+      "Considering lease vs purchase options"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST84905/683340"
+  },
+  {
+    "sale_id": "SALE353274",
+    "customer": {
+      "customer_id": "CUST32291",
+      "first_name": "William",
+      "last_name": "Clark",
+      "email": "william.clark@email.com",
+      "phone": "07924641885",
+      "postcode": "LE67 7A"
+    },
+    "vehicle": {
+      "vin": "FAFHCZ5B154Z1TS5J",
+      "registration": "NF24 NLD",
+      "make": "BMW",
+      "model": "3 Series",
+      "variant": "320d M Sport",
+      "year": 2024,
+      "base_price": 42500,
+      "color": "Portimao Blue",
+      "interior": "Mocha Leather"
+    },
+    "pipeline": {
+      "current_stage": "Demands & Needs",
+      "stage_index": 1,
+      "total_stages": 5,
+      "progress_percentage": 40,
+      "stage_history": {
+        "Deposit Taken": "2025-11-07T14:08:00.320799",
+        "Demands & Needs": "2025-11-13T14:08:00.320799",
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP002",
+      "name": "Lisa Chen",
+      "email": "lisa.chen@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 42500,
+      "extras_total": 0,
+      "total_price": 42500,
+      "deposit_paid": 500,
+      "outstanding_balance": 42000,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Portimao Blue",
+      "Interior Trim": "Mocha Leather",
+      "Wheel Style": "18\" Standard",
+      "Technology Pack": "Premium Sound System",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-03T14:08:00.320799",
+      "expected_collection": "2025-12-09T14:08:00.320799",
+      "last_updated": "2025-12-12T14:08:00.320822"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 29,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST32291/719569"
+  },
+  {
+    "sale_id": "SALE440113",
+    "customer": {
+      "customer_id": "CUST20250",
+      "first_name": "Emma",
+      "last_name": "Taylor",
+      "email": "emma.taylor@email.com",
+      "phone": "07139607955",
+      "postcode": "WS30 5E"
+    },
+    "vehicle": {
+      "vin": "CDCMK2P4GGZD00FX4",
+      "registration": "ZU73 NJK",
+      "make": "Mercedes-Benz",
+      "model": "GLC",
+      "variant": "GLC 300d AMG Line",
+      "year": 2024,
+      "base_price": 54900,
+      "color": "Manhattan Grey",
+      "interior": "Black Leather"
+    },
+    "pipeline": {
+      "current_stage": "Deposit Taken",
+      "stage_index": 0,
+      "total_stages": 5,
+      "progress_percentage": 20,
+      "stage_history": {
+        "Deposit Taken": "2025-11-13T14:08:00.320834",
+        "Demands & Needs": null,
+        "Sign/Ink Order": null,
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP004",
+      "name": "Rachel Green",
+      "email": "rachel.green@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 54900,
+      "extras_total": 0,
+      "total_price": 54900,
+      "deposit_paid": 500,
+      "outstanding_balance": 54400,
+      "payment_method": "Lease"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Manhattan Grey",
+      "Interior Trim": "Black Leather",
+      "Wheel Style": "19\" M Performance",
+      "Technology Pack": "Parking Assistant",
+      "Comfort Features": "Panoramic Sunroof"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-10T14:08:00.320834",
+      "expected_collection": "2025-11-30T14:08:00.320834",
+      "last_updated": "2025-12-12T14:08:00.320855"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 29,
+      "needs_attention": true
+    },
+    "notes": [],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST20250/336926"
+  },
+  {
+    "sale_id": "SALE745078",
+    "customer": {
+      "customer_id": "CUST33933",
+      "first_name": "Charlotte",
+      "last_name": "White",
+      "email": "charlotte.white@email.com",
+      "phone": "07466607765",
+      "postcode": "NN98 9C"
+    },
+    "vehicle": {
+      "vin": "RNFB30WA7T1NK5925",
+      "registration": "AM73 HMH",
+      "make": "Land Rover",
+      "model": "Range Rover Sport",
+      "variant": "P400e HSE",
+      "year": 2024,
+      "base_price": 89900,
+      "color": "Sapphire Black",
+      "interior": "Red Leather"
+    },
+    "pipeline": {
+      "current_stage": "Sign/Ink Order",
+      "stage_index": 2,
+      "total_stages": 5,
+      "progress_percentage": 60,
+      "stage_history": {
+        "Deposit Taken": "2025-11-12T14:08:00.320864",
+        "Demands & Needs": "2025-11-18T14:08:00.320864",
+        "Sign/Ink Order": "2025-11-19T14:08:00.320864",
+        "Sell Option Extras": null,
+        "Collection Day": null
+      }
+    },
+    "salesperson": {
+      "id": "SP005",
+      "name": "Tom Henderson",
+      "email": "tom.henderson@sytner.co.uk"
+    },
+    "financial": {
+      "vehicle_price": 89900,
+      "extras_total": 0,
+      "total_price": 89900,
+      "deposit_paid": 500,
+      "outstanding_balance": 89400,
+      "payment_method": "PCP"
+    },
+    "demands_and_needs": {
+      "Exterior Color": "Sapphire Black",
+      "Interior Trim": "Red Leather",
+      "Wheel Style": "21\" Black Alloys",
+      "Technology Pack": "Adaptive Cruise",
+      "Comfort Features": "Ventilated Seats"
+    },
+    "selected_extras": [],
+    "dates": {
+      "deposit_date": "2025-11-10T14:08:00.320864",
+      "expected_collection": "2026-01-02T14:08:00.320864",
+      "last_updated": "2025-12-12T14:08:00.320894"
+    },
+    "status": {
+      "is_active": true,
+      "is_completed": false,
+      "days_in_current_stage": 23,
+      "needs_attention": true
+    },
+    "notes": [
+      "Business purchase - requires VAT invoice"
+    ],
+    "customer_portal_link": "https://sales.sytner.co.uk/track/CUST33933/665530"
+  }
+]
